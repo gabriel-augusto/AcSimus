@@ -1,5 +1,6 @@
 package simulador;
 
+import objetos.Localizacao;
 import utils.Util;
 import jade.core.AID;
 import jade.core.Agent;
@@ -18,6 +19,8 @@ public class FonteSonora extends Agent{
 	private static final long serialVersionUID = 1L;
 	
 	PlatformController container;
+	
+	private int intervaloAtualizacao = 10000;
 	
 	private AID ambiente;
 	private AID fonteSonora;
@@ -69,7 +72,7 @@ public class FonteSonora extends Agent{
 		
 		System.out.println("Som criado em: "+localizacao);
 	}
-/*	
+	
 	private class AtualizarSomBehaviour extends TickerBehaviour {
 
 		private static final long serialVersionUID = 1L;
@@ -81,10 +84,9 @@ public class FonteSonora extends Agent{
 		@Override
 		protected void onTick() {
 			criarSom(localizacao, 0, 60);
-		}
-		
+		}		
 	}
-	*/
+	
 	private class ReceberMensagemBehaviour extends CyclicBehaviour {
 		
 		private static final long serialVersionUID = 1L;

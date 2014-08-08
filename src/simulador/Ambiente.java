@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import objetos.Linha;
+import objetos.Localizacao;
+import objetos.ObstaculoObject;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -35,12 +38,14 @@ public class Ambiente extends Agent{
 	public void definirAmbiente() {
 		PlatformController container = getContainerController();
 		
+		ObstaculoObject parede = new ObstaculoObject(new Linha(new Localizacao(5,0), new Localizacao(5,10)), 20);
+		
 		/* Obstaculo */
 		Object[] argsObstaculo = {new Localizacao(5,5), 20};
 		obstaculos.add(criarObjeto(argsObstaculo, container, this.OBSTACULO));
 	
 		/* fonte sonora */
-		Object[] argsFonteSonora = {new Localizacao(0,5), this.getAID(), 15};		
+		Object[] argsFonteSonora = {new Localizacao(0,5), this.getAID(), 15, parede};		
 		fontesSonoras.add(criarObjeto(argsFonteSonora, container,this.FONTESONORA));
 		
 		addBehaviour(new ReceberMensagemBehaviour(this));
@@ -100,12 +105,12 @@ public class Ambiente extends Agent{
 
 		private void receberInforamcao(ACLMessage mensagem) {
 			if(mensagem.getLanguage().equals(Linguagem.LOCALIZACAO)){
-				System.out.println("Sala: localizacao dos obstaculos recebida.");
+				System.out.println("Ambiente: localizacao dos obstaculos recebida.");
 				responderLocalizacao(mensagem.getContent(), filaParaReceberLocalizacao.remove());	
 			}
 			
 			if(mensagem.getLanguage().equals(Linguagem.INDICE)){
-				System.out.println("Sala: indice do obstaculo recebido");
+				System.out.println("Ambiente: indice do obstaculo recebido");
 				responderIndice(mensagem.getContent(), filaParaReceberIndice.remove());				
 			}
 		}

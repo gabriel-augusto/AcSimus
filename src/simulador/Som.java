@@ -3,6 +3,7 @@ package simulador;
 import java.util.ArrayList;
 import java.util.List;
 
+import objetos.Localizacao;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -21,10 +22,10 @@ public class Som extends Agent{
 	
 	private static List <String> pontosDeColisao = new ArrayList<>();
 	
-	private long intervaloAtualizacao = 100;
+	private long intervaloDeAtualizacao = 500; //Intervalo de atualização do som em ms.
 	
-	int x0;
-	int y0;
+	double x0;
+	double y0;
 	Localizacao localizacao;
 	double direcao;
 	double potencia;
@@ -42,7 +43,7 @@ public class Som extends Agent{
 
 	private void adicionarComportamentos() {
 		addBehaviour(new SolicitarObstaculosBehaviour(this));
-		addBehaviour(new AtualizarSomBehaviour(this, intervaloAtualizacao));
+		addBehaviour(new AtualizarSomBehaviour(this, intervaloDeAtualizacao));
 		addBehaviour(new ReceberMensagemBehaviour(this));
 	}
 

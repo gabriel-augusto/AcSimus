@@ -1,6 +1,7 @@
-package simulador;
+package objetos;
 
 import static org.junit.Assert.*;
+import objetos.Localizacao;
 
 import org.junit.Test;
 
@@ -24,8 +25,8 @@ public class LocalizacaoTest {
 		Localizacao localizacao1 = new Localizacao(20, 30);
 		Localizacao localizacao2 = Localizacao.valueOf("[x: 20; y: 30]");
 		
-		assertEquals(localizacao1.getX(), localizacao2.getX());
-		assertEquals(localizacao1.getY(), localizacao2.getY());
+		assertEquals(localizacao1.getX(), localizacao2.getX(), .000001);
+		assertEquals(localizacao1.getY(), localizacao2.getY(), .000001);
 	}
 
 }

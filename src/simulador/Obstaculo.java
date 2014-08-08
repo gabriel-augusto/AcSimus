@@ -1,6 +1,6 @@
 package simulador;
 
-import simulador.Localizacao;
+import objetos.Localizacao;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;

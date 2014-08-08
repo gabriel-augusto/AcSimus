@@ -1,12 +1,12 @@
-package simulador;
+package objetos;
 
 public class Localizacao {
 
-	int x;
+	double x;
 	
-	int y;
+	double y;
 
-	public Localizacao(int x, int y) {
+	public Localizacao(double x, double y) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -20,25 +20,25 @@ public class Localizacao {
 		this(-1,-1);
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 	
 	public double distancia(Localizacao l) {
-		int dx = Math.abs(this.x - l.x);
-		int dy = Math.abs(this.y - l.y);
+		double dx = Math.abs(this.x - l.x);
+		double dy = Math.abs(this.y - l.y);
 		return Math.sqrt(dx*dx + dy*dy);
 	}
 
@@ -68,7 +68,7 @@ public class Localizacao {
 				variavel = 'y';
 			}
 		}		
-		return new Localizacao(Integer.valueOf(x.toString()), 
-				Integer.valueOf(y.toString()));
+		return new Localizacao(Double.valueOf(x.toString()), 
+				Double.valueOf(y.toString()));
 	}
 }
