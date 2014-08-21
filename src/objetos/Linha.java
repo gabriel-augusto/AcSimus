@@ -6,53 +6,96 @@ public class Linha {
 	private Localizacao pontoInicial;
 	private Localizacao pontoFinal;
 	private double inclinacao;
+	private double direcao; // ângulo de direção.
 	
 	public Linha(Localizacao pontoInicial, Localizacao pontoFinal){
 		this.setPontoInicial(pontoInicial);
 		this.setPontoFinal(pontoFinal);
-		this.setInclinacao(calcularInclinacao());
+		this.setInclinacao(calcularInclinacao(pontoInicial, pontoFinal));
 	}
 	
-	public Linha(Localizacao pontoInicial, double inclinacao){
+	public Linha(Localizacao pontoInicial, double direcao){
 		this.setPontoInicial(pontoInicial);
-		this.setInclinacao(inclinacao);
 		this.setPontoFinal(null);
+		this.setDirecao(direcao);
+		this.setInclinacao(calcularInclinacao(direcao));
 	}
 	
-	private double calcularInclinacao() {
-		double x = pontoFinal.getX() - pontoInicial.getX();
-		double y = pontoFinal.getY() - pontoInicial.getY();
-		double m = y/x;
-		return m;
+	private double calcularInclinacao(Localizacao pontoInicial, Localizacao pontoFinal) {
+		double deltaX = pontoFinal.getX() - pontoInicial.getX();
+		double deltaY = pontoFinal.getY() - pontoInicial.getY();
+		return deltaY/deltaX;
 	}
-
-	private double calcularConstante() {
-		return pontoInicial.getY() - inclinacao * pontoInicial.getX();
+	
+	private double calcularInclinacao(double direcao){
+		if(direcao == 90)
+			return Double.POSITIVE_INFINITY;
+		if(direcao == 270)
+			return Double.NEGATIVE_INFINITY;
+		
+		return Math.tan(Math.toRadians(direcao));
 	}
 	
 	public Localizacao procurarPontoDeInterseccao(Linha linha){
-		double x = (linha.getConstante() - this.getConstante())/(this.getInclinacao() - linha.getInclinacao());
-		double y = this.getInclinacao() * x + this.getConstante();
+		Localizacao pontoDeInterseccao = null;
+		double x;
+		double y;
 		
-		Localizacao pontoDeInterseccao = new Localizacao(x,y);
+		if(this.ehVertical() && !linha.ehVertical()){
+			x = this.getConstante();
+			y = linha.getY(x);
+			pontoDeInterseccao = new Localizacao(x,y);
+		}
 		
-		if(pertenceAoIntervalo(pontoDeInterseccao))
+		if(linha.ehVertical() && !this.ehVertical()){
+			x = linha.getConstante();
+			y = this.getY(x);
+			pontoDeInterseccao = new Localizacao(x,y);
+		}		
+		
+		if(((this.getInclinacao() - linha.getInclinacao()) != 0) 
+				&& !this.ehVertical() 
+				&& !linha.ehVertical()){
+			x = (linha.getConstante() - this.getConstante())/(this.getInclinacao() - linha.getInclinacao());
+			y = linha.getInclinacao() * x + linha.getConstante();
+			pontoDeInterseccao = new Localizacao(x,y);
+		}
+			
+
+		if(pertenceAoIntervalo(pontoDeInterseccao.getX()))		
 			return pontoDeInterseccao;
 		
 		return null;
 	}
 	
-	private boolean pertenceAoIntervalo(Localizacao localizacao){
+	private boolean pertenceAoIntervalo(double x){
 		if(pontoFinal != null){
-			if(localizacao.getX() <= Math.max(this.getPontoInicial().getX(), this.getPontoFinal().getX()) 
-					&& localizacao.getX() >= Math.min(this.getPontoInicial().getX(), this.getPontoFinal().getX())
-					&& localizacao.getY() <= Math.max(this.getPontoInicial().getY(), this.getPontoFinal().getY())
-					&& localizacao.getY() >= Math.min(this.getPontoInicial().getY(), this.getPontoFinal().getY())){
+			if(x <= Math.max(this.getPontoInicial().getX(), this.getPontoFinal().getX()) 
+					&& x >= Math.min(this.getPontoInicial().getX(), this.getPontoFinal().getX())){
 				return true;
 			}
-		}else if((localizacao.getX() >= this.getPontoInicial().getX()) && (localizacao.getY() >= this.getPontoInicial().getY()))
+		}else if((x >= this.getPontoInicial().getX()))
 			return true;		
 		return false;
+	}
+	
+	public boolean ehVertical(){
+		if(this.inclinacao == Double.POSITIVE_INFINITY 
+				|| this.inclinacao == Double.NEGATIVE_INFINITY)
+			return true;
+		return false;
+	}
+	
+	public double getConstante() {
+		if(this.ehVertical())
+			return pontoInicial.getX();
+		return pontoInicial.getY() - inclinacao * pontoInicial.getX();
+	}
+	
+	public Double getY(double x){
+		if(!this.ehVertical())
+			return this.getInclinacao() * x + this.getConstante();
+		return null;
 	}
 	
 	public Localizacao getPontoInicial() {
@@ -72,15 +115,18 @@ public class Linha {
 	}
 
 	public double getInclinacao() {
-		return this.calcularInclinacao();
+		return inclinacao;
 	}
 
 	public void setInclinacao(double inclinacao) {
 		this.inclinacao = inclinacao;
 	}
 
-	public double getConstante() {
-		return this.calcularConstante();
+	public double getDirecao() {
+		return direcao;
 	}
-	
+
+	public void setDirecao(double direcao) {
+		this.direcao = direcao;
+	}	
 }
