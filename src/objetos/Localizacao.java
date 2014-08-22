@@ -2,11 +2,11 @@ package objetos;
 
 public class Localizacao {
 
-	double x;	
-	double y;
+	private double x;	
+	private double y;
+	private static final double TOLERANCIA = 0.0000001;
 
 	public Localizacao(double x, double y) {
-		super();
 		this.x = x;
 		this.y = y;
 	}
@@ -47,7 +47,8 @@ public class Localizacao {
 	}
 	
 	public boolean equals(Localizacao localizacao){
-		if(this.getX() == localizacao.getX() && this.getY() == localizacao.getY())
+		if(Math.abs(this.getX() - localizacao.getX()) < TOLERANCIA && Math.abs(this.getY() - localizacao.getY()) < TOLERANCIA)
+		//if(this.getX() == localizacao.getX() && this.getY() == localizacao.getY())
 			return true;
 		return false;
 	}

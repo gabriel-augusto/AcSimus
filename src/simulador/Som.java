@@ -22,7 +22,7 @@ public class Som extends Agent{
 	
 	private static List <String> pontosDeColisao = new ArrayList<>();
 	
-	private long intervaloDeAtualizacao = 500; //Intervalo de atualização do som em ms.
+	private long intervaloDeAtualizacao = 500; //Intervalo de atualizacao do som em ms.
 	
 	double x0;
 	double y0;

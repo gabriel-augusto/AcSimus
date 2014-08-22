@@ -1,1 +1,1 @@
-http://10.208.208.165:7778/acc
+http://gabriel-PC:7778/acc
