@@ -3,36 +3,44 @@ package simulador;
 import java.util.ArrayList;
 import java.util.List;
 
+import objetos.Linha;
 import objetos.Localizacao;
-import jade.core.AID;
+import objetos.ObstaculoObject;
+//import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
+//import jade.core.behaviours.CyclicBehaviour;
+//import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.lang.acl.ACLMessage;
-import linguagensEmensagens.Linguagem;
-import linguagensEmensagens.Mensagem;
+//import jade.lang.acl.ACLMessage;
+//import linguagensEmensagens.Linguagem;
+//import linguagensEmensagens.Mensagem;
 
 public class Som extends Agent{
 
 	private static final long serialVersionUID = 1L;
 	
 	private static List <String> pontosDeColisao = new ArrayList<>();
+	private static List <ObstaculoObject> obstaculos;
 	
 	private long intervaloDeAtualizacao = 500; //Intervalo de atualizacao do som em ms.
 	
-	double x0;
-	double y0;
-	Localizacao localizacao;
+	private Linha rota;
+	private Localizacao pontoDeColisao;
+	private ObstaculoObject obstaculoDeColisao;
+	
+	//double x0;
+	//double y0;
+	Localizacao localizacaoInicial;
+	Localizacao localizacaoAtual;
 	double direcao;
 	double potencia;
-	private AID ambiente;
-	private AID fonteSonora;
+	//private AID ambiente;
+	//private AID fonteSonora;
 	int distancia = 0;
-	int indice;
+	double indice;
 	
 	@Override
 	protected void setup() {
@@ -42,9 +50,9 @@ public class Som extends Agent{
 	}
 
 	private void adicionarComportamentos() {
-		addBehaviour(new SolicitarObstaculosBehaviour(this));
+		//addBehaviour(new SolicitarObstaculosBehaviour(this));
 		addBehaviour(new AtualizarSomBehaviour(this, intervaloDeAtualizacao));
-		addBehaviour(new ReceberMensagemBehaviour(this));
+		//addBehaviour(new ReceberMensagemBehaviour(this));
 	}
 
 	private void registrarSom(){
@@ -57,13 +65,15 @@ public class Som extends Agent{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void receberParametros() {
 		Object[] args = getArguments();
-		localizacao = (Localizacao) args[0];
+		localizacaoAtual = (Localizacao) args[0];
 		direcao = (double) args[1];
 		potencia = (double) args[2];
-		ambiente = (AID) args[3];
-		fonteSonora = (AID) args[4];
+		//ambiente = (AID) args[3];
+		//fonteSonora = (AID) args[4];
+		obstaculos = (ArrayList<ObstaculoObject>) args[5];
 		definirNovaLocalizacaoInicial();
 	}
 	
@@ -76,21 +86,28 @@ public class Som extends Agent{
 		distancia++;
 		atualizarLocalizacao();
 		
-		if(ehPontoDeColisao(localizacao))
-			solicitarIndice(localizacao.toString());		
+		if(ehPontoDeColisao(localizacaoAtual))
+			//solicitarIndice(localizacaoAtual.toString());		
+			atualizarParametros(obstaculoDeColisao.getIndiceDeAbsorcao());
 	}
 
 	private void atualizarLocalizacao() {
-		localizacao.setX(calculaX(direcao, distancia) + x0);
-		localizacao.setY(calculaY(direcao, distancia) + y0);
+		localizacaoAtual.setX(calculaX(direcao, distancia) + localizacaoInicial.getX());
+		localizacaoAtual.setY(calculaY(direcao, distancia) + localizacaoInicial.getY());
 	}
 
 	private boolean ehPontoDeColisao(Localizacao localizacao) {
+		/*
 		for(String pontoDeColisao : pontosDeColisao){
 			if(localizacao.toString().equals(pontoDeColisao)){
 				return true;				
 			}
 		}
+		return false;
+		*/
+		if(Math.abs(localizacao.getX() - pontoDeColisao.getX()) < 0.5 
+				|| Math.abs(localizacao.getY() - pontoDeColisao.getY()) < 0.5)
+			return true;
 		return false;
 	}
 	
@@ -99,49 +116,50 @@ public class Som extends Agent{
 		System.out.println("Fim do som.");
 	}
 	
-	private void atualizarParametros(int indice){
+	private void atualizarParametros(double indice){
 		distancia = 0;
 		definirNovaLocalizacaoInicial();
 		calcularNovaDirecao();
 		calcularPotencia(indice);
+		rota = Linha.getLinha(localizacaoInicial, direcao);
 	}
 
-	private void calcularPotencia(int indice) {
+	private void calcularPotencia(double indice) {
 		potencia = potencia - (potencia*((double)indice/100));
 	}
 
 	private void definirNovaLocalizacaoInicial() {
-		x0 = localizacao.getX();
-		y0 = localizacao.getY();
+		localizacaoInicial.setX(localizacaoAtual.getX());
+		localizacaoInicial.setY(localizacaoAtual.getY());
 	}
 
-	private void calcularNovaDirecao() {
-		/*
-		int angulo = 2 * anguloDoObstaculo;
+	private double calcularNovaDirecao() {
+		
+		double angulo = 2 * Math.toDegrees(Math.atan(obstaculoDeColisao.getLinha().getInclinacao()));
 		while(angulo < 360)
 			angulo = angulo + 360;
 		  
-		int novaDirecao = angulo - direcao;
+		double novaDirecao = angulo - direcao;
 		  
 		while(direcao > 360)
 			novaDirecao = novaDirecao - 360;
 			
 		return novaDirecao;
-		 */
+		 
+		/*
 		direcao = 540 - direcao;
 		while(direcao>360)
 			direcao = direcao - 360;
+			*/
 	}
-	
-	
-	
+	/*
 	private void solicitarIndice(String pontoDeColisao){
 		ACLMessage msg = Mensagem.prepararMensagem(ACLMessage.REQUEST, 
 				Linguagem.INDICE, pontoDeColisao, ambiente,  fonteSonora);
 		send(msg);
 		System.out.println("Som: indice do obstaculo solicitado.");
 	}
-	
+	*/
 	public int calculaX(double angulo, int hipotenusa){
 		int x = (int) Math.cos(angulo * Math.PI/180) * hipotenusa;
 		return x;
@@ -166,7 +184,7 @@ public class Som extends Agent{
 		}
 		
 	}	
-	
+	/*
 	private class SolicitarObstaculosBehaviour extends OneShotBehaviour {
 
 		private static final long serialVersionUID = 1L;
@@ -227,7 +245,7 @@ public class Som extends Agent{
 		}
 		
 		private void responderLocalizacao(AID destino){
-			ACLMessage resposta = Mensagem.prepararMensagem(ACLMessage.INFORM, null, localizacao.toString(), destino);
+			ACLMessage resposta = Mensagem.prepararMensagem(ACLMessage.INFORM, null, localizacaoAtual.toString(), destino);
 			send(resposta);
 		}
 
@@ -236,9 +254,9 @@ public class Som extends Agent{
 			send(resposta);
 		}
 	}
-		
+		*/
 	private String escreverEstadoAtual(){
-		return "localizacao: " + localizacao + "\npotencia: " + potencia 
+		return "localizacao: " + localizacaoAtual + "\npotencia: " + potencia 
 				+ "\ndirecao: " + direcao + " graus";
 	}
 	

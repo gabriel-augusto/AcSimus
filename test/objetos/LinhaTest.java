@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class LinhaTest {
-
+	
 	@Test
 	public void calcularInclinacaoTest() {
 		Linha linha1 = Linha.getLinha(new Localizacao(0,0), new Localizacao(1,1));

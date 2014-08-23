@@ -1,6 +1,10 @@
 package simulador;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import objetos.Localizacao;
+import objetos.ObstaculoObject;
 import utils.Util;
 import jade.core.AID;
 import jade.core.Agent;
@@ -21,6 +25,8 @@ public class FonteSonora extends Agent{
 	PlatformController container;
 	
 	private int intervaloAtualizacao = 10000;
+	
+	private static List <ObstaculoObject> obstaculos;
 	
 	private AID ambiente;
 	private AID fonteSonora;
@@ -54,16 +60,18 @@ public class FonteSonora extends Agent{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void receberParametros() {
 		fonteSonora = this.getAID();
 		Object[] args = getArguments();
 		localizacao = (Localizacao) args[0];
 		ambiente = (AID) args[1];
 		indiceAbsorcao = (int) args[2];
+		obstaculos = (ArrayList<ObstaculoObject>) args[3];
 	}
 
 	private void criarSom(Localizacao localizacao, double direcao, double potencia){
-		Object[] args = {new Localizacao(localizacao), direcao, potencia, ambiente, fonteSonora};
+		Object[] args = {new Localizacao(localizacao), direcao, potencia, ambiente, fonteSonora, obstaculos};
 		final String id = Som.proximoId();
 		som = new AID(id, AID.ISLOCALNAME);		
 		
