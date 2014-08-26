@@ -2,16 +2,16 @@ package objetos;
 
 public class LinhaNormal extends Linha{
 	
-	public LinhaNormal(Localizacao pontoInicial, Localizacao pontoFinal) {
+	protected LinhaNormal(Localizacao pontoInicial, Localizacao pontoFinal) {
 		super(pontoInicial, pontoFinal);
 	}
 	
-	public LinhaNormal(Localizacao pontoInicial, double direcao){
+	protected LinhaNormal(Localizacao pontoInicial, double direcao){
 		super(pontoInicial, direcao);
 	}
 	
 	public Localizacao procurarPontoDeInterseccao(LinhaNormal linha){
-		Localizacao pontoDeInterseccao = null;
+		Localizacao pontoDeInterseccao;
 		double x;
 		double y;
 		
@@ -19,11 +19,9 @@ public class LinhaNormal extends Linha{
 			x = (linha.getConstante() - this.getConstante())/(this.getInclinacao() - linha.getInclinacao());
 			y = linha.getInclinacao() * x + linha.getConstante();
 			pontoDeInterseccao = new Localizacao(x,y);
-		}			
-
-		if(pontoDeInterseccao != null && pertenceAoIntervalo(pontoDeInterseccao.getX()))		
-			return pontoDeInterseccao;
-		
+			if(pontoDeInterseccao != null && this.pertenceAoIntervalo(pontoDeInterseccao.getX()) && linha.pertenceAoIntervalo(pontoDeInterseccao.getX()))		
+				return pontoDeInterseccao;
+		}					
 		return null;
 	}
 	

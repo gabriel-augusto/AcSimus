@@ -2,17 +2,24 @@ package objetos;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class LinhaTest {
 	
+	private double precisao;
+	
+	@Before
+	public void setup(){
+		precisao = 0.00001;
+	}
+	
 	@Test
-	public void calcularInclinacaoTest() {
+	public void calcularInclinacaoTest() {	
 		Linha linha1 = Linha.getLinha(new Localizacao(0,0), new Localizacao(1,1));
 		Linha linha2 = Linha.getLinha(new Localizacao(0,0), new Localizacao(1,-1));
 		Linha linha3 = Linha.getLinha(new Localizacao(-1,-1), new Localizacao(0,0));
-		Linha linha4 = Linha.getLinha(new Localizacao(-1,1), new Localizacao(0,0));
-		
+		Linha linha4 = Linha.getLinha(new Localizacao(-1,1), new Localizacao(0,0));		
 		
 		assertEquals(1, linha1.getInclinacao(), .0000001);
 		assertEquals(-1, linha2.getInclinacao(), .0000001);
@@ -59,14 +66,14 @@ public class LinhaTest {
 		Localizacao pontoDeInterseccao1 = linha1.procurarPontoDeInterseccao(linha2);
 		Localizacao pontoDeInterseccao2 = linha3.procurarPontoDeInterseccao(linha4);
 		
-		assertTrue(pontoDeInterseccao1.equals(new Localizacao(1,1)));
-		assertTrue(pontoDeInterseccao2.equals(new Localizacao(1,0)));
+		assertTrue(pontoDeInterseccao1.equals(new Localizacao(1,1),precisao));
+		assertTrue(pontoDeInterseccao2.equals(new Localizacao(1,0),precisao));
 		/*
-		assertEquals(1, pontoDeInterseccao1.getX(), .00001);
-		assertEquals(1, pontoDeInterseccao1.getY(), .00001);
+		assertEquals(1, pontoDeInterseccao1.getX(), precisao);
+		assertEquals(1, pontoDeInterseccao1.getY(), precisao);
 
-		assertEquals(1, pontoDeInterseccao2.getX(), .00001);
-		assertEquals(0, pontoDeInterseccao2.getY(), .00001);
+		assertEquals(1, pontoDeInterseccao2.getX(), precisao);
+		assertEquals(0, pontoDeInterseccao2.getY(), precisao);
 		*/
 	}
 
@@ -82,15 +89,32 @@ public class LinhaTest {
 		Localizacao pontoDeInterseccao1 = linha1.procurarPontoDeInterseccao(linha2);
 		Localizacao pontoDeInterseccao2 = linha3.procurarPontoDeInterseccao(linha4);
 		
-		assertTrue(pontoDeInterseccao1.equals(new Localizacao(1,1)));
-		assertTrue(pontoDeInterseccao2.equals(new Localizacao(1,0)));
+		assertTrue(pontoDeInterseccao1.equals(new Localizacao(1,1),precisao));
+		assertTrue(pontoDeInterseccao2.equals(new Localizacao(1,0),precisao));
 		
 		/*
-		assertEquals(1, pontoDeInterseccao1.getX(), .00001);
-		assertEquals(1, pontoDeInterseccao1.getY(), .00001);
+		assertEquals(1, pontoDeInterseccao1.getX(), precisao);
+		assertEquals(1, pontoDeInterseccao1.getY(), precisao);
 		
-		assertEquals(1, pontoDeInterseccao2.getX(), .00001);
-		assertEquals(0, pontoDeInterseccao2.getY(), .00001);
+		assertEquals(1, pontoDeInterseccao2.getX(), precisao);
+		assertEquals(0, pontoDeInterseccao2.getY(), precisao);
 		*/
+	}
+	
+	@Test
+	public void procurarPontoDeInterseccaoNaoExistenteTest(){
+		Linha linha1 = Linha.getLinha(new Localizacao(10,0), new Localizacao(0,0));
+		Linha linha2 = Linha.getLinha(new Localizacao(5,10), 315);
+		
+		Linha linha3 = Linha.getLinha(new Localizacao(0,0), new Localizacao(0,10));
+		Linha linha4 = Linha.getLinha(new Localizacao(2,-1), 90);
+		
+		
+		Localizacao pontoDeInterseccao1 = linha1.procurarPontoDeInterseccao(linha2);
+		Localizacao pontoDeInterseccao2 = linha3.procurarPontoDeInterseccao(linha4);
+		
+		assertNull(pontoDeInterseccao1);
+		assertNull(pontoDeInterseccao2);
+		
 	}
 }

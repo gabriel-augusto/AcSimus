@@ -1,12 +1,16 @@
 package objetos;
 
+import utils.Util;
+
 public class LinhaVertical extends Linha{
 	
-	public LinhaVertical(Localizacao pontoInicial, Localizacao pontoFinal) {
+	private static final double TOLERANCIA = 0.000001;
+	
+	protected LinhaVertical(Localizacao pontoInicial, Localizacao pontoFinal) {
 		super(pontoInicial, pontoFinal);
 	}
 	
-	public LinhaVertical(Localizacao pontoInicial, double direcao){
+	protected LinhaVertical(Localizacao pontoInicial, double direcao){
 		super(pontoInicial, direcao);
 	}
 	
@@ -36,10 +40,10 @@ public class LinhaVertical extends Linha{
 				return true;
 			}
 		}else{
-			if(this.getDirecao() == 270 && y <= this.getPontoInicial().getY())
+			if(Util.compararDouble(this.getDirecao(), 270, TOLERANCIA) && y <= this.getPontoInicial().getY())
 				return true;
 			
-			if(this.getDirecao() == 90 && y >= this.getPontoInicial().getY())
+			if(Util.compararDouble(this.getDirecao(), 90, TOLERANCIA) && y >= this.getPontoInicial().getY())
 				return true;				
 		}
 		

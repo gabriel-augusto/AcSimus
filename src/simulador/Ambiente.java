@@ -50,9 +50,10 @@ public class Ambiente extends Agent{
 		obstaculosObjects.add(parede4);
 		
 		/* Obstaculo */
+		/*
 		Object[] argsObstaculo = {new Localizacao(5,5), 20};
 		obstaculos.add(criarObjeto(argsObstaculo, container, this.OBSTACULO));
-	
+		*/
 		/* fonte sonora */
 		Object[] argsFonteSonora = {new Localizacao(0,5), this.getAID(), 15, obstaculosObjects};		
 		fontesSonoras.add(criarObjeto(argsFonteSonora, container,this.FONTESONORA));

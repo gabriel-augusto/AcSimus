@@ -1,10 +1,11 @@
 package objetos;
 
+import utils.Util;
+
 public class Localizacao {
 
 	private double x;	
 	private double y;
-	private static final double TOLERANCIA = 0.0000001;
 
 	public Localizacao(double x, double y) {
 		this.x = x;
@@ -46,8 +47,8 @@ public class Localizacao {
 		return "[x: "+x+"; y: "+y+"]";
 	}
 	
-	public boolean equals(Localizacao localizacao){
-		if(Math.abs(this.getX() - localizacao.getX()) < TOLERANCIA && Math.abs(this.getY() - localizacao.getY()) < TOLERANCIA)
+	public boolean equals(Localizacao localizacao, double precisao){
+		if(Util.compararDouble(this.getX(), localizacao.getX(), precisao) && Util.compararDouble(this.getY(),localizacao.getY(), precisao))
 		//if(this.getX() == localizacao.getX() && this.getY() == localizacao.getY())
 			return true;
 		return false;

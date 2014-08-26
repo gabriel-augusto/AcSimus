@@ -16,4 +16,10 @@ public class Util{
 			e.printStackTrace();
 		}
 	}	
+	
+	public static boolean compararDouble(double double1, double double2, double tolerancia){
+		if(Math.abs(double1 - double2) < tolerancia)
+			return true;
+		return false;
+	}
 }
