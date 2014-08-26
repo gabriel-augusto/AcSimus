@@ -43,6 +43,8 @@ public class FonteSonora extends Agent{
 			registrarFonteSonora();		
 			adicionarComportamentos();			
 			criarSom(localizacao, 45, 60);
+			criarSom(localizacao, 0, 60);
+			criarSom(localizacao, 315, 60);
 	}
 
 	private void adicionarComportamentos() {		

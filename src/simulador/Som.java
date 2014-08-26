@@ -24,7 +24,7 @@ public class Som extends Agent{
 	private static final long serialVersionUID = 1L;
 	
 	private static final double TOLERANCIA = 0.000001;
-	private long intervaloDeAtualizacao = 2000; //Intervalo de atualizacao do som em ms.
+	private long intervaloDeAtualizacao = 500; //Intervalo de atualizacao do som em ms.
 	
 	//private static List <String> pontosDeColisao = new ArrayList<>();
 	private static List <ObstaculoObject> obstaculos;
@@ -146,6 +146,7 @@ public class Som extends Agent{
 	private void atualizarParametros(){
 		distancia = 0;
 		localizacaoInicial = pontoDeColisao;//definirNovaLocalizacaoInicial(localizacaoAtual.getX(), localizacaoAtual.getY());
+		localizacaoAtual = localizacaoInicial;
 		//localizacaoAtual = pontoDeColisao;
 		calcularNovaDirecao();
 		calcularPotencia(obstaculoDeColisao.getIndiceDeAbsorcao());
