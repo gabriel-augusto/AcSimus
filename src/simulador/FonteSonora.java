@@ -42,9 +42,29 @@ public class FonteSonora extends Agent{
 			receberParametros(); 
 			registrarFonteSonora();		
 			adicionarComportamentos();			
-			criarSom(localizacao, 45, 60);
-			criarSom(localizacao, 0, 60);
-			criarSom(localizacao, 315, 60);
+			
+			lancarPulso(0,60,80);
+	}
+	
+	private void lancarPulso(double direcao, double abertura, double potencia){
+		double angulo;
+		criarSom(localizacao, direcao, potencia);
+		for(int i = 1; i<=abertura/2; i++){
+			angulo = padronizarAngulo(direcao+i);			
+			criarSom(localizacao,angulo,potencia);
+			angulo = padronizarAngulo(direcao-1);
+			criarSom(localizacao,angulo,potencia);
+		}
+	}
+	
+	private double padronizarAngulo(double angulo){
+		while(angulo < 0 || angulo > 360){
+			if(angulo<0)
+				angulo = angulo+360;
+			if(angulo>360)
+				angulo = angulo-360;
+		}
+		return angulo;
 	}
 
 	private void adicionarComportamentos() {		
@@ -75,12 +95,12 @@ public class FonteSonora extends Agent{
 	private void criarSom(Localizacao localizacao, double direcao, double potencia){
 		Object[] args = {new Localizacao(localizacao), direcao, potencia, ambiente, fonteSonora, obstaculos};
 		final String id = Som.proximoId();
-		som = new AID(id, AID.ISLOCALNAME);		
+		som = new AID(id, AID.ISLOCALNAME);	
 		
 		container = getContainerController();
 		Util.inicializarAgente(container, args, "simulador.Som", id);
 		
-		System.out.println("Som criado em: "+localizacao);
+		System.out.println(id + " criado em: "+localizacao);
 	}
 	
 	private class AtualizarSomBehaviour extends TickerBehaviour {

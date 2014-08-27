@@ -24,7 +24,7 @@ public class Som extends Agent{
 	private static final long serialVersionUID = 1L;
 	
 	private static final double TOLERANCIA = 0.000001;
-	private long intervaloDeAtualizacao = 500; //Intervalo de atualizacao do som em ms.
+	private long intervaloDeAtualizacao = 100; //Intervalo de atualizacao do som em ms.
 	
 	//private static List <String> pontosDeColisao = new ArrayList<>();
 	private static List <ObstaculoObject> obstaculos;
@@ -82,40 +82,36 @@ public class Som extends Agent{
 	}
 	
 	private void localizarProximoObstaculo(){
+		pontoDeColisao = null;
+		obstaculoDeColisao = null;
+		Localizacao pontoDeInterseccao = null;
 		for(ObstaculoObject obstaculo : obstaculos){
-			Localizacao pontoDeInterseccao = rota.procurarPontoDeInterseccao(obstaculo.getLinha());
+			pontoDeInterseccao = rota.procurarPontoDeInterseccao(obstaculo.getLinha());
 			if(pontoDeInterseccao != null && !localizacaoAtual.equals(pontoDeInterseccao, 0.5)){
-				obstaculoDeColisao = obstaculo;
-				pontoDeColisao = rota.procurarPontoDeInterseccao(obstaculo.getLinha());
-				System.out.println("Obstaculo encontrado: \nindice: " + obstaculo.getIndiceDeAbsorcao() + "\nponto de colisao: " + pontoDeColisao.toString());
-				return;
+				if(pontoDeColisao == null || localizacaoAtual.distancia(pontoDeInterseccao) < localizacaoAtual.distancia(pontoDeColisao)){
+					obstaculoDeColisao = obstaculo;
+					pontoDeColisao = pontoDeInterseccao;
+					System.out.println("Obstaculo encontrado: \nindice: " + obstaculo.getIndiceDeAbsorcao() + "\nponto de colisao: " + pontoDeColisao.toString());
+				}
 			}
 		}
-		//pontoDeColisao = null;
-		//obstaculoDeColisao = null;
 	}
 	
 	private void atualizar(){
-		if(potencia < 5){
-			finalizarSom();
-			System.out.println("Fim do SOM!!!");
-			//return;
-		}
 		distancia++;
 		atualizarLocalizacao();
 		
 		if(ehPontoDeColisao(localizacaoAtual)){
-			//solicitarIndice(localizacaoAtual.toString());	
-			System.out.println("COLIDIU!!!!!");
 			atualizarParametros();
-			//localizarProximoObstaculo();
-		}
-		System.out.println(this.escreverEstadoAtual());
-		if(ehPontoDeColisao(localizacaoAtual)){
-			//solicitarIndice(localizacaoAtual.toString());		
-			//atualizarParametros();
+			System.out.println("\nCOLIDIU!!!!!");
+			System.out.println(this.escreverEstadoAtual());
+			if(potencia < 5){
+				finalizarSom();
+				return;
+			}
 			localizarProximoObstaculo();
-		}
+		}else
+			System.out.println("\n"+this.escreverEstadoAtual());
 	}
 
 	private void atualizarLocalizacao() {
@@ -132,21 +128,19 @@ public class Som extends Agent{
 		}
 		return false;
 		*/
-		if(Math.abs(localizacao.getX() - pontoDeColisao.getX()) < 0.5 
-				|| Math.abs(localizacao.getY() - pontoDeColisao.getY()) < 0.5)
+		if(localizacao.distancia(pontoDeColisao)<.5)
 			return true;
 		return false;
 	}
 	
 	private void finalizarSom() {
 		doDelete();
-		System.out.println("Fim do som.");
+		System.out.println("FIM DO SOM!!!");
 	}
 	
 	private void atualizarParametros(){
 		distancia = 0;
 		localizacaoInicial = pontoDeColisao;//definirNovaLocalizacaoInicial(localizacaoAtual.getX(), localizacaoAtual.getY());
-		localizacaoAtual = localizacaoInicial;
 		//localizacaoAtual = pontoDeColisao;
 		calcularNovaDirecao();
 		calcularPotencia(obstaculoDeColisao.getIndiceDeAbsorcao());
@@ -287,13 +281,13 @@ public class Som extends Agent{
 	}
 		*/
 	private String escreverEstadoAtual(){
-		return "\npotencia: " + potencia + "\ndirecao: " + direcao + " graus \nlocalizacao inicial: " 
+		return this.getAID().getName() + ":" + "\npotencia: " + potencia + "\ndirecao: " + direcao + " graus \nlocalizacao inicial: " 
 	+ localizacaoInicial.toString() + "\nlocalizacao: " + localizacaoAtual;
 	}
 	
 	private static int idDisponivel = 0;
 
 	public static String proximoId() {
-		return "som_" + (++idDisponivel);
+		return "Som_" + (++idDisponivel);
 	}
 }
