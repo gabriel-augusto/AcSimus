@@ -22,4 +22,14 @@ public class Util{
 			return true;
 		return false;
 	}
+	
+	public static double padronizarAngulo(double angulo){
+		while(angulo < 0 || angulo > 360){
+			if(angulo<0)
+				angulo = angulo+360;
+			if(angulo>360)
+				angulo = angulo-360;
+		}
+		return angulo;
+	}
 }

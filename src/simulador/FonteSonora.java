@@ -39,32 +39,22 @@ public class FonteSonora extends Agent{
 
 	@Override
 	protected void setup() {
-			receberParametros(); 
+			receberParametros();
 			registrarFonteSonora();		
 			adicionarComportamentos();			
-			
-			lancarPulso(0,60,80);
+			//criarSom(localizacao,0,60);
+			lancarPulso(0,90,80);
 	}
 	
 	private void lancarPulso(double direcao, double abertura, double potencia){
 		double angulo;
 		criarSom(localizacao, direcao, potencia);
-		for(int i = 1; i<=abertura/2; i++){
-			angulo = padronizarAngulo(direcao+i);			
+		for(double i = 1; i<=abertura/2; i++){
+			angulo = Util.padronizarAngulo(direcao+i);			
 			criarSom(localizacao,angulo,potencia);
-			angulo = padronizarAngulo(direcao-1);
+			angulo = Util.padronizarAngulo(direcao-i);
 			criarSom(localizacao,angulo,potencia);
 		}
-	}
-	
-	private double padronizarAngulo(double angulo){
-		while(angulo < 0 || angulo > 360){
-			if(angulo<0)
-				angulo = angulo+360;
-			if(angulo>360)
-				angulo = angulo-360;
-		}
-		return angulo;
 	}
 
 	private void adicionarComportamentos() {		

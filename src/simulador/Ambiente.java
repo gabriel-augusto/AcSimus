@@ -39,23 +39,24 @@ public class Ambiente extends Agent{
 	public void definirAmbiente() {
 		PlatformController container = getContainerController();
 		
-		ObstaculoObject parede1 = new ObstaculoObject(Linha.getLinha(new Localizacao(0,0), new Localizacao(0,10)), 10);
-		ObstaculoObject parede2 = new ObstaculoObject(Linha.getLinha(new Localizacao(0,10), new Localizacao(10,10)), 20);
-		ObstaculoObject parede3 = new ObstaculoObject(Linha.getLinha(new Localizacao(10,10), new Localizacao(10,0)), 30);
-		ObstaculoObject parede4 = new ObstaculoObject(Linha.getLinha(new Localizacao(10,0), new Localizacao(0,0)), 40);
+		ObstaculoObject parede1 = new ObstaculoObject(Linha.getLinha(new Localizacao(0,0), new Localizacao(0,100)), 10);
+		ObstaculoObject parede2 = new ObstaculoObject(Linha.getLinha(new Localizacao(0,100), new Localizacao(100,100)), 20);
+		ObstaculoObject parede3 = new ObstaculoObject(Linha.getLinha(new Localizacao(100,100), new Localizacao(100,0)), 30);
+		ObstaculoObject parede4 = new ObstaculoObject(Linha.getLinha(new Localizacao(100,0), new Localizacao(0,0)), 40);
+		ObstaculoObject parede5 = new ObstaculoObject(Linha.getLinha(new Localizacao(50,30), new Localizacao(50,70)), 50);
 		
 		obstaculosObjects.add(parede1);
 		obstaculosObjects.add(parede2);
 		obstaculosObjects.add(parede3);
 		obstaculosObjects.add(parede4);
-		
+		obstaculosObjects.add(parede5);
 		/* Obstaculo */
 		/*
 		Object[] argsObstaculo = {new Localizacao(5,5), 20};
 		obstaculos.add(criarObjeto(argsObstaculo, container, this.OBSTACULO));
 		*/
 		/* fonte sonora */
-		Object[] argsFonteSonora = {new Localizacao(0,5), this.getAID(), 15, obstaculosObjects};		
+		Object[] argsFonteSonora = {new Localizacao(0,50), this.getAID(), 15, obstaculosObjects};		
 		fontesSonoras.add(criarObjeto(argsFonteSonora, container,this.FONTESONORA));
 		
 		addBehaviour(new ReceberMensagemBehaviour(this));

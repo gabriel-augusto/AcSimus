@@ -48,7 +48,7 @@ public class Localizacao {
 	}
 	
 	public boolean equals(Localizacao localizacao, double precisao){
-		if(Util.compararDouble(this.getX(), localizacao.getX(), precisao) && Util.compararDouble(this.getY(),localizacao.getY(), precisao))
+		if(this.distancia(localizacao) < precisao)
 		//if(this.getX() == localizacao.getX() && this.getY() == localizacao.getY())
 			return true;
 		return false;
