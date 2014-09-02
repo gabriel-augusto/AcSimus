@@ -2,49 +2,50 @@ package simulador;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import objetos.Linha;
 import objetos.Localizacao;
-import jade.core.AID;
+import objetos.ObstaculoObject;
+import utils.Util;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.lang.acl.ACLMessage;
-import linguagensEmensagens.Linguagem;
-import linguagensEmensagens.Mensagem;
+
 
 public class Som extends Agent{
 
 	private static final long serialVersionUID = 1L;
 	
-	private static List <String> pontosDeColisao = new ArrayList<>();
+	private static final int INTERVALO_DE_ATUALIZACAO = 20; //Intervalo de atualizacao do som em ms.
+	private static final int TAMANHO_DO_PASSO = 5;
+	private static final double ERRO = TAMANHO_DO_PASSO/2;
 	
-	private long intervaloDeAtualizacao = 500; //Intervalo de atualização do som em ms.
+	private static List <ObstaculoObject> obstaculos;
 	
-	double x0;
-	double y0;
-	Localizacao localizacao;
+	private Linha rota;
+	private Localizacao pontoDeColisao;
+	private ObstaculoObject obstaculoDeColisao;
+	
+	Localizacao localizacaoInicial;
+	Localizacao localizacaoAtual;
 	double direcao;
 	double potencia;
-	private AID ambiente;
-	private AID fonteSonora;
+	//private AID ambiente;
+	//private AID fonteSonora;
 	int distancia = 0;
-	int indice;
+	double indice;
 	
 	@Override
 	protected void setup() {
 		receberParametros();
+		localizarProximoObstaculo();
 		registrarSom();
 		adicionarComportamentos();
 	}
 
 	private void adicionarComportamentos() {
-		addBehaviour(new SolicitarObstaculosBehaviour(this));
-		addBehaviour(new AtualizarSomBehaviour(this, intervaloDeAtualizacao));
-		addBehaviour(new ReceberMensagemBehaviour(this));
+		addBehaviour(new AtualizarSomBehaviour(this, INTERVALO_DE_ATUALIZACAO));
 	}
 
 	private void registrarSom(){
@@ -57,101 +58,108 @@ public class Som extends Agent{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void receberParametros() {
 		Object[] args = getArguments();
-		localizacao = (Localizacao) args[0];
+		localizacaoInicial = (Localizacao) args[0];
+		localizacaoAtual = localizacaoInicial;
 		direcao = (double) args[1];
 		potencia = (double) args[2];
-		ambiente = (AID) args[3];
-		fonteSonora = (AID) args[4];
-		definirNovaLocalizacaoInicial();
+		//ambiente = (AID) args[3];
+		//fonteSonora = (AID) args[4];
+		obstaculos = (ArrayList<ObstaculoObject>) args[5];
+		//localizacaoInicial = definirNovaLocalizacaoInicial(localizacaoAtual.getX(), localizacaoAtual.getY());
+		rota = Linha.getLinha(localizacaoInicial, direcao);
+	}
+	
+	private void localizarProximoObstaculo(){
+		pontoDeColisao = null;
+		obstaculoDeColisao = null;
+		Localizacao pontoDeInterseccao = null;
+		for(ObstaculoObject obstaculo : obstaculos){
+			pontoDeInterseccao = rota.procurarPontoDeInterseccao(obstaculo.getLinha());
+			if(pontoDeInterseccao != null && !localizacaoAtual.equals(pontoDeInterseccao, ERRO)){
+				if(pontoDeColisao == null || localizacaoAtual.distancia(pontoDeInterseccao) < localizacaoAtual.distancia(pontoDeColisao)){
+					obstaculoDeColisao = obstaculo;
+					pontoDeColisao = pontoDeInterseccao;
+					System.out.println("Obstaculo encontrado: \nindice: " + obstaculo.getIndiceDeAbsorcao() + "\nponto de colisao: " + pontoDeColisao.toString());
+				}
+			}
+		}
 	}
 	
 	private void atualizar(){
-		System.out.println(this.escreverEstadoAtual());
-		if(potencia < 5){
-			finalizarSom();
-			return;
-		}
-		distancia++;
+		distancia = distancia + TAMANHO_DO_PASSO;
 		atualizarLocalizacao();
 		
-		if(ehPontoDeColisao(localizacao))
-			solicitarIndice(localizacao.toString());		
+		if(ehPontoDeColisao(localizacaoAtual)){
+			atualizarParametros();
+			System.out.println("\nCOLIDIU!!!!!");
+			System.out.println(this.escreverEstadoAtual());
+			if(potencia < 5){
+				finalizarSom();
+				return;
+			}
+			localizarProximoObstaculo();
+		}else
+			System.out.println("\n"+this.escreverEstadoAtual());
 	}
 
 	private void atualizarLocalizacao() {
-		localizacao.setX(calculaX(direcao, distancia) + x0);
-		localizacao.setY(calculaY(direcao, distancia) + y0);
+		localizacaoAtual.setX(calculaX(direcao, distancia) + localizacaoInicial.getX());
+		localizacaoAtual.setY(calculaY(direcao, distancia) + localizacaoInicial.getY());
 	}
 
 	private boolean ehPontoDeColisao(Localizacao localizacao) {
-		for(String pontoDeColisao : pontosDeColisao){
-			if(localizacao.toString().equals(pontoDeColisao)){
-				return true;				
-			}
-		}
+		if(localizacao.equals(pontoDeColisao,ERRO))
+			return true;
 		return false;
 	}
 	
 	private void finalizarSom() {
 		doDelete();
-		System.out.println("Fim do som.");
+		System.out.println("FIM DO SOM!!!");
 	}
 	
-	private void atualizarParametros(int indice){
+	private void atualizarParametros(){
 		distancia = 0;
-		definirNovaLocalizacaoInicial();
+		localizacaoInicial = pontoDeColisao;
 		calcularNovaDirecao();
-		calcularPotencia(indice);
+		calcularPotencia(obstaculoDeColisao.getIndiceDeAbsorcao());
+		rota = Linha.getLinha(localizacaoInicial, direcao);
 	}
 
-	private void calcularPotencia(int indice) {
-		potencia = potencia - (potencia*((double)indice/100));
+	private void calcularPotencia(double indice) {
+		potencia = potencia - (potencia*(indice/100));
 	}
 
-	private void definirNovaLocalizacaoInicial() {
-		x0 = localizacao.getX();
-		y0 = localizacao.getY();
+	private void calcularNovaDirecao() {		
+		double anguloDeInclinacaoDoObstaculo = Math.toDegrees(Math.atan(obstaculoDeColisao.getLinha().getInclinacao()));		  
+		double novaDirecao = 2 * anguloDeInclinacaoDoObstaculo - direcao;			
+		direcao = Util.padronizarAngulo(novaDirecao);
 	}
+	
+	public double calculaX(double angulo, int hipotenusa){
+		return Math.cos(Math.toRadians(angulo)) * hipotenusa;
+	}
+	
+	public double calculaY(double angulo, int hipotenusa){
+		return Math.sin(Math.toRadians(angulo)) * hipotenusa;
+	}
+	
+	private String escreverEstadoAtual(){
+		return this.getAID().getName() + ":" + "\npotencia: " + potencia + "\ndirecao: " + direcao + " graus \nlocalizacao inicial: " 
+	+ localizacaoInicial.toString() + "\nlocalizacao: " + localizacaoAtual;
+	}
+	
+	private static int idDisponivel = 0;
 
-	private void calcularNovaDirecao() {
-		/*
-		int angulo = 2 * anguloDoObstaculo;
-		while(angulo < 360)
-			angulo = angulo + 360;
-		  
-		int novaDirecao = angulo - direcao;
-		  
-		while(direcao > 360)
-			novaDirecao = novaDirecao - 360;
-			
-		return novaDirecao;
-		 */
-		direcao = 540 - direcao;
-		while(direcao>360)
-			direcao = direcao - 360;
+	public static String proximoId() {
+		return "Som_" + (++idDisponivel);
 	}
 	
+	/*------------------------------------------  COMPORTAMENTOS ------------------------------------- */
 	
-	
-	private void solicitarIndice(String pontoDeColisao){
-		ACLMessage msg = Mensagem.prepararMensagem(ACLMessage.REQUEST, 
-				Linguagem.INDICE, pontoDeColisao, ambiente,  fonteSonora);
-		send(msg);
-		System.out.println("Som: indice do obstaculo solicitado.");
-	}
-	
-	public int calculaX(double angulo, int hipotenusa){
-		int x = (int) Math.cos(angulo * Math.PI/180) * hipotenusa;
-		return x;
-	}
-	
-	public int calculaY(double angulo, int hipotenusa){
-		int y = (int) Math.sin(angulo * Math.PI/180) * hipotenusa;
-		return y;
-	}
-
 	private class AtualizarSomBehaviour extends TickerBehaviour {
 
 		private static final long serialVersionUID = 5631501784835798992L;
@@ -166,85 +174,4 @@ public class Som extends Agent{
 		}
 		
 	}	
-	
-	private class SolicitarObstaculosBehaviour extends OneShotBehaviour {
-
-		private static final long serialVersionUID = 1L;
-
-		public SolicitarObstaculosBehaviour(Agent agent) {
-			super(agent);
-		}
-
-		@Override
-		public void action() {			
-			ACLMessage mensagem = Mensagem.prepararMensagem(ACLMessage.REQUEST, null, Mensagem.QUAL_LOCALIZACAO, ambiente, fonteSonora);
-			send(mensagem);
-			System.out.println("Som: localizacao dos obstaculos solicitada.");
-		}
-	}
-	
-	private class ReceberMensagemBehaviour extends CyclicBehaviour {
-
-		private static final long serialVersionUID = 1L;
-
-		public ReceberMensagemBehaviour(Agent agent) {
-			super(agent);
-		}
-		
-		@Override
-		public void action() {
-			ACLMessage mensagem = receive();
-
-			if (mensagem != null) {
-				AID remetente = mensagem.getSender();
-				responder(mensagem, remetente);
-			}
-
-		}
-
-		private void responder(ACLMessage mensagem, AID destino) {
-			if (mensagem.getPerformative() == ACLMessage.REQUEST && 
-					mensagem.getContent().equals(Mensagem.QUAL_LOCALIZACAO)) {
-				responderLocalizacao(destino);
-			}
-
-			else if(mensagem.getPerformative() == ACLMessage.INFORM && 
-					(mensagem.getLanguage().equals(Linguagem.LOCALIZACAO))){
-				System.out.println("Som: Pontos de colisao recebidos.");
-				pontosDeColisao.add(mensagem.getContent());
-			}
-			
-			else if(mensagem.getPerformative() == ACLMessage.INFORM && 
-					mensagem.getLanguage().equals(Linguagem.INDICE)){
-				System.out.println("Som: Indice recebido!");
-				indice = Integer.valueOf(mensagem.getContent());
-				atualizarParametros(indice);
-				System.out.println("Indice: " + indice + "\n");
-			}
-			else {
-				responderMensagemNaoCompreendida(destino);
-			}
-		}
-		
-		private void responderLocalizacao(AID destino){
-			ACLMessage resposta = Mensagem.prepararMensagem(ACLMessage.INFORM, null, localizacao.toString(), destino);
-			send(resposta);
-		}
-
-		private void responderMensagemNaoCompreendida(AID destino) {
-			ACLMessage resposta = Mensagem.getRespostaDeMensagemNaoCompreendida(destino);
-			send(resposta);
-		}
-	}
-		
-	private String escreverEstadoAtual(){
-		return "localizacao: " + localizacao + "\npotencia: " + potencia 
-				+ "\ndirecao: " + direcao + " graus";
-	}
-	
-	private static int idDisponivel = 0;
-
-	public static String proximoId() {
-		return "som_" + (++idDisponivel);
-	}
 }

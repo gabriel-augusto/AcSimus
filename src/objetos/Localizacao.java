@@ -1,13 +1,13 @@
 package objetos;
 
+import utils.Util;
+
 public class Localizacao {
 
-	double x;
-	
-	double y;
+	private double x;	
+	private double y;
 
 	public Localizacao(double x, double y) {
-		super();
 		this.x = x;
 		this.y = y;
 	}
@@ -47,6 +47,13 @@ public class Localizacao {
 		return "[x: "+x+"; y: "+y+"]";
 	}
 	
+	public boolean equals(Localizacao localizacao, double precisao){
+		if(this.distancia(localizacao) < precisao)
+		//if(this.getX() == localizacao.getX() && this.getY() == localizacao.getY())
+			return true;
+		return false;
+	}
+	
 	public static Localizacao valueOf(String loc){
 		StringBuilder x = new StringBuilder();
 		StringBuilder y = new StringBuilder();
@@ -54,13 +61,18 @@ public class Localizacao {
 		boolean encontrouAlgumNumero = false; 
 		
 		for(int i = 0; i < loc.length(); i++){
-			
-			if(Character.isDigit(loc.charAt(i)) && variavel=='x'){
+			if((Character.isDigit(loc.charAt(i)) 
+					|| loc.charAt(i) == '.' 
+					|| loc.charAt(i) == '-') 
+					&& variavel=='x'){
 				encontrouAlgumNumero = true;
 				x.append(loc.charAt(i));
 			}
 			
-			if(Character.isDigit(loc.charAt(i)) && variavel=='y'){
+			if((Character.isDigit(loc.charAt(i)) 
+					|| loc.charAt(i) == '.' 
+					|| loc.charAt(i) == '-') 
+					&& variavel=='y'){
 				y.append(loc.charAt(i));
 			}
 			

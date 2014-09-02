@@ -1,6 +1,10 @@
 package simulador;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import objetos.Localizacao;
+import objetos.ObstaculoObject;
 import utils.Util;
 import jade.core.AID;
 import jade.core.Agent;
@@ -22,6 +26,8 @@ public class FonteSonora extends Agent{
 	
 	private int intervaloAtualizacao = 10000;
 	
+	private static List <ObstaculoObject> obstaculos;
+	
 	private AID ambiente;
 	private AID fonteSonora;
 	private AID som;
@@ -33,10 +39,22 @@ public class FonteSonora extends Agent{
 
 	@Override
 	protected void setup() {
-			receberParametros(); 
+			receberParametros();
 			registrarFonteSonora();		
 			adicionarComportamentos();			
-			criarSom(localizacao, 0, 60);
+			//criarSom(localizacao,0,60);
+			lancarPulso(0,90,80);
+	}
+	
+	private void lancarPulso(double direcao, double abertura, double potencia){
+		double angulo;
+		criarSom(localizacao, direcao, potencia);
+		for(double i = 1; i<=abertura/2; i++){
+			angulo = Util.padronizarAngulo(direcao+i);			
+			criarSom(localizacao,angulo,potencia);
+			angulo = Util.padronizarAngulo(direcao-i);
+			criarSom(localizacao,angulo,potencia);
+		}
 	}
 
 	private void adicionarComportamentos() {		
@@ -54,23 +72,25 @@ public class FonteSonora extends Agent{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void receberParametros() {
 		fonteSonora = this.getAID();
 		Object[] args = getArguments();
 		localizacao = (Localizacao) args[0];
 		ambiente = (AID) args[1];
 		indiceAbsorcao = (int) args[2];
+		obstaculos = (ArrayList<ObstaculoObject>) args[3];
 	}
 
 	private void criarSom(Localizacao localizacao, double direcao, double potencia){
-		Object[] args = {new Localizacao(localizacao), direcao, potencia, ambiente, fonteSonora};
+		Object[] args = {new Localizacao(localizacao), direcao, potencia, ambiente, fonteSonora, obstaculos};
 		final String id = Som.proximoId();
-		som = new AID(id, AID.ISLOCALNAME);		
+		som = new AID(id, AID.ISLOCALNAME);	
 		
 		container = getContainerController();
 		Util.inicializarAgente(container, args, "simulador.Som", id);
 		
-		System.out.println("Som criado em: "+localizacao);
+		System.out.println(id + " criado em: "+localizacao);
 	}
 	
 	private class AtualizarSomBehaviour extends TickerBehaviour {
