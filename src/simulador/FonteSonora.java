@@ -42,7 +42,7 @@ public class FonteSonora extends Agent{
 			receberParametros();
 			registrarFonteSonora();		
 			adicionarComportamentos();			
-			//criarSom(localizacao,0,60);
+			//criarSom(localizacao,0,80);
 			lancarPulso(0,90,80);
 	}
 	

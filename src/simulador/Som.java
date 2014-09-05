@@ -18,13 +18,14 @@ public class Som extends Agent{
 	private static final long serialVersionUID = 1L;
 	
 	private static final int INTERVALO_DE_ATUALIZACAO = 20; //Intervalo de atualizacao do som em ms.
-	private static final int TAMANHO_DO_PASSO = 5;
-	private static final double ERRO = TAMANHO_DO_PASSO/2;
+	private static final int TAMANHO_DO_PASSO = 1;
+	private static final double ERRO = 1;//TAMANHO_DO_PASSO/2;
 	
 	private static List <ObstaculoObject> obstaculos;
 	
 	private Linha rota;
 	private Localizacao pontoDeColisao;
+	private double distanciaDeColisao;
 	private ObstaculoObject obstaculoDeColisao;
 	
 	Localizacao localizacaoInicial;
@@ -61,8 +62,9 @@ public class Som extends Agent{
 	@SuppressWarnings("unchecked")
 	private void receberParametros() {
 		Object[] args = getArguments();
-		localizacaoInicial = (Localizacao) args[0];
-		localizacaoAtual = localizacaoInicial;
+		localizacaoAtual = new Localizacao((Localizacao) args[0]);
+		localizacaoInicial = new Localizacao((Localizacao) args[0]);
+		System.out.println("\nLocalizacao Inicial: " + localizacaoInicial + "\nLocalizacao Atual: " + localizacaoAtual);
 		direcao = (double) args[1];
 		potencia = (double) args[2];
 		//ambiente = (AID) args[3];
@@ -82,6 +84,7 @@ public class Som extends Agent{
 				if(pontoDeColisao == null || localizacaoAtual.distancia(pontoDeInterseccao) < localizacaoAtual.distancia(pontoDeColisao)){
 					obstaculoDeColisao = obstaculo;
 					pontoDeColisao = pontoDeInterseccao;
+					distanciaDeColisao = localizacaoAtual.distancia(pontoDeColisao);
 					System.out.println("Obstaculo encontrado: \nindice: " + obstaculo.getIndiceDeAbsorcao() + "\nponto de colisao: " + pontoDeColisao.toString());
 				}
 			}
@@ -111,6 +114,7 @@ public class Som extends Agent{
 	}
 
 	private boolean ehPontoDeColisao(Localizacao localizacao) {
+		//if(Util.compararDouble(distancia, distanciaDeColisao, ERRO))
 		if(localizacao.equals(pontoDeColisao,ERRO))
 			return true;
 		return false;
@@ -148,8 +152,8 @@ public class Som extends Agent{
 	}
 	
 	private String escreverEstadoAtual(){
-		return this.getAID().getName() + ":" + "\npotencia: " + potencia + "\ndirecao: " + direcao + " graus \nlocalizacao inicial: " 
-	+ localizacaoInicial.toString() + "\nlocalizacao: " + localizacaoAtual;
+		return this.getAID().getName() + ":" + "\npotencia: " + potencia + "\ndirecao: " + direcao + " graus" + "\ndistancia da origem: " + distancia + "\nlocalizacao inicial: " 
+	+ localizacaoInicial + "\nlocalizacao: " + localizacaoAtual;
 	}
 	
 	private static int idDisponivel = 0;
