@@ -95,7 +95,7 @@ public class Som extends Agent{
 		distancia = distancia + TAMANHO_DO_PASSO;
 		atualizarLocalizacao();
 		
-		if(ehPontoDeColisao(localizacaoAtual)){
+		if(ehPontoDeColisao()){
 			atualizarParametros();
 			System.out.println("\nCOLIDIU!!!!!");
 			System.out.println(this.escreverEstadoAtual());
@@ -113,9 +113,8 @@ public class Som extends Agent{
 		localizacaoAtual.setY(calculaY(direcao, distancia) + localizacaoInicial.getY());
 	}
 
-	private boolean ehPontoDeColisao(Localizacao localizacao) {
-		//if(Util.compararDouble(distancia, distanciaDeColisao, ERRO))
-		if(localizacao.equals(pontoDeColisao,ERRO))
+	private boolean ehPontoDeColisao() {
+		if(localizacaoAtual.equals(pontoDeColisao,ERRO))
 			return true;
 		return false;
 	}

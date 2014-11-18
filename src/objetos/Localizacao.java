@@ -36,10 +36,10 @@ public class Localizacao {
 		this.y = y;
 	}
 	
-	public double distancia(Localizacao l) {
-		double dx = Math.abs(this.x - l.x);
-		double dy = Math.abs(this.y - l.y);
-		return Math.sqrt(dx*dx + dy*dy);
+	public double distancia(Localizacao localizacao) {
+		double dx = Math.abs(this.getX() - localizacao.getX());
+		double dy = Math.abs(this.getY() - localizacao.getY());
+		return Math.sqrt((dx*dx) + (dy*dy));
 	}
 
 	@Override
@@ -49,7 +49,6 @@ public class Localizacao {
 	
 	public boolean equals(Localizacao localizacao, double precisao){
 		if(this.distancia(localizacao) < precisao)
-		//if(this.getX() == localizacao.getX() && this.getY() == localizacao.getY())
 			return true;
 		return false;
 	}
