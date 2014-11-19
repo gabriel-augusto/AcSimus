@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objetos.Localizacao;
-import objetos.ObstaculoObject;
+import objetos.Obstacle;
 import utils.Util;
 import jade.core.AID;
 import jade.core.Agent;
@@ -24,45 +24,45 @@ public class FonteSonora extends Agent{
 	
 	PlatformController container;
 	
-	private int intervaloAtualizacao = 10000;
+	private int updateTime = 10000;
 	
-	private static List <ObstaculoObject> obstaculos;
+	private static List <Obstacle> obstacles;
 	
-	private AID ambiente;
-	private AID fonteSonora;
-	private AID som;
+	private AID ambient;
+	private AID soundSource;
+	private AID sound;
 	
-	private Localizacao localizacao;
-	private int indiceAbsorcao;
+	private Localizacao location;
+	private int absorptionRate;
 	//private double direcao;
 	//private double potencia;
 
 	@Override
 	protected void setup() {
-			receberParametros();
-			registrarFonteSonora();		
-			adicionarComportamentos();			
+			getParameters();
+			registerSoundSource();		
+			addBehavior();			
 			//criarSom(localizacao,0,80);
-			lancarPulso(0,90,80);
+			emitSoundPulse(0,90,80);
 	}
 	
-	private void lancarPulso(double direcao, double abertura, double potencia){
-		double angulo;
-		criarSom(localizacao, direcao, potencia);
-		for(double i = 1; i<=abertura/2; i++){
-			angulo = Util.padronizarAngulo(direcao+i);			
-			criarSom(localizacao,angulo,potencia);
-			angulo = Util.padronizarAngulo(direcao-i);
-			criarSom(localizacao,angulo,potencia);
+	private void emitSoundPulse(double direction, double opening, double potency){
+		double angle;
+		createSound(location, direction, potency);
+		for(double i = 1; i<=opening/2; i++){
+			angle = Util.normalizeAngle(direction+i);			
+			createSound(location,angle,potency);
+			angle = Util.normalizeAngle(direction-i);
+			createSound(location,angle,potency);
 		}
 	}
 
-	private void adicionarComportamentos() {		
+	private void addBehavior() {		
 			//addBehaviour(new AtualizarSomBehaviour(this, intervaloAtualizacao));
-			addBehaviour(new ReceberMensagemBehaviour(this));
+			addBehaviour(new GetMessageBehavior(this));
 	}
 
-	private void registrarFonteSonora(){
+	private void registerSoundSource(){
 		try {
 			DFAgentDescription dfd = new DFAgentDescription();
 			dfd.setName(getAID());
@@ -73,90 +73,90 @@ public class FonteSonora extends Agent{
 	}
 
 	@SuppressWarnings("unchecked")
-	private void receberParametros() {
-		fonteSonora = this.getAID();
+	private void getParameters() {
+		soundSource = this.getAID();
 		Object[] args = getArguments();
-		localizacao = (Localizacao) args[0];
-		ambiente = (AID) args[1];
-		indiceAbsorcao = (int) args[2];
-		obstaculos = (ArrayList<ObstaculoObject>) args[3];
+		location = (Localizacao) args[0];
+		ambient = (AID) args[1];
+		absorptionRate = (int) args[2];
+		obstacles = (ArrayList<Obstacle>) args[3];
 	}
 
-	private void criarSom(Localizacao localizacao, double direcao, double potencia){
-		Object[] args = {new Localizacao(localizacao), direcao, potencia, ambiente, fonteSonora, obstaculos};
-		final String id = Som.proximoId();
-		som = new AID(id, AID.ISLOCALNAME);	
+	private void createSound(Localizacao location, double direction, double potency){
+		Object[] args = {new Localizacao(location), direction, potency, ambient, soundSource, obstacles};
+		final String id = Som.nextId();
+		sound = new AID(id, AID.ISLOCALNAME);	
 		
 		container = getContainerController();
-		Util.inicializarAgente(container, args, "simulador.Som", id);
+		Util.initAgent(container, args, "simulador.Som", id);
 		
-		System.out.println(id + " criado em: "+localizacao);
+		System.out.println(id + " created at: "+location);
 	}
 	
-	private class AtualizarSomBehaviour extends TickerBehaviour {
+	private class UpdateSoundBehavior extends TickerBehaviour {
 
 		private static final long serialVersionUID = 1L;
 
-		public AtualizarSomBehaviour(Agent a, long period) {
+		public UpdateSoundBehavior(Agent a, long period) {
 			super(a, period);
 		}
 
 		@Override
 		protected void onTick() {
-			criarSom(localizacao, 0, 60);
+			createSound(location, 0, 60);
 		}		
 	}
 	
-	private class ReceberMensagemBehaviour extends CyclicBehaviour {
+	private class GetMessageBehavior extends CyclicBehaviour {
 		
 		private static final long serialVersionUID = 1L;
 
-		public ReceberMensagemBehaviour(Agent agent) {
+		public GetMessageBehavior(Agent agent) {
 			super(agent);
 		}
 		
 		@Override
 		public void action() {
-			ACLMessage mensagem = receive();
+			ACLMessage message = receive();
 
-			if (mensagem != null) {
-				AID remetente = mensagem.getSender();
+			if (message != null) {
+				AID sender = message.getSender();
 
-				if (mensagem.getPerformative() == ACLMessage.REQUEST && 
-						mensagem.getContent().equals(Mensagem.QUAL_LOCALIZACAO)){
-					responderLocalizacao(remetente);
-					System.out.println("Fonte Sonora: Localizacao enviada.");
+				if (message.getPerformative() == ACLMessage.REQUEST && 
+						message.getContent().equals(Mensagem.WHAT_IS_THE_LOCATION)){
+					responseLocalization(sender);
+					System.out.println("Sound Source: Location sent.");
 				}
-				else if (mensagem.getPerformative() == ACLMessage.REQUEST && 
-						mensagem.getLanguage().equals(Linguagem.INDICE) && 
-						mensagem.getContent().equals(localizacao.toString())){
-					System.out.println("FS: " + localizacao.toString());
-					responderIndice(remetente);
+				else if (message.getPerformative() == ACLMessage.REQUEST && 
+						message.getLanguage().equals(Linguagem.INDEX) && 
+						message.getContent().equals(location.toString())){
+					System.out.println("SS: " + location.toString());
+					indexAnswer(sender);
 				}
 				else {
-					send(Mensagem.getRespostaDeMensagemNaoCompreendida(remetente));					
+					send(Mensagem.getAnswerOfANotUnderstoodMessage(sender));					
 				}
 			}
 
 		}
 		
-		public void responderIndice(AID destino){
-			ACLMessage mensagem = Mensagem.prepararMensagem(ACLMessage.INFORM, 
-					Linguagem.INDICE, Integer.toString(indiceAbsorcao), destino);
-			send(mensagem);
-			System.out.println("Fonte Sonora: Indice enviado.");
+		public void indexAnswer(AID destination){
+			ACLMessage message = Mensagem.prepareMessage(ACLMessage.INFORM, 
+					Linguagem.INDEX, Integer.toString(absorptionRate), destination);
+			send(message);
+			System.out.println("Sound Source: Index sent.");
 		}
 		
-		public void responderLocalizacao(AID destino){
-			ACLMessage mensagem = Mensagem.prepararMensagem(ACLMessage.INFORM, 
-					Linguagem.LOCALIZACAO, localizacao.toString(), destino);
-			send(mensagem);
+		public void responseLocalization(AID destination){
+			ACLMessage message = Mensagem.prepareMessage(ACLMessage.INFORM, 
+					Linguagem.LOCATION, location.toString(), destination);
+			send(message);
 		}
 	}
 	
 	private static int idDisponivel = 0;
 
-	public static String proximoId() {
+	public static String nextId() {
 		return "fonte_sonora_" + (++idDisponivel);
 	}
 }

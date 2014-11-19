@@ -2,55 +2,55 @@ package objetos;
 
 public class LinhaNormal extends Linha{
 	
-	protected LinhaNormal(Localizacao pontoInicial, Localizacao pontoFinal) {
-		super(pontoInicial, pontoFinal);
+	protected LinhaNormal(Localizacao initialPoint, Localizacao finalPoint) {
+		super(initialPoint, finalPoint);
 	}
 	
-	protected LinhaNormal(Localizacao pontoInicial, double direcao){
-		super(pontoInicial, direcao);
+	protected LinhaNormal(Localizacao initialPoint, double direction){
+		super(initialPoint, direction);
 	}
 	
-	public Localizacao procurarPontoDeInterseccao(LinhaNormal linha){
-		Localizacao pontoDeInterseccao;
+	public Localizacao searchIntersectionPoint(LinhaNormal line){
+		Localizacao intersectionPoint;
 		double x;
 		double y;
 		
-		if((this.getInclinacao() - linha.getInclinacao()) != 0){
-			x = (linha.getConstante() - this.getConstante())/(this.getInclinacao() - linha.getInclinacao());
-			y = linha.getInclinacao() * x + linha.getConstante();
-			pontoDeInterseccao = new Localizacao(x,y);
-			if(pontoDeInterseccao != null && this.pertenceAoIntervalo(pontoDeInterseccao.getX()) && linha.pertenceAoIntervalo(pontoDeInterseccao.getX()))		
-				return pontoDeInterseccao;
+		if((this.getSlope() - line.getSlope()) != 0){
+			x = (line.getConstant() - this.getConstant())/(this.getSlope() - line.getSlope());
+			y = line.getSlope() * x + line.getConstant();
+			intersectionPoint = new Localizacao(x,y);
+			if(intersectionPoint != null && this.belongsToTheInterval(intersectionPoint.getX()) && line.belongsToTheInterval(intersectionPoint.getX()))		
+				return intersectionPoint;
 		}					
 		return null;
 	}
 	
-	public Localizacao procurarPontoDeInterseccao(LinhaVertical linha){
+	public Localizacao searchIntersectionPoint(LinhaVertical line){
 		double y;
-		y = this.getY(linha.getConstante());
+		y = this.getY(line.getConstant());
 		
-		if(linha.pertenceAoIntervalo(y))
-			return new Localizacao(linha.getConstante(), y);		
+		if(line.belongsToTheInterval(y))
+			return new Localizacao(line.getConstant(), y);		
 		return null;
 	}
 	
-	public Localizacao procurarPontoDeInterseccao(Linha linha){
-		if(linha instanceof LinhaNormal)
-			return procurarPontoDeInterseccao((LinhaNormal)linha);
-		return procurarPontoDeInterseccao((LinhaVertical) linha);
+	public Localizacao searchSlopePoint(Linha line){
+		if(line instanceof LinhaNormal)
+			return searchIntersectionPoint((LinhaNormal)line);
+		return searchIntersectionPoint((LinhaVertical) line);
 	}
 	
-	protected boolean pertenceAoIntervalo(double x){
-		if(this.getPontoFinal() != null){
-			if(x <= Math.max(this.getPontoInicial().getX(), this.getPontoFinal().getX()) 
-					&& x >= Math.min(this.getPontoInicial().getX(), this.getPontoFinal().getX())){
+	protected boolean belongsToTheInterval(double x){
+		if(this.getFinalPoint() != null){
+			if(x <= Math.max(this.getInitialPoint().getX(), this.getFinalPoint().getX()) 
+					&& x >= Math.min(this.getInitialPoint().getX(), this.getFinalPoint().getX())){
 				return true;
 			}
 		}else{
-			if(this.getDirecao() > 90 && this.getDirecao() < 270 && x <= this.getPontoInicial().getX()){
+			if(this.getDirection() > 90 && this.getDirection() < 270 && x <= this.getInitialPoint().getX()){
 				return true;
 			}else{
-				if(x >= this.getPontoInicial().getX()){
+				if(x >= this.getInitialPoint().getX()){
 					return true;
 				}
 			}
@@ -59,20 +59,20 @@ public class LinhaNormal extends Linha{
 		return false;
 	}
 	
-	public double getInclinacao() {
-		if(this.getPontoFinal() != null){
-			double deltaX = this.getPontoFinal().getX() - this.getPontoInicial().getX();
-			double deltaY = this.getPontoFinal().getY() - this.getPontoInicial().getY();
+	public double getSlope() {
+		if(this.getFinalPoint() != null){
+			double deltaX = this.getFinalPoint().getX() - this.getInitialPoint().getX();
+			double deltaY = this.getFinalPoint().getY() - this.getInitialPoint().getY();
 			return deltaY/deltaX;
 		}
-		return Math.tan(Math.toRadians(this.getDirecao()));
+		return Math.tan(Math.toRadians(this.getDirection()));
 	}
 	
-	public double getConstante() {
-		return this.getPontoInicial().getY() - this.getInclinacao() * this.getPontoInicial().getX();
+	public double getConstant() {
+		return this.getInitialPoint().getY() - this.getSlope() * this.getInitialPoint().getX();
 	}
 	
 	public Double getY(double x){
-		return this.getInclinacao() * x + this.getConstante();
+		return this.getSlope() * x + this.getConstant();
 	}
 }

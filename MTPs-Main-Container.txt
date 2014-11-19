@@ -1,1 +1,1 @@
-http://gabriel-PC:7778/acc
+http://Luan-VM-Linux:7778/acc

@@ -36,9 +36,9 @@ public class Localizacao {
 		this.y = y;
 	}
 	
-	public double distancia(Localizacao localizacao) {
-		double dx = Math.abs(this.getX() - localizacao.getX());
-		double dy = Math.abs(this.getY() - localizacao.getY());
+	public double distance(Localizacao location) {
+		double dx = Math.abs(this.getX() - location.getX());
+		double dy = Math.abs(this.getY() - location.getY());
 		return Math.sqrt((dx*dx) + (dy*dy));
 	}
 
@@ -47,8 +47,8 @@ public class Localizacao {
 		return "[x: "+x+"; y: "+y+"]";
 	}
 	
-	public boolean equals(Localizacao localizacao, double precisao){
-		if(this.distancia(localizacao) < precisao)
+	public boolean equals(Localizacao location, double precision){
+		if(this.distance(location) < precision)
 			return true;
 		return false;
 	}
@@ -56,27 +56,27 @@ public class Localizacao {
 	public static Localizacao valueOf(String loc){
 		StringBuilder x = new StringBuilder();
 		StringBuilder y = new StringBuilder();
-		char variavel = 'x';
-		boolean encontrouAlgumNumero = false; 
+		char coordinate = 'x';
+		boolean foundANumber = false; 
 		
 		for(int i = 0; i < loc.length(); i++){
 			if((Character.isDigit(loc.charAt(i)) 
 					|| loc.charAt(i) == '.' 
 					|| loc.charAt(i) == '-') 
-					&& variavel=='x'){
-				encontrouAlgumNumero = true;
+					&& coordinate=='x'){
+				foundANumber = true;
 				x.append(loc.charAt(i));
 			}
 			
 			if((Character.isDigit(loc.charAt(i)) 
 					|| loc.charAt(i) == '.' 
 					|| loc.charAt(i) == '-') 
-					&& variavel=='y'){
+					&& coordinate=='y'){
 				y.append(loc.charAt(i));
 			}
 			
-			if(Character.isLetter(loc.charAt(i)) && encontrouAlgumNumero){
-				variavel = 'y';
+			if(Character.isLetter(loc.charAt(i)) && foundANumber){
+				coordinate = 'y';
 			}
 		}		
 		return new Localizacao(Double.valueOf(x.toString()), 

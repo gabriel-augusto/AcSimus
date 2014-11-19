@@ -7,7 +7,7 @@ import java.util.Queue;
 
 import objetos.Linha;
 import objetos.Localizacao;
-import objetos.ObstaculoObject;
+import objetos.Obstacle;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -21,67 +21,60 @@ public class Ambiente extends Agent{
 
 	private static final long serialVersionUID = 1L;
 	
-	private final String FONTESONORA = "FonteSonora";
-	private final String OBSTACULO = "Obstaculo";
+	private final String SOUNDSOURCE = "FonteSonora";
+	private final String OBSTACLE = "Obstaculo";
 	
-	private List <ObstaculoObject> obstaculosObjects = new ArrayList<>();
-	private List <AID> obstaculos = new ArrayList<>();
-	private List <AID> fontesSonoras = new ArrayList<>();
+	private List <Obstacle> obstaclesObjects = new ArrayList<>();
+	private List <AID> obstacle = new ArrayList<>();
+	private List <AID> soundSources = new ArrayList<>();
 
-	private static Queue<AID> filaParaReceberLocalizacao = new LinkedList<AID>();
-	private static Queue<AID> filaParaReceberIndice = new LinkedList<AID>();
+	//private static Queue<AID> filaParaReceberLocalizaca = new LinkedList<AID>();
+	//private static Queue<AID> filaParaReceberIndice = new LinkedList<AID>();
 
 	@Override
 	protected void setup() {
-		definirAmbiente();
+		defineAmbient();
 	}
 	
-	public void definirAmbiente() {
+	public void defineAmbient() {
 		PlatformController container = getContainerController();
 		
-		ObstaculoObject parede1 = new ObstaculoObject(Linha.getLinha(new Localizacao(0,0), new Localizacao(0,100)), 10);
-		ObstaculoObject parede2 = new ObstaculoObject(Linha.getLinha(new Localizacao(0,100), new Localizacao(100,100)), 20);
-		ObstaculoObject parede3 = new ObstaculoObject(Linha.getLinha(new Localizacao(100,100), new Localizacao(100,0)), 30);
-		ObstaculoObject parede4 = new ObstaculoObject(Linha.getLinha(new Localizacao(100,0), new Localizacao(0,0)), 40);
-		ObstaculoObject parede5 = new ObstaculoObject(Linha.getLinha(new Localizacao(50,30), new Localizacao(50,70)), 50);
+		Obstacle wall1 = new Obstacle(Linha.getLine(new Localizacao(0,0), new Localizacao(0,100)), 10);
+		Obstacle wall2 = new Obstacle(Linha.getLine(new Localizacao(0,100), new Localizacao(100,100)), 20);
+		Obstacle wall3 = new Obstacle(Linha.getLine(new Localizacao(100,100), new Localizacao(100,0)), 30);
+		Obstacle wall4 = new Obstacle(Linha.getLine(new Localizacao(100,0), new Localizacao(0,0)), 40);
+		Obstacle wall5 = new Obstacle(Linha.getLine(new Localizacao(50,30), new Localizacao(50,70)), 50);
 		
-		obstaculosObjects.add(parede1);
-		obstaculosObjects.add(parede2);
-		obstaculosObjects.add(parede3);
-		obstaculosObjects.add(parede4);
-		obstaculosObjects.add(parede5);
+		obstaclesObjects.add(wall1);
+		obstaclesObjects.add(wall2);
+		obstaclesObjects.add(wall3);
+		obstaclesObjects.add(wall4);
+		obstaclesObjects.add(wall5);
 		/* Obstaculo */
 		/*
 		Object[] argsObstaculo = {new Localizacao(5,5), 20};
 		obstaculos.add(criarObjeto(argsObstaculo, container, this.OBSTACULO));
 		*/
 		/* fonte sonora */
-		Object[] argsFonteSonora = {new Localizacao(0,50), this.getAID(), 15, obstaculosObjects};		
-		fontesSonoras.add(criarObjeto(argsFonteSonora, container,this.FONTESONORA));
+		Object[] argsSoundSource = {new Localizacao(0,50), this.getAID(), 15, obstaclesObjects};		
+		soundSources.add(createObject(argsSoundSource, container,this.SOUNDSOURCE));
 		
-		addBehaviour(new ReceberMensagemBehaviour(this));
+	//	addBehaviour(new ReceberMensagemBehaviour(this));
 	}
 
-	private AID criarObjeto(Object[] args, PlatformController container, String tipo) {
-		String id = solicitarProximoId(tipo);		
-		Util.inicializarAgente(container, args, "simulador."+tipo, id);
-		System.out.println(tipo + " criado(a) em: " + args[0]);
+	private AID createObject(Object[] args, PlatformController container, String type) {
+		String id = getNextId(type);		
+		Util.initAgent(container, args, "simulador."+type, id);
+		System.out.println(type + " criado(a) em: " + args[0]);
 		return new AID(id, AID.ISLOCALNAME);
 	}
 
-	public String solicitarProximoId(String tipo) {
-		String id = null;
-		switch(tipo){
-		case FONTESONORA:
-			id = FonteSonora.proximoId();
-			break;
-		case OBSTACULO:
-			id = Obstaculo.proximoId();
-			break;
-		}
-		return id;
+	public String getNextId(String type) {
+		
+		return FonteSonora.nextId();
+		
 	}
-	
+/*	
 	private class ReceberMensagemBehaviour extends CyclicBehaviour {
 
 		private static final long serialVersionUID = 1L;
@@ -129,11 +122,11 @@ public class Ambiente extends Agent{
 		private void receberRequisicao(ACLMessage mensagem) {
 			if(mensagem.getContent().equals(Mensagem.QUAL_LOCALIZACAO)){
 				filaParaReceberLocalizacao.add(mensagem.getSender());
-				solicitarLocalizacao(obstaculos);
+				solicitarLocalizacao(obstacle);
 			}	
 			else if(mensagem.getLanguage().equals(Linguagem.INDICE)){
 				filaParaReceberIndice.add(mensagem.getSender());
-				solicitarIndice(mensagem.getContent(), obstaculos);
+				solicitarIndice(mensagem.getContent(), obstacle);
 			}
 		}
 		
@@ -151,16 +144,16 @@ public class Ambiente extends Agent{
 
 		private void solicitarIndice(String conteudo, List <AID> destinos) {
 			ACLMessage msg = Mensagem.prepararMensagem(ACLMessage.REQUEST,
-					Linguagem.INDICE, conteudo, obstaculos);
+					Linguagem.INDICE, conteudo, obstacle);
 			send(msg);
 			System.out.println("Ambiente: indice do obstaculo solicitado.");
 		}
 
 		private void solicitarLocalizacao(List <AID> destinos) {
 			ACLMessage msg = Mensagem.prepararMensagem(ACLMessage.REQUEST,
-					null, Mensagem.QUAL_LOCALIZACAO, obstaculos);
+					null, Mensagem.QUAL_LOCALIZACAO, obstacle);
 			send(msg);
 			System.out.println("Ambiente: localizacao dos obstaculos solicitada.");
-		}
-	}
+		} 
+	}*/
 }

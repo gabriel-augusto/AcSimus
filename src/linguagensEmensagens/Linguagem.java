@@ -1,7 +1,7 @@
 package linguagensEmensagens;
 
 public class Linguagem {
-	public static String LOCALIZACAO = "Localizacao"; //Linguagem para envio de localizacao do obstáculo.
-	public static String INDICE = "Indice"; //Linguagem para envio de índice do obstáculo.
+	public static String LOCATION = "Location"; //Linguagem para envio de localizacao do obstï¿½culo.
+	public static String INDEX = "Index"; //Linguagem para envio de ï¿½ndice do obstï¿½culo.
 	
 }

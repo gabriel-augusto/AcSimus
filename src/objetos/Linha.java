@@ -3,84 +3,84 @@ package objetos;
 
 public abstract class Linha {
 
-	private Localizacao pontoInicial = null;
-	private Localizacao pontoFinal = null;
-	private double direcao = 0; // angulo de direcao.
+	private Localizacao initialPoint = null;
+	private Localizacao finalPoint = null;
+	private double direction = 0; // angulo de direcao.
 	
-	protected Linha(Localizacao pontoInicial, Localizacao pontoFinal){
-		this.pontoInicial = pontoInicial;
-		this.pontoFinal = pontoFinal;
+	protected Linha(Localizacao initialPoint, Localizacao finalPoint){
+		this.initialPoint = initialPoint;
+		this.finalPoint = finalPoint;
 	}
 	
-	protected Linha(Localizacao pontoInicial, double direcao){
-		this.pontoInicial = pontoInicial;
-		this.direcao = direcao;
+	protected Linha(Localizacao initialPoint, double direction){
+		this.initialPoint = initialPoint;
+		this.direction = direction;
 	}
 	
-	public static Linha getLinha(Localizacao pontoInicial, Localizacao pontoFinal){
-		if(ehVertical(pontoInicial, pontoFinal)){
-			return new LinhaVertical(pontoInicial, pontoFinal);
+	public static Linha getLine(Localizacao initialPoint, Localizacao finalPoint){
+		if(isVertical(initialPoint, finalPoint)){
+			return new LinhaVertical(initialPoint, finalPoint);
 		}
-		return new LinhaNormal(pontoInicial, pontoFinal);
+		return new LinhaNormal(initialPoint, finalPoint);
 	}
 	
-	public static Linha getLinha(Localizacao pontoInicial, double direcao){
-		if(ehVertical(direcao)){
-			return new LinhaVertical(pontoInicial, direcao);
+	public static Linha getLine(Localizacao initialPoint, double direction){
+		if(isVertical(direction)){
+			return new LinhaVertical(initialPoint, direction);
 		}
-		return new LinhaNormal(pontoInicial, direcao);
+		return new LinhaNormal(initialPoint, direction);
 	}
 	
-	private static boolean ehVertical(Localizacao pontoInicial, Localizacao pontoFinal){
-		if(pontoInicial.getX() == pontoFinal.getX())
+	private static boolean isVertical(Localizacao initialPoint, Localizacao finalPoint){
+		if(initialPoint.getX() == finalPoint.getX())
 			return true;
 		return false;
 	}
 	
-	public static boolean ehVertical(double direcao){
-		if(direcao == 90 || direcao == 270)
+	public static boolean isVertical(double direction){
+		if(direction == 90 || direction == 270)
 			return true;
 		return false;
 	}
 	
-	public abstract double getInclinacao();
+	public abstract double getSlope();
 	
-	public Localizacao procurarPontoDeInterseccao(Linha linha){
-		if(linha instanceof LinhaNormal)
-			return procurarPontoDeInterseccao((LinhaNormal)linha);
-		return procurarPontoDeInterseccao((LinhaVertical) linha);
+	public Localizacao searchSlopePoint(Linha line){
+		if(line instanceof LinhaNormal)
+			return searchIntersectionPoint((LinhaNormal)line);
+		return searchIntersectionPoint((LinhaVertical) line);
 	}
 	
-	public abstract Localizacao procurarPontoDeInterseccao(LinhaVertical linha);
+	public abstract Localizacao searchIntersectionPoint(LinhaVertical line);
 	
-	public abstract Localizacao procurarPontoDeInterseccao(LinhaNormal linha);
+	public abstract Localizacao searchIntersectionPoint(LinhaNormal line);
 	
-	public double getConstante() {
+	public double getConstant() {
 		return 0;
 
 	}
 	
-	public Localizacao getPontoInicial() {
-		return pontoInicial;
+	public Localizacao getInitialPoint() {
+		return initialPoint;
 	}
 	
-	public void setPontoInicial(Localizacao pontoInicial) {
-		this.pontoInicial = pontoInicial;
+	public void setInitialPoint(Localizacao initialPoint) {
+		this.initialPoint = initialPoint;
 	}
 
-	public Localizacao getPontoFinal() {
-		return pontoFinal;
+	public Localizacao getFinalPoint() {
+		return finalPoint;
 	}
 
-	public void setPontoFinal(Localizacao pontoFinal) {
-		this.pontoFinal = pontoFinal;
+	public void setFinalPoint(Localizacao finalPoint) {
+		this.finalPoint = finalPoint;
 	}
 
-	public double getDirecao() {
-		return direcao;
+	public double getDirection() {
+		return direction;
 	}
 
-	public void setDirecao(double direcao) {
-		this.direcao = direcao;
+	public void setDirection(double direction) {
+		this.direction = direction;
 	}	
 }

@@ -23,7 +23,7 @@ public class LocalizacaoTest {
 	@Test
 	public void distanciaTeste(){
 		Localizacao localizacao = new Localizacao(0,0);
-		double distancia = localizacao.distancia(new Localizacao(1,1));
+		double distancia = localizacao.distance(new Localizacao(1,1));
 		assertEquals(1.414213,distancia,.000001);
 	}
 	

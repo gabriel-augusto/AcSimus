@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import objetos.Linha;
 import objetos.Localizacao;
-import objetos.ObstaculoObject;
+import objetos.Obstacle;
 import utils.Util;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
@@ -17,39 +17,39 @@ public class Som extends Agent{
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final int INTERVALO_DE_ATUALIZACAO = 20; //Intervalo de atualizacao do som em ms.
-	private static final int TAMANHO_DO_PASSO = 1;
-	private static final double ERRO = 1;//TAMANHO_DO_PASSO/2;
+	private static final int UPDATE_PERIOD = 20; //Intervalo de atualizacao do som em ms.
+	private static final int SIZE_OF_STEP = 1;
+	private static final double ERROR = 1;//TAMANHO_DO_PASSO/2;
 	
-	private static List <ObstaculoObject> obstaculos;
+	private static List <Obstacle> obstacles;
 	
-	private Linha rota;
-	private Localizacao pontoDeColisao;
-	private double distanciaDeColisao;
-	private ObstaculoObject obstaculoDeColisao;
+	private Linha rote;
+	private Localizacao collisionPoint;
+	private double collisionDistance;
+	private Obstacle collisionObstacle;
 	
-	Localizacao localizacaoInicial;
-	Localizacao localizacaoAtual;
-	double direcao;
-	double potencia;
+	Localizacao initialLocation;
+	Localizacao actualLocation;
+	double direction;
+	double potency;
 	//private AID ambiente;
 	//private AID fonteSonora;
-	int distancia = 0;
-	double indice;
+	int distance = 0;
+	double index;
 	
 	@Override
 	protected void setup() {
-		receberParametros();
-		localizarProximoObstaculo();
-		registrarSom();
-		adicionarComportamentos();
+		getParameters();
+		findNextObstacle();
+		soundRegister();
+		addBehavior();
 	}
 
-	private void adicionarComportamentos() {
-		addBehaviour(new AtualizarSomBehaviour(this, INTERVALO_DE_ATUALIZACAO));
+	private void addBehavior() {
+		addBehaviour(new UpdateSoundBehavior(this, UPDATE_PERIOD));
 	}
 
-	private void registrarSom(){
+	private void soundRegister(){
 		try{
 			DFAgentDescription som = new DFAgentDescription();
 			som.setName(getAID());
@@ -60,120 +60,120 @@ public class Som extends Agent{
 	}
 
 	@SuppressWarnings("unchecked")
-	private void receberParametros() {
+	private void getParameters() {
 		Object[] args = getArguments();
-		localizacaoAtual = new Localizacao((Localizacao) args[0]);
-		localizacaoInicial = new Localizacao((Localizacao) args[0]);
-		System.out.println("\nLocalizacao Inicial: " + localizacaoInicial + "\nLocalizacao Atual: " + localizacaoAtual);
-		direcao = (double) args[1];
-		potencia = (double) args[2];
+		actualLocation = new Localizacao((Localizacao) args[0]);
+		initialLocation = new Localizacao((Localizacao) args[0]);
+		System.out.println("\nInitial Location: " + initialLocation + "\nActual Location: " + actualLocation);
+		direction = (double) args[1];
+		potency = (double) args[2];
 		//ambiente = (AID) args[3];
 		//fonteSonora = (AID) args[4];
-		obstaculos = (ArrayList<ObstaculoObject>) args[5];
+		obstacles = (ArrayList<Obstacle>) args[5];
 		//localizacaoInicial = definirNovaLocalizacaoInicial(localizacaoAtual.getX(), localizacaoAtual.getY());
-		rota = Linha.getLinha(localizacaoInicial, direcao);
+		rote = Linha.getLine(initialLocation, direction);
 	}
 	
-	private void localizarProximoObstaculo(){
-		pontoDeColisao = null;
-		obstaculoDeColisao = null;
-		Localizacao pontoDeInterseccao = null;
-		for(ObstaculoObject obstaculo : obstaculos){
-			pontoDeInterseccao = rota.procurarPontoDeInterseccao(obstaculo.getLinha());
-			if(pontoDeInterseccao != null && !localizacaoAtual.equals(pontoDeInterseccao, ERRO)){
-				if(pontoDeColisao == null || localizacaoAtual.distancia(pontoDeInterseccao) < localizacaoAtual.distancia(pontoDeColisao)){
-					obstaculoDeColisao = obstaculo;
-					pontoDeColisao = pontoDeInterseccao;
-					distanciaDeColisao = localizacaoAtual.distancia(pontoDeColisao);
-					System.out.println("Obstaculo encontrado: \nindice: " + obstaculo.getIndiceDeAbsorcao() + "\nponto de colisao: " + pontoDeColisao.toString());
+	private void findNextObstacle(){
+		collisionPoint = null;
+		collisionObstacle = null;
+		Localizacao intersectionPoint = null;
+		for(Obstacle obstacle : obstacles){
+			intersectionPoint = rote.searchSlopePoint(obstacle.getLine());
+			if(intersectionPoint != null && !actualLocation.equals(intersectionPoint, ERROR)){
+				if(collisionPoint == null || actualLocation.distance(intersectionPoint) < actualLocation.distance(collisionPoint)){
+					collisionObstacle = obstacle;
+					collisionPoint = intersectionPoint;
+					collisionDistance = actualLocation.distance(collisionPoint);
+					System.out.println("Obstacle found: \nindex: " + obstacle.getAbsortionRate() + "\ncollision point: " + collisionPoint.toString());
 				}
 			}
 		}
 	}
 	
-	private void atualizar(){
-		distancia = distancia + TAMANHO_DO_PASSO;
-		atualizarLocalizacao();
+	private void update(){
+		distance = distance + SIZE_OF_STEP;
+		updateLocation();
 		
-		if(ehPontoDeColisao()){
-			atualizarParametros();
-			System.out.println("\nCOLIDIU!!!!!");
-			System.out.println(this.escreverEstadoAtual());
-			if(potencia < 5){
-				finalizarSom();
+		if(isCollisionPoint()){
+			updateParameters();
+			System.out.println("\nCOLLIDED!!!!!");
+			System.out.println(this.writeActualState());
+			if(potency < 5){
+				killSound();
 				return;
 			}
-			localizarProximoObstaculo();
+			findNextObstacle();
 		}else
-			System.out.println("\n"+this.escreverEstadoAtual());
+			System.out.println("\n"+this.writeActualState());
 	}
 
-	private void atualizarLocalizacao() {
-		localizacaoAtual.setX(calculaX(direcao, distancia) + localizacaoInicial.getX());
-		localizacaoAtual.setY(calculaY(direcao, distancia) + localizacaoInicial.getY());
+	private void updateLocation() {
+		actualLocation.setX(calculateX(direction, distance) + initialLocation.getX());
+		actualLocation.setY(calculateY(direction, distance) + initialLocation.getY());
 	}
 
-	private boolean ehPontoDeColisao() {
-		if(localizacaoAtual.equals(pontoDeColisao,ERRO))
+	private boolean isCollisionPoint() {
+		if(actualLocation.equals(collisionPoint,ERROR))
 			return true;
 		return false;
 	}
 	
-	private void finalizarSom() {
+	private void killSound() {
 		doDelete();
 		System.out.println("FIM DO SOM!!!");
 	}
 	
-	private void atualizarParametros(){
-		distancia = 0;
-		localizacaoInicial = pontoDeColisao;
-		calcularNovaDirecao();
-		calcularPotencia(obstaculoDeColisao.getIndiceDeAbsorcao());
-		rota = Linha.getLinha(localizacaoInicial, direcao);
+	private void updateParameters(){
+		distance = 0;
+		initialLocation = collisionPoint;
+		calculateNewDirection();
+		calculatePotency(collisionObstacle.getAbsortionRate());
+		rote = Linha.getLine(initialLocation, direction);
 	}
 
-	private void calcularPotencia(double indice) {
-		potencia = potencia - (potencia*(indice/100));
+	private void calculatePotency(double index) {
+		potency = potency - (potency*(index/100));
 	}
 
-	private void calcularNovaDirecao() {		
-		double anguloDeInclinacaoDoObstaculo = Math.toDegrees(Math.atan(obstaculoDeColisao.getLinha().getInclinacao()));		  
-		double novaDirecao = 2 * anguloDeInclinacaoDoObstaculo - direcao;			
-		direcao = Util.padronizarAngulo(novaDirecao);
+	private void calculateNewDirection() {		
+		double obstacleSlopeAngle = Math.toDegrees(Math.atan(collisionObstacle.getLine().getSlope()));		  
+		double newDirection = 2 * obstacleSlopeAngle - direction;			
+		direction = Util.normalizeAngle(newDirection);
 	}
 	
-	public double calculaX(double angulo, int hipotenusa){
-		return Math.cos(Math.toRadians(angulo)) * hipotenusa;
+	public double calculateX(double angle, int hypotenuse){
+		return Math.cos(Math.toRadians(angle)) * hypotenuse;
 	}
 	
-	public double calculaY(double angulo, int hipotenusa){
-		return Math.sin(Math.toRadians(angulo)) * hipotenusa;
+	public double calculateY(double angle, int hypotenuse){
+		return Math.sin(Math.toRadians(angle)) * hypotenuse;
 	}
 	
-	private String escreverEstadoAtual(){
-		return this.getAID().getName() + ":" + "\npotencia: " + potencia + "\ndirecao: " + direcao + " graus" + "\ndistancia da origem: " + distancia + "\nlocalizacao inicial: " 
-	+ localizacaoInicial + "\nlocalizacao: " + localizacaoAtual;
+	private String writeActualState(){
+		return this.getAID().getName() + ":" + "\npotency: " + potency + "\ndirection: " + direction + " degrees" + "\ndistance of origin: " + distance + "\ninitial location: " 
+	+ initialLocation + "\nlocation: " + actualLocation;
 	}
 	
 	private static int idDisponivel = 0;
 
-	public static String proximoId() {
+	public static String nextId() {
 		return "Som_" + (++idDisponivel);
 	}
 	
 	/*------------------------------------------  COMPORTAMENTOS ------------------------------------- */
 	
-	private class AtualizarSomBehaviour extends TickerBehaviour {
+	private class UpdateSoundBehavior extends TickerBehaviour {
 
 		private static final long serialVersionUID = 5631501784835798992L;
 
-		public AtualizarSomBehaviour(Agent a, long period) {
+		public UpdateSoundBehavior(Agent a, long period) {
 			super(a, period);
 		}
 
 		@Override
 		protected void onTick() {
-			atualizar();
+			update();
 		}
 		
 	}	
