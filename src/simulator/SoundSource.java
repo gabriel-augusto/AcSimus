@@ -15,8 +15,8 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.PlatformController;
-import languagesAndMessages.Linguagem;
-import languagesAndMessages.Mensagem;
+import languagesAndMessages.Language;
+import languagesAndMessages.Message;
 
 public class SoundSource extends Agent{
 
@@ -119,16 +119,16 @@ public class SoundSource extends Agent{
 			if (message != null) {
 				AID sender = message.getSender();
 
-				if (message.getPerformative() == ACLMessage.REQUEST && message.getContent().equals(Mensagem.WHAT_IS_THE_LOCATION)){
+				if (message.getPerformative() == ACLMessage.REQUEST && message.getContent().equals(Message.WHAT_IS_THE_LOCATION)){
 					responseLocalization(sender);
 					System.out.println("Sound Source: Location sent.");
 				}
-				else if (message.getPerformative() == ACLMessage.REQUEST && message.getLanguage().equals(Linguagem.INDEX) && message.getContent().equals(location.toString())){
+				else if (message.getPerformative() == ACLMessage.REQUEST && message.getLanguage().equals(Language.INDEX) && message.getContent().equals(location.toString())){
 					System.out.println("SS: " + location.toString());
 					indexAnswer(sender);
 				}
 				else {
-					send(Mensagem.getAnswerOfANotUnderstoodMessage(
+					send(Message.getAnswerOfANotUnderstoodMessage(
 							sender));					
 				}
 			}
@@ -136,13 +136,13 @@ public class SoundSource extends Agent{
 		}
 		
 		public void indexAnswer(AID destination){
-			ACLMessage message = Mensagem.prepareMessage(ACLMessage.INFORM, Linguagem.INDEX, Integer.toString(absorptionRate), destination);
+			ACLMessage message = Message.prepareMessage(ACLMessage.INFORM, Language.INDEX, Integer.toString(absorptionRate), destination);
 			send(message);
 			System.out.println("Sound Source: Index sent.");
 		}
 		
 		public void responseLocalization(AID destination){
-			ACLMessage message = Mensagem.prepareMessage(ACLMessage.INFORM, Linguagem.LOCATION, location.toString(), destination);
+			ACLMessage message = Message.prepareMessage(ACLMessage.INFORM, Language.LOCATION, location.toString(), destination);
 			send(message);
 		}
 	}
