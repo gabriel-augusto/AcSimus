@@ -6,11 +6,10 @@ import jade.wrapper.PlatformController;
 
 public class Util{
 	
-	public static void initAgent(PlatformController container, Object[] args, String way, String id){
+	public static void initAgent(PlatformController container, Object[] args, String path, String id){
 		final AgentController agentController;
 		try {
-			agentController = container.createNewAgent(id, 
-					way, args);
+			agentController = container.createNewAgent(id, path, args);
 			agentController.start();			
 		} catch (ControllerException e ) {
 			e.printStackTrace();
