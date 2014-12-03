@@ -6,30 +6,29 @@ import jade.wrapper.PlatformController;
 
 public class Util{
 	
-	public static void inicializarAgente(PlatformController container, Object[] args, String caminho, String id){
+	public static void initAgent(PlatformController container, Object[] args, String path, String id){
 		final AgentController agentController;
 		try {
-			agentController = container.createNewAgent(id, 
-					caminho, args);
+			agentController = container.createNewAgent(id, path, args);
 			agentController.start();			
 		} catch (ControllerException e ) {
 			e.printStackTrace();
 		}
 	}	
 	
-	public static boolean compararDouble(double double1, double double2, double tolerancia){
-		if(Math.abs(double1 - double2) < tolerancia)
+	public static boolean compareDouble(double double1, double double2, double tolerance){
+		if(Math.abs(double1 - double2) < tolerance)
 			return true;
 		return false;
 	}
 	
-	public static double padronizarAngulo(double angulo){
-		while(angulo < 0 || angulo > 360){
-			if(angulo<0)
-				angulo = angulo+360;
-			if(angulo>360)
-				angulo = angulo-360;
+	public static double normalizeAngle(double angle){
+		while(angle < 0 || angle > 360){
+			if(angle<0)
+				angle = angle+360;
+			if(angle>360)
+				angle = angle-360;
 		}
-		return angulo;
+		return angle;
 	}
 }
