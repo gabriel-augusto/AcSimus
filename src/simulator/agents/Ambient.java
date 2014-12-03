@@ -1,13 +1,14 @@
-package simulator;
+package simulator.agents;
 
 import java.util.ArrayList;
 import java.util.List;
-import oo.Line;
-import oo.Localization;
-import oo.Obstacle;
+
 import jade.core.AID;
 import jade.core.Agent;
 import jade.wrapper.PlatformController;
+import simulator.objects.Line;
+import simulator.objects.Localization;
+import simulator.objects.Obstacle;
 import utils.Util;
 
 public class Ambient extends Agent{
@@ -45,7 +46,7 @@ public class Ambient extends Agent{
 
 	private AID createObject(Object[] args, PlatformController container, String type) {
 		String id = getNextId(type);		
-		Util.initAgent(container, args, "simulator."+type, id);
+		Util.initAgent(container, args, "simulator.agents."+type, id);
 		System.out.println(type + " criado(a) em: " + args[0]);
 		return new AID(id, AID.ISLOCALNAME);
 	}

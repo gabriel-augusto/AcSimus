@@ -1,10 +1,10 @@
-package simulator;
+package simulator.agents;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import oo.Localization;
-import oo.Obstacle;
+import simulator.objects.Localization;
+import simulator.objects.Obstacle;
 import utils.Util;
 import jade.core.AID;
 import jade.core.Agent;
@@ -32,6 +32,7 @@ public class SoundSource extends Agent{
 	private AID soundSource;
 	private Localization location;
 	private int absorptionRate;
+	private double soundSeparation = 1;
 
 	@Override
 	protected void setup() {
@@ -44,7 +45,7 @@ public class SoundSource extends Agent{
 	private void emitSoundPulse(double direction, double opening, double potency){
 		double angle;
 		createSound(location, direction, potency);
-		for(double i = 1; i<=opening/2; i++){
+		for(double i = soundSeparation; i<=opening/2; i=i+soundSeparation){
 			angle = Util.normalizeAngle(direction+i);			
 			createSound(location,angle,potency);
 			angle = Util.normalizeAngle(direction-i);
@@ -84,7 +85,7 @@ public class SoundSource extends Agent{
 		
 		container = getContainerController();
 		Util.initAgent(container, args, 
-				"simulator.Sound", id);
+				"simulator.agents.Sound", id);
 		
 		System.out.println(id + " created at: " + location);
 	}

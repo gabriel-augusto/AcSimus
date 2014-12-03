@@ -1,11 +1,11 @@
-package simulator;
+package simulator.agents;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import oo.Line;
-import oo.Localization;
-import oo.Obstacle;
+import simulator.objects.Line;
+import simulator.objects.Localization;
+import simulator.objects.Obstacle;
 import utils.Util;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;

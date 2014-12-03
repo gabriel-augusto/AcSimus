@@ -1,4 +1,4 @@
-package oo;
+package simulator.objects;
 
 
 public abstract class Line {

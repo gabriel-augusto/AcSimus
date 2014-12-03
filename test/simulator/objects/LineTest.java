@@ -1,11 +1,12 @@
-package oo;
+package simulator.objects;
 
 import static org.junit.Assert.*;
-import oo.Line;
-import oo.Localization;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import simulator.objects.Line;
+import simulator.objects.Localization;
 
 public class LineTest {
 	
