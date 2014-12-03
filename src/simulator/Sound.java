@@ -18,7 +18,7 @@ public class Sound extends Agent{
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final int UPDATE_PERIOD = 20; //Time of atualization of the sound in ms.
+	private static final int UPDATE_PERIOD = 3; //Time of atualization of the sound in ms.
 	private static final int SIZE_OF_STEP = 1;
 	private static final double ERROR = 1; //SIZE_OF_STEP/2;
 	
@@ -31,8 +31,10 @@ public class Sound extends Agent{
 	Localization initialLocation;
 	Localization actualLocation;
 	double direction;
-	double potency;
-	int distance = 0;
+	double power;
+	double intensity;
+	int distanceOfPreviousColisionPoint = 0;
+	int distanceTraveled = 0;
 	double index;
 	
 	@Override
@@ -64,7 +66,8 @@ public class Sound extends Agent{
 		initialLocation = new Localization((Localization) args[0]);
 		System.out.println("\nInitial Location: " + initialLocation + "\nActual Location: " + actualLocation);
 		direction = (double) args[1];
-		potency = (double) args[2];
+		power = (double) args[2];
+		intensity = power;
 		obstacles = (ArrayList<Obstacle>) args[5];
 		rote = Line.getLine(initialLocation, direction);
 	}
@@ -87,14 +90,16 @@ public class Sound extends Agent{
 	}
 	
 	private void update(){
-		distance = distance + SIZE_OF_STEP;
+		distanceOfPreviousColisionPoint = distanceOfPreviousColisionPoint + SIZE_OF_STEP;
+		distanceTraveled = distanceTraveled + SIZE_OF_STEP;
+		intensity = calculateIntensityBySoundPropagation(power, direction, distanceTraveled);
 		updateLocation();
 		
 		if(isCollisionPoint()){
 			updateParameters();
 			System.out.println("\nCOLLIDED!!!!!");
 			System.out.println(this.writeActualState());
-			if(potency < 5){
+			if(intensity < 5){
 				killSound();
 				return;
 			}
@@ -104,12 +109,17 @@ public class Sound extends Agent{
 	}
 
 	private void updateLocation() {
-		actualLocation.setX(calculateX(direction, distance) + initialLocation.getX());
-		actualLocation.setY(calculateY(direction, distance) + initialLocation.getY());
+		actualLocation.setX(calculateX(direction, distanceOfPreviousColisionPoint) + initialLocation.getX());
+		actualLocation.setY(calculateY(direction, distanceOfPreviousColisionPoint) + initialLocation.getY());
+	}
+	
+	private double calculateIntensityBySoundPropagation(double actualIntensity, double angle, double radius){
+		double archLenght = angle * Math.PI * radius / 180;
+		return actualIntensity/archLenght;
 	}
 
 	private boolean isCollisionPoint() {
-		if(actualLocation.equals(collisionPoint,ERROR))
+		if(actualLocation.equals(collisionPoint, ERROR))
 			return true;
 		return false;
 	}
@@ -120,15 +130,15 @@ public class Sound extends Agent{
 	}
 	
 	private void updateParameters(){
-		distance = 0;
+		distanceOfPreviousColisionPoint = 0;
 		initialLocation = collisionPoint;
 		calculateNewDirection();
-		calculatePotency(collisionObstacle.getAbsortionRate());
+		calculateIntencityAfterColisionPoint(collisionObstacle.getAbsortionRate());
 		rote = Line.getLine(initialLocation, direction);
 	}
 
-	private void calculatePotency(double index) {
-		potency = potency - (potency*(index/100));
+	private void calculateIntencityAfterColisionPoint(double absorptionRate) {
+		intensity = intensity - (intensity*(absorptionRate/100));
 	}
 
 	private void calculateNewDirection() {		
@@ -146,7 +156,7 @@ public class Sound extends Agent{
 	}
 	
 	private String writeActualState(){
-		return this.getAID().getName() + ":" + "\npotency: " + potency + "\ndirection: " + direction + " degrees" + "\ndistance of origin: " + distance + "\ninitial location: " 
+		return this.getAID().getName() + ":" + "\nintensity: " + intensity + "\ndirection: " + direction + " degrees" + "\ndistance of origin: " + distanceOfPreviousColisionPoint + "\ninitial location: " 
 	+ initialLocation + "\nlocation: " + actualLocation;
 	}
 	
