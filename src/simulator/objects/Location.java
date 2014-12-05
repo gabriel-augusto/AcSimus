@@ -1,20 +1,20 @@
 package simulator.objects;
 
-public class Localization {
+public class Location {
 
 	private double x;	
 	private double y;
 
-	public Localization(double x, double y) {
+	public Location(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
 	
-	public Localization(Localization l) {
+	public Location(Location l) {
 		this(l.x,l.y);
 	}
 	
-	public Localization() {
+	public Location() {
 		this(-1,-1);
 	}
 
@@ -34,7 +34,7 @@ public class Localization {
 		this.y = y;
 	}
 	
-	public double distance(Localization location) {
+	public double distance(Location location) {
 		double dx = Math.abs(this.getX() - location.getX());
 		double dy = Math.abs(this.getY() - location.getY());
 		return Math.sqrt((dx*dx) + (dy*dy));
@@ -45,13 +45,13 @@ public class Localization {
 		return "[x: "+x+"; y: "+y+"]";
 	}
 	
-	public boolean equals(Localization location, double precision){
+	public boolean equals(Location location, double precision){
 		if(this.distance(location) < precision)
 			return true;
 		return false;
 	}
 	
-	public static Localization valueOf(String loc){
+	public static Location valueOf(String loc){
 		StringBuilder x = new StringBuilder();
 		StringBuilder y = new StringBuilder();
 		char coordinate = 'x';
@@ -71,7 +71,7 @@ public class Localization {
 				coordinate = 'y';
 			}
 		}		
-		return new Localization(Double.valueOf(
+		return new Location(Double.valueOf(
 				x.toString()), 
 				Double.valueOf(y.toString()));
 	}

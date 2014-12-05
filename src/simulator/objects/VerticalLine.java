@@ -6,28 +6,28 @@ public class VerticalLine extends Line{
 	
 	private static final double TOLERANCE = 0.000001;
 	
-	protected VerticalLine(Localization initialPoint, Localization finalPoint) {
+	protected VerticalLine(Location initialPoint, Location finalPoint) {
 		super(initialPoint, finalPoint);
 	}
 	
-	protected VerticalLine(Localization initialPoint, double direction){
+	protected VerticalLine(Location initialPoint, double direction){
 		super(initialPoint, direction);
 	}
 	
-	public Localization searchIntersectionPoint(VerticalLine line){		
+	public Location searchIntersectionPoint(VerticalLine line){		
 		return null;
 	}
 	
-	public Localization searchIntersectionPoint(NormalLine line){
+	public Location searchIntersectionPoint(NormalLine line){
 		double y;
 		y = line.getY(this.getConstant());
 		
 		if(this.belongsToTheInterval(y))
-			return new Localization(this.getConstant(), y);		
+			return new Location(this.getConstant(), y);		
 		return null;
 	}
 	
-	public Localization searchSlopePoint(Line line){
+	public Location searchSlopePoint(Line line){
 		if(line instanceof NormalLine)
 			return searchIntersectionPoint((NormalLine)line);
 		return searchIntersectionPoint((VerticalLine) line);

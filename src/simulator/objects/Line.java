@@ -3,21 +3,21 @@ package simulator.objects;
 
 public abstract class Line {
 
-	private Localization initialPoint = null;
-	private Localization finalPoint = null;
+	private Location initialPoint = null;
+	private Location finalPoint = null;
 	private double directionAngle = 0;
 	
-	protected Line(Localization initialPoint, Localization finalPoint){
+	protected Line(Location initialPoint, Location finalPoint){
 		this.initialPoint = initialPoint;
 		this.finalPoint = finalPoint;
 	}
 	
-	protected Line(Localization initialPoint, double direction){
+	protected Line(Location initialPoint, double direction){
 		this.initialPoint = initialPoint;
 		this.directionAngle = direction;
 	}
 	
-	public static Line getLine(Localization initialPoint, Localization finalPoint){
+	public static Line getLine(Location initialPoint, Location finalPoint){
 		if(isVertical(initialPoint, finalPoint)){
 			return new VerticalLine(initialPoint, 
 					finalPoint);
@@ -26,14 +26,14 @@ public abstract class Line {
 				finalPoint);
 	}
 	
-	public static Line getLine(Localization initialPoint, double direction){
+	public static Line getLine(Location initialPoint, double direction){
 		if(isVertical(direction)){
 			return new VerticalLine(initialPoint, direction);
 		}
 		return new NormalLine(initialPoint, direction);
 	}
 	
-	private static boolean isVertical(Localization initialPoint, Localization finalPoint){
+	private static boolean isVertical(Location initialPoint, Location finalPoint){
 		if(initialPoint.getX() == finalPoint.getX())
 			return true;
 		return false;
@@ -47,34 +47,34 @@ public abstract class Line {
 	
 	public abstract double getSlope();
 	
-	public Localization searchSlopePoint(Line line){
+	public Location searchSlopePoint(Line line){
 		if(line instanceof NormalLine)
 			return searchIntersectionPoint((NormalLine)line);
 		return searchIntersectionPoint((VerticalLine) line);
 	}
 	
-	public abstract Localization searchIntersectionPoint(
+	public abstract Location searchIntersectionPoint(
 			VerticalLine line);
 	
-	public abstract Localization searchIntersectionPoint(NormalLine line);
+	public abstract Location searchIntersectionPoint(NormalLine line);
 	
 	public double getConstant() {
 		return 0;
 	}
 	
-	public Localization getInitialPoint() {
+	public Location getInitialPoint() {
 		return initialPoint;
 	}
 	
-	public void setInitialPoint(Localization initialPoint) {
+	public void setInitialPoint(Location initialPoint) {
 		this.initialPoint = initialPoint;
 	}
 
-	public Localization getFinalPoint() {
+	public Location getFinalPoint() {
 		return finalPoint;
 	}
 
-	public void setFinalPoint(Localization finalPoint) {
+	public void setFinalPoint(Location finalPoint) {
 		this.finalPoint = finalPoint;
 	}
 

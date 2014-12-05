@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import simulator.objects.Line;
-import simulator.objects.Localization;
+import simulator.objects.Location;
 import simulator.objects.Obstacle;
 import utils.Util;
 import jade.core.Agent;
@@ -25,13 +25,14 @@ public class Sound extends Agent{
 	private static List <Obstacle> obstacles;
 	
 	private Line rote;
-	private Localization collisionPoint;
+	private Location collisionPoint;
 	private Obstacle collisionObstacle;
 	
-	Localization initialLocation;
-	Localization actualLocation;
+	Location initialLocation;
+	Location actualLocation;
 	double direction;
 	double power;
+	int opening;
 	double intensity;
 	int distanceOfPreviousColisionPoint = 0;
 	int distanceTraveled = 0;
@@ -40,8 +41,8 @@ public class Sound extends Agent{
 	@Override
 	protected void setup() {
 		getParameters();
-		findNextObstacle();
 		soundRegister();
+		findNextObstacle();
 		addBehavior();
 	}
 
@@ -51,9 +52,9 @@ public class Sound extends Agent{
 
 	private void soundRegister(){
 		try{
-			DFAgentDescription som = new DFAgentDescription();
-			som.setName(getAID());
-			DFService.register(this, som);
+			DFAgentDescription sound = new DFAgentDescription();
+			sound.setName(getAID());
+			DFService.register(this, sound);
 		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
@@ -62,20 +63,21 @@ public class Sound extends Agent{
 	@SuppressWarnings("unchecked")
 	private void getParameters() {
 		Object[] args = getArguments();
-		actualLocation = new Localization((Localization) args[0]);
-		initialLocation = new Localization((Localization) args[0]);
+		actualLocation = new Location((Location) args[0]);
+		initialLocation = new Location((Location) args[0]);
 		System.out.println("\nInitial Location: " + initialLocation + "\nActual Location: " + actualLocation);
 		direction = (double) args[1];
 		power = (double) args[2];
 		intensity = power;
-		obstacles = (ArrayList<Obstacle>) args[5];
+		opening = (int) args[3];
+		obstacles = (ArrayList<Obstacle>) args[6];
 		rote = Line.getLine(initialLocation, direction);
 	}
 	
 	private void findNextObstacle(){
 		collisionPoint = null;
 		collisionObstacle = null;
-		Localization intersectionPoint = null;
+		Location intersectionPoint = null;
 		for(Obstacle obstacle : obstacles){
 			intersectionPoint = rote.searchSlopePoint(obstacle.getLine());
 			if(intersectionPoint != null && !actualLocation.equals(intersectionPoint, ERROR)){
@@ -92,7 +94,7 @@ public class Sound extends Agent{
 	private void update(){
 		distanceOfPreviousColisionPoint = distanceOfPreviousColisionPoint + SIZE_OF_STEP;
 		distanceTraveled = distanceTraveled + SIZE_OF_STEP;
-		intensity = calculateIntensityBySoundPropagation(power, direction, distanceTraveled);
+		intensity = calculateIntensityBySoundPropagation(power, opening, distanceTraveled);
 		updateLocation();
 		
 		if(isCollisionPoint()){

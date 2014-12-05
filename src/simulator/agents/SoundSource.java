@@ -3,7 +3,7 @@ package simulator.agents;
 import java.util.ArrayList;
 import java.util.List;
 
-import simulator.objects.Localization;
+import simulator.objects.Location;
 import simulator.objects.Obstacle;
 import utils.Util;
 import jade.core.AID;
@@ -30,26 +30,30 @@ public class SoundSource extends Agent{
 	
 	private AID ambient;
 	private AID soundSource;
-	private Localization location;
+	private Location location;
 	private int absorptionRate;
-	private double soundSeparation = 1;
+	private static double soundSeparation = 1;
+	private int opening;
+	private int power;
+	private int direction;
 
 	@Override
 	protected void setup() {
 			getParameters();
 			registerSoundSource();		
 			addBehavior();			
-			emitSoundPulse(0,90,80);
+			emitSoundPulse(direction,opening,power);
+			//createSound(location,direction,power,opening);
 	}
 	
-	private void emitSoundPulse(double direction, double opening, double potency){
+	private void emitSoundPulse(double direction, int opening, double potency){
 		double angle;
-		createSound(location, direction, potency);
+		createSound(location, direction, potency, opening);
 		for(double i = soundSeparation; i<=opening/2; i=i+soundSeparation){
 			angle = Util.normalizeAngle(direction+i);			
-			createSound(location,angle,potency);
+			createSound(location,angle,potency, opening);
 			angle = Util.normalizeAngle(direction-i);
-			createSound(location,angle,potency);
+			createSound(location,angle,potency, opening);
 		}
 	}
 
@@ -72,14 +76,17 @@ public class SoundSource extends Agent{
 	private void getParameters() {
 		soundSource = this.getAID();
 		Object[] args = getArguments();
-		location = (Localization) args[0];
-		ambient = (AID) args[1];
-		absorptionRate = (int) args[2];
-		obstacles = (ArrayList<Obstacle>) args[3];
+		location = (Location) args[0];
+		power = (int) args[1];
+		opening = (int) args[2];
+		direction = (int) args[3];
+		absorptionRate = (int) args[4];
+		ambient = (AID) args[5];
+		obstacles = (ArrayList<Obstacle>) args[6];
 	}
 
-	private void createSound(Localization location, double direction, double potency){
-		Object[] args = {new Localization(location), direction, potency, ambient, soundSource, obstacles};
+	private void createSound(Location location, double direction, double potency, int opening){
+		Object[] args = {new Location(location), direction, potency, opening, ambient, soundSource, obstacles};
 		final String id = Sound.nextId();
 		new AID(id, AID.ISLOCALNAME);	
 		

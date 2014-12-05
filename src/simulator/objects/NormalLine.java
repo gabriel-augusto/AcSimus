@@ -2,39 +2,39 @@ package simulator.objects;
 
 public class NormalLine extends Line{
 	
-	protected NormalLine(Localization initialPoint, Localization finalPoint) {
+	protected NormalLine(Location initialPoint, Location finalPoint) {
 		super(initialPoint, finalPoint);
 	}
 	
-	protected NormalLine(Localization initialPoint, double direction){
+	protected NormalLine(Location initialPoint, double direction){
 		super(initialPoint, direction);
 	}
 	
-	public Localization searchIntersectionPoint(NormalLine line){
-		Localization intersectionPoint;
+	public Location searchIntersectionPoint(NormalLine line){
+		Location intersectionPoint;
 		double x;
 		double y;
 		
 		if((this.getSlope() - line.getSlope()) != 0){
 			x = (line.getConstant() - this.getConstant())/(this.getSlope() - line.getSlope());
 			y = line.getSlope() * x + line.getConstant();
-			intersectionPoint = new Localization(x,y);
+			intersectionPoint = new Location(x,y);
 			if(intersectionPoint != null && this.belongsToTheInterval(intersectionPoint.getX()) && line.belongsToTheInterval(intersectionPoint.getX()))		
 				return intersectionPoint;
 		}					
 		return null;
 	}
 	
-	public Localization searchIntersectionPoint(VerticalLine line){
+	public Location searchIntersectionPoint(VerticalLine line){
 		double y;
 		y = this.getY(line.getConstant());
 		
-		if(line.belongsToTheInterval(y))
-			return new Localization(line.getConstant(), y);		
+		if(line.belongsToTheInterval(y) && this.belongsToTheInterval(line.getConstant()))
+			return new Location(line.getConstant(), y);		
 		return null;
 	}
 	
-	public Localization searchSlopePoint(Line line){
+	public Location searchSlopePoint(Line line){
 		if(line instanceof NormalLine)
 			return searchIntersectionPoint((NormalLine)line);
 		return searchIntersectionPoint((VerticalLine) line);
@@ -46,8 +46,7 @@ public class NormalLine extends Line{
 				return true;
 			}
 		}else{
-			if(this.getDirection() > 90 
-					&& this.getDirection() < 270 && x <= this.getInitialPoint().getX()){
+			if(this.getDirection() > 90 && this.getDirection() < 270 && x <= this.getInitialPoint().getX()){
 				return true;
 			}else{
 				if(x >= this.getInitialPoint().getX()){
