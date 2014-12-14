@@ -1,5 +1,6 @@
 package utils;
 
+import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -12,13 +13,14 @@ import jade.wrapper.StaleProxyException;
 public class Util{
 	
 	//Variables delcaration
-	private static Runtime rt = Runtime.instance(); // Get a hold on JADE runtime
+	private static final Runtime rt = Runtime.instance(); // Get a hold on JADE runtime
 	private static final Profile profile = new ProfileImpl(null, 1200, null); // Create a default profile
 	private static final ProfileImpl pContainer = new ProfileImpl(null, 1200, null); // set the default Profile to start a container
 	private static AgentContainer mainContainer = null;
 	private static AgentContainer simulatorContainer = null;
 	private static AgentController rma = null;
 	private static AgentController ambient = null;
+	private static AID ambientAID = null;
 	//End of variables declaration
 	
 	public static void initAgent(PlatformController container, Object[] args, String path, String id){
@@ -38,7 +40,7 @@ public class Util{
     	return mainContainer;
     }
     
-    private static AgentContainer getSimulatorContainer() {
+    public static AgentContainer getSimulatorContainer() {
     	if(simulatorContainer == null) {
     		simulatorContainer = rt.createAgentContainer(pContainer);
     	}
@@ -53,7 +55,7 @@ public class Util{
 				rma = getMainContainer().createNewAgent("rma", "jade.tools.rma.rma", new Object[0]);
 				rma.start();
 			} catch (StaleProxyException e1) {
-			e1.printStackTrace();
+				e1.printStackTrace();
 			}
 		}
 		else{
@@ -61,16 +63,17 @@ public class Util{
 		}
 	}
 	
-	public static void initiateAmbient() {		
-		if(ambient == null){
+	public static void initiateAmbient() throws StaleProxyException {		
+		if(getAmbient() == null){
+			String id = "Ambient";
 			try {
-				ambient = getSimulatorContainer().createNewAgent("Ambient", "simulator.agents.Ambient", new Object[0]);
+				ambient = getSimulatorContainer().createNewAgent(id, "simulator.agents.Ambient", new Object[0]);
 				ambient.start();
+				ambientAID = new AID(id,AID.ISLOCALNAME);
 			} catch (StaleProxyException e1) {
 				e1.printStackTrace();
 			}
-		}
-		else{
+		}else{
 			System.out.println("Ambient is already intiated.");
 		}
 	}
@@ -89,5 +92,25 @@ public class Util{
 				angle = angle-360;
 		}
 		return angle;
+	}
+
+	public static AgentController getAmbient() {
+		return ambient;
+	}
+
+	public static void setAmbient(AgentController ambient) {
+		Util.ambient = ambient;
+	}
+
+	public static void setSimulatorContainer(AgentContainer simulatorContainer) {
+		Util.simulatorContainer = simulatorContainer;
+	}
+
+	public static AID getAmbientAID() {
+		return ambientAID;
+	}
+
+	public static void setAmbientAID(AID ambientAID) {
+		Util.ambientAID = ambientAID;
 	}
 }

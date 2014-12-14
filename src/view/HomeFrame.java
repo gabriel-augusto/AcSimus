@@ -6,8 +6,9 @@
 
 package view;
 
+import javax.swing.table.DefaultTableModel;
+import languagesAndMessages.Message;
 import settings.ProjectSettings;
-import utils.Util;
 
 /**
  *
@@ -15,11 +16,17 @@ import utils.Util;
  */
 public class HomeFrame extends javax.swing.JFrame {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 	
-	AmbientSettingsFrame ambienteSettingsFrame = new AmbientSettingsFrame();
-    SoundSourceSettingsFrame soundSourceSettingsFrame = new SoundSourceSettingsFrame();
+    private final AmbientSettingsFrame ambienteSettingsFrame = new AmbientSettingsFrame();
+    private final SoundSourceSettingsFrame soundSourceSettingsFrame = new SoundSourceSettingsFrame();
+    private final SimulationSettingsFrame simulationSettingsFrame = new SimulationSettingsFrame();
+    private final ObstaclesSettingsFrame obstacleSettingsFrame = new ObstaclesSettingsFrame();
     
+    private static DefaultTableModel obstacleModel = new DefaultTableModel(null, new String [] {"Nº", "Initial Point", "End Point", "Absorption Rate"});
+    
+    private static DefaultTableModel soundSourceModel = new DefaultTableModel(null, new String [] {"Nº", "Power", "Opening", "Location", "Direction"});
+        
     public HomeFrame() {
         initComponents();
     }
@@ -27,129 +34,513 @@ public class HomeFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToolBar = new javax.swing.JToolBar();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        jButtonRun = new javax.swing.JButton();
+        jButtonStop = new javax.swing.JButton();
+        jButtonResume = new javax.swing.JButton();
+        jButtonPause = new javax.swing.JButton();
+        jButtonConfig = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
         jPanelHome = new javax.swing.JPanel();
-        jPanelHead = new javax.swing.JPanel();
-        jLabelTitle = new javax.swing.JLabel();
         jPanelBody = new javax.swing.JPanel();
-        jButtonAmbient = new javax.swing.JButton();
-        jButtonSimulation = new javax.swing.JButton();
-        jButtonSoundSource = new javax.swing.JButton();
+        jSplitPaneBody = new javax.swing.JSplitPane();
+        jSplitPaneMenu = new javax.swing.JSplitPane();
+        jPanelObstacles = new javax.swing.JPanel();
+        jLabelObstacles = new javax.swing.JLabel();
+        jScrollPaneTableObstacles = new javax.swing.JScrollPane();
+        jTableObstacles = new javax.swing.JTable();
+        jButtonAddObstacle = new javax.swing.JButton();
+        jButtonRemoveObstacle = new javax.swing.JButton();
+        jPanelSoundSources = new javax.swing.JPanel();
+        jLabelSoundSources = new javax.swing.JLabel();
+        jScrollPaneTableSoundSources = new javax.swing.JScrollPane();
+        jTableSoundSources = new javax.swing.JTable();
+        jButtonAddSoundSource = new javax.swing.JButton();
+        jButtonRemoveSoundSource = new javax.swing.JButton();
+        jPanelContent = new javax.swing.JPanel();
+        jMenuBar = new javax.swing.JMenuBar();
+        jMenuFile = new javax.swing.JMenu();
+        jMenuItemRun = new javax.swing.JMenuItem();
+        jMenuItemStop = new javax.swing.JMenuItem();
+        jMenuItemPause = new javax.swing.JMenuItem();
+        jMenuItemResume = new javax.swing.JMenuItem();
+        jMenuItemExit = new javax.swing.JMenuItem();
+        jMenuSoundEdit = new javax.swing.JMenu();
+        jMenuItemAmbient = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItemSoundSource = new javax.swing.JMenuItem();
+        jMenuItemSimulationSetting = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(ProjectSettings.getProjectName());
+        setExtendedState(MAXIMIZED_BOTH);
 
-        jLabelTitle.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
-        jLabelTitle.setForeground(new java.awt.Color(51, 51, 51));
-        jLabelTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelTitle.setText(ProjectSettings.getProjectName());
+        jToolBar.setFloatable(false);
+        jToolBar.setRollover(true);
+        jToolBar.add(jSeparator1);
 
-        javax.swing.GroupLayout jPanelHeadLayout = new javax.swing.GroupLayout(jPanelHead);
-        jPanelHead.setLayout(jPanelHeadLayout);
-        jPanelHeadLayout.setHorizontalGroup(
-            jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelHeadLayout.createSequentialGroup()
+        jButtonRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/runIcon.png"))); // NOI18N
+        jButtonRun.setToolTipText("Run simulation");
+        jButtonRun.setEnabled(false);
+        jButtonRun.setFocusable(false);
+        jButtonRun.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonRun.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRunActionPerformed(evt);
+            }
+        });
+        jToolBar.add(jButtonRun);
+
+        jButtonStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/stopIcon.png"))); // NOI18N
+        jButtonStop.setEnabled(false);
+        jButtonStop.setFocusable(false);
+        jButtonStop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonStop.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonStopActionPerformed(evt);
+            }
+        });
+        jToolBar.add(jButtonStop);
+
+        jButtonResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/resumeIcon.png"))); // NOI18N
+        jButtonResume.setToolTipText("Resume");
+        jButtonResume.setEnabled(false);
+        jButtonResume.setFocusable(false);
+        jButtonResume.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonResume.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonResume.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonResumeActionPerformed(evt);
+            }
+        });
+        jToolBar.add(jButtonResume);
+
+        jButtonPause.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/pauseIcon.png"))); // NOI18N
+        jButtonPause.setToolTipText("Pause");
+        jButtonPause.setEnabled(false);
+        jButtonPause.setFocusable(false);
+        jButtonPause.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonPause.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonPause.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPauseActionPerformed(evt);
+            }
+        });
+        jToolBar.add(jButtonPause);
+
+        jButtonConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/settingsIcon.png"))); // NOI18N
+        jButtonConfig.setFocusable(false);
+        jButtonConfig.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonConfig.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConfigActionPerformed(evt);
+            }
+        });
+        jToolBar.add(jButtonConfig);
+        jToolBar.add(jSeparator2);
+
+        jSplitPaneBody.setDividerLocation(350);
+
+        jSplitPaneMenu.setDividerLocation(350);
+        jSplitPaneMenu.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jLabelObstacles.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabelObstacles.setText("OBSTACLES:");
+
+        jTableObstacles.setModel(obstacleModel);
+        jScrollPaneTableObstacles.setViewportView(jTableObstacles);
+
+        jButtonAddObstacle.setText("ADD");
+        jButtonAddObstacle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddObstacleActionPerformed(evt);
+            }
+        });
+
+        jButtonRemoveObstacle.setText("Remove");
+
+        javax.swing.GroupLayout jPanelObstaclesLayout = new javax.swing.GroupLayout(jPanelObstacles);
+        jPanelObstacles.setLayout(jPanelObstaclesLayout);
+        jPanelObstaclesLayout.setHorizontalGroup(
+            jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelObstaclesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanelObstaclesLayout.createSequentialGroup()
+                        .addGroup(jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelObstacles)
+                            .addGroup(jPanelObstaclesLayout.createSequentialGroup()
+                                .addComponent(jButtonAddObstacle)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonRemoveObstacle)))
+                        .addGap(0, 193, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanelHeadLayout.setVerticalGroup(
-            jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabelTitle)
+        jPanelObstaclesLayout.setVerticalGroup(
+            jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelObstaclesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelObstacles)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonAddObstacle)
+                    .addComponent(jButtonRemoveObstacle))
+                .addContainerGap())
         );
 
-        jButtonAmbient.setText("Definir Ambiente");
-        jButtonAmbient.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAmbientActionPerformed(evt);
-            }
-        });
+        jSplitPaneMenu.setTopComponent(jPanelObstacles);
 
-        jButtonSimulation.setText("Iniciar Simulação");
-        jButtonSimulation.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSimulationActionPerformed(evt);
-            }
-        });
+        jLabelSoundSources.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabelSoundSources.setText("SOUND SOURCES:");
 
-        jButtonSoundSource.setText("Configurar fonte sonora");
-        jButtonSoundSource.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSoundSourceActionPerformed(evt);
-            }
-        });
+        jTableSoundSources.setModel(soundSourceModel);
+        jScrollPaneTableSoundSources.setViewportView(jTableSoundSources);
+
+        jButtonAddSoundSource.setText("ADD");
+
+        jButtonRemoveSoundSource.setText("Remove");
+
+        javax.swing.GroupLayout jPanelSoundSourcesLayout = new javax.swing.GroupLayout(jPanelSoundSources);
+        jPanelSoundSources.setLayout(jPanelSoundSourcesLayout);
+        jPanelSoundSourcesLayout.setHorizontalGroup(
+            jPanelSoundSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSoundSourcesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelSoundSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneTableSoundSources, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanelSoundSourcesLayout.createSequentialGroup()
+                        .addGroup(jPanelSoundSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelSoundSources)
+                            .addGroup(jPanelSoundSourcesLayout.createSequentialGroup()
+                                .addComponent(jButtonAddSoundSource)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonRemoveSoundSource)))
+                        .addGap(0, 193, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanelSoundSourcesLayout.setVerticalGroup(
+            jPanelSoundSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSoundSourcesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelSoundSources)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPaneTableSoundSources, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelSoundSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonAddSoundSource)
+                    .addComponent(jButtonRemoveSoundSource))
+                .addContainerGap())
+        );
+
+        jSplitPaneMenu.setRightComponent(jPanelSoundSources);
+
+        jSplitPaneBody.setLeftComponent(jSplitPaneMenu);
+
+        javax.swing.GroupLayout jPanelContentLayout = new javax.swing.GroupLayout(jPanelContent);
+        jPanelContent.setLayout(jPanelContentLayout);
+        jPanelContentLayout.setHorizontalGroup(
+            jPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 393, Short.MAX_VALUE)
+        );
+        jPanelContentLayout.setVerticalGroup(
+            jPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 439, Short.MAX_VALUE)
+        );
+
+        jSplitPaneBody.setRightComponent(jPanelContent);
 
         javax.swing.GroupLayout jPanelBodyLayout = new javax.swing.GroupLayout(jPanelBody);
         jPanelBody.setLayout(jPanelBodyLayout);
         jPanelBodyLayout.setHorizontalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelBodyLayout.createSequentialGroup()
-                .addComponent(jButtonAmbient, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonSoundSource, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonSimulation, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jSplitPaneBody)
         );
         jPanelBodyLayout.setVerticalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButtonAmbient, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jButtonSoundSource, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jButtonSimulation, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanelBodyLayout.createSequentialGroup()
+                .addComponent(jSplitPaneBody)
+                .addGap(0, 0, 0))
         );
 
         javax.swing.GroupLayout jPanelHomeLayout = new javax.swing.GroupLayout(jPanelHome);
         jPanelHome.setLayout(jPanelHomeLayout);
         jPanelHomeLayout.setHorizontalGroup(
             jPanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelHead, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanelHomeLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanelBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelHomeLayout.setVerticalGroup(
             jPanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelHomeLayout.createSequentialGroup()
-                .addComponent(jPanelHead, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelBody, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanelBody, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        jMenuFile.setText("File");
+
+        jMenuItemRun.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/runIcon.png"))); // NOI18N
+        jMenuItemRun.setText("Run simulation");
+        jMenuItemRun.setEnabled(false);
+        jMenuItemRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemRunActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemRun);
+
+        jMenuItemStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/stopIcon.png"))); // NOI18N
+        jMenuItemStop.setText("Stop simulation");
+        jMenuItemStop.setEnabled(false);
+        jMenuItemStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemStopActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemStop);
+
+        jMenuItemPause.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/pauseIcon.png"))); // NOI18N
+        jMenuItemPause.setText("Pause simulation");
+        jMenuItemPause.setEnabled(false);
+        jMenuItemPause.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemPauseActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemPause);
+
+        jMenuItemResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/resumeIcon.png"))); // NOI18N
+        jMenuItemResume.setText("Resume simulation");
+        jMenuItemResume.setEnabled(false);
+        jMenuFile.add(jMenuItemResume);
+
+        jMenuItemExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/exitIcon.png"))); // NOI18N
+        jMenuItemExit.setText("Exit");
+        jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemExitActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemExit);
+
+        jMenuBar.add(jMenuFile);
+
+        jMenuSoundEdit.setText("Edit");
+
+        jMenuItemAmbient.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemAmbient.setText("Define ambient");
+        jMenuItemAmbient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemAmbientActionPerformed(evt);
+            }
+        });
+        jMenuSoundEdit.add(jMenuItemAmbient);
+
+        jMenuItem1.setText("Add Obstacles");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenuSoundEdit.add(jMenuItem1);
+
+        jMenuItemSoundSource.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemSoundSource.setText("Configure sound source");
+        jMenuItemSoundSource.setEnabled(false);
+        jMenuItemSoundSource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSoundSourceActionPerformed(evt);
+            }
+        });
+        jMenuSoundEdit.add(jMenuItemSoundSource);
+
+        jMenuItemSimulationSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/settingsIcon.png"))); // NOI18N
+        jMenuItemSimulationSetting.setText("Simulation settings");
+        jMenuItemSimulationSetting.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSimulationSettingActionPerformed(evt);
+            }
+        });
+        jMenuSoundEdit.add(jMenuItemSimulationSetting);
+
+        jMenuBar.add(jMenuSoundEdit);
+
+        setJMenuBar(jMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addComponent(jPanelHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSimulationActionPerformed
-        Util.initiateJadeRma();
-        Util.initiateAmbient();
-    }//GEN-LAST:event_jButtonSimulationActionPerformed
+    private void jButtonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunActionPerformed
+        this.runSimulation();
+    }//GEN-LAST:event_jButtonRunActionPerformed
 
-    private void jButtonAmbientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAmbientActionPerformed
-        this.ambienteSettingsFrame.setVisible(true);
-    }//GEN-LAST:event_jButtonAmbientActionPerformed
+    private void jMenuItemRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRunActionPerformed
+        this.runSimulation();
+    }//GEN-LAST:event_jMenuItemRunActionPerformed
 
-    private void jButtonSoundSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSoundSourceActionPerformed
+    private void jMenuItemSoundSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSoundSourceActionPerformed
         this.soundSourceSettingsFrame.setVisible(true);
-    }//GEN-LAST:event_jButtonSoundSourceActionPerformed
+    }//GEN-LAST:event_jMenuItemSoundSourceActionPerformed
 
+    private void jMenuItemAmbientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAmbientActionPerformed
+        this.ambienteSettingsFrame.setVisible(true);
+    }//GEN-LAST:event_jMenuItemAmbientActionPerformed
+
+    private void jMenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItemExitActionPerformed
+
+    private void jMenuItemSimulationSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSimulationSettingActionPerformed
+        simulationSettingsFrame.setVisible(true);
+    }//GEN-LAST:event_jMenuItemSimulationSettingActionPerformed
+
+    private void jButtonConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigActionPerformed
+        simulationSettingsFrame.setVisible(true);
+    }//GEN-LAST:event_jButtonConfigActionPerformed
+
+    private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
+        this.stopSimulation();
+    }//GEN-LAST:event_jButtonStopActionPerformed
+
+    private void jMenuItemStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemStopActionPerformed
+        this.stopSimulation();
+    }//GEN-LAST:event_jMenuItemStopActionPerformed
+
+    private void jButtonResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResumeActionPerformed
+        this.resumeSimulation();
+    }//GEN-LAST:event_jButtonResumeActionPerformed
+
+    private void jMenuItemPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPauseActionPerformed
+        this.pauseSimulation();
+    }//GEN-LAST:event_jMenuItemPauseActionPerformed
+
+    private void jButtonPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPauseActionPerformed
+        this.pauseSimulation();
+    }//GEN-LAST:event_jButtonPauseActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        obstacleSettingsFrame.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jButtonAddObstacleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddObstacleActionPerformed
+        obstacleSettingsFrame.setVisible(true);
+    }//GEN-LAST:event_jButtonAddObstacleActionPerformed
+
+    private void runSimulation(){
+        this.jButtonStop.setEnabled(true);
+        this.jMenuItemStop.setEnabled(true);
+        HomeFrame.jButtonRun.setEnabled(false);
+        HomeFrame.jMenuItemRun.setEnabled(false);
+        this.jButtonPause.setEnabled(true);
+        this.jMenuItemPause.setEnabled(true);
+        this.jButtonResume.setEnabled(false);
+        this.jMenuItemResume.setEnabled(false);
+        
+        UIController.getInstance().addNewEvent(Message.RUN);
+    }
+    
+    private void stopSimulation(){
+        this.jButtonStop.setEnabled(false);
+        this.jButtonPause.setEnabled(false);
+        this.jButtonResume.setEnabled(false);
+        
+        UIController.getInstance().addNewEvent(Message.STOP);
+    }
+    
+    private void pauseSimulation(){
+        this.jButtonPause.setEnabled(false);
+        this.jMenuItemPause.setEnabled(false);
+        this.jButtonResume.setEnabled(true);
+        this.jMenuItemResume.setEnabled(true);
+        this.jButtonStop.setEnabled(false);
+        
+        UIController.getInstance().addNewEvent(Message.PAUSE);
+    }
+    
+    private void resumeSimulation(){
+        this.jButtonPause.setEnabled(true);
+        this.jMenuItemPause.setEnabled(true);
+        this.jButtonResume.setEnabled(false);
+        this.jMenuItemResume.setEnabled(false);
+        this.jButtonStop.setEnabled(true);
+        
+        UIController.getInstance().addNewEvent(Message.RESUME);
+    }
+
+    public static DefaultTableModel getObstacleModel() {
+        return obstacleModel;
+    }
+
+    public static void setObstacleModel(DefaultTableModel obstacleModel) {
+        HomeFrame.obstacleModel = obstacleModel;
+    }
+
+    public static DefaultTableModel getSoundSourceModel() {
+        return soundSourceModel;
+    }
+
+    public static void setSoundSourceModel(DefaultTableModel soundSourceModel) {
+        HomeFrame.soundSourceModel = soundSourceModel;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAmbient;
-    private javax.swing.JButton jButtonSimulation;
-    private javax.swing.JButton jButtonSoundSource;
-    private javax.swing.JLabel jLabelTitle;
+    private javax.swing.JButton jButtonAddObstacle;
+    private javax.swing.JButton jButtonAddSoundSource;
+    private javax.swing.JButton jButtonConfig;
+    private javax.swing.JButton jButtonPause;
+    private javax.swing.JButton jButtonRemoveObstacle;
+    private javax.swing.JButton jButtonRemoveSoundSource;
+    private javax.swing.JButton jButtonResume;
+    public static javax.swing.JButton jButtonRun;
+    private javax.swing.JButton jButtonStop;
+    private javax.swing.JLabel jLabelObstacles;
+    private javax.swing.JLabel jLabelSoundSources;
+    private javax.swing.JMenuBar jMenuBar;
+    private javax.swing.JMenu jMenuFile;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItemAmbient;
+    private javax.swing.JMenuItem jMenuItemExit;
+    private javax.swing.JMenuItem jMenuItemPause;
+    private javax.swing.JMenuItem jMenuItemResume;
+    public static javax.swing.JMenuItem jMenuItemRun;
+    private javax.swing.JMenuItem jMenuItemSimulationSetting;
+    public static javax.swing.JMenuItem jMenuItemSoundSource;
+    private javax.swing.JMenuItem jMenuItemStop;
+    private javax.swing.JMenu jMenuSoundEdit;
     private javax.swing.JPanel jPanelBody;
-    private javax.swing.JPanel jPanelHead;
+    private javax.swing.JPanel jPanelContent;
     private javax.swing.JPanel jPanelHome;
+    private javax.swing.JPanel jPanelObstacles;
+    private javax.swing.JPanel jPanelSoundSources;
+    private javax.swing.JScrollPane jScrollPaneTableObstacles;
+    private javax.swing.JScrollPane jScrollPaneTableSoundSources;
+    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JSplitPane jSplitPaneBody;
+    private javax.swing.JSplitPane jSplitPaneMenu;
+    public static javax.swing.JTable jTableObstacles;
+    public static javax.swing.JTable jTableSoundSources;
+    private javax.swing.JToolBar jToolBar;
     // End of variables declaration//GEN-END:variables
 }

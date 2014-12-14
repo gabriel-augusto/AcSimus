@@ -3,22 +3,26 @@ package simulator.agents;
 import java.util.ArrayList;
 import java.util.List;
 
+import settings.ProjectSettings;
 import simulator.objects.Line;
 import simulator.objects.Location;
 import simulator.objects.Obstacle;
 import utils.Util;
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.lang.acl.ACLMessage;
+import languagesAndMessages.Message;
 
 
 public class Sound extends Agent{
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final int UPDATE_PERIOD = 3; //Time of atualization of the sound in ms.
+	//private static final int UPDATE_PERIOD = 3; //Time of atualization of the sound in ms.
 	private static final int SIZE_OF_STEP = 1;
 	private static final double ERROR = 1; //SIZE_OF_STEP/2;
 	
@@ -47,7 +51,8 @@ public class Sound extends Agent{
 	}
 
 	private void addBehavior() {
-		addBehaviour(new UpdateSoundBehavior(this, UPDATE_PERIOD));
+		addBehaviour(new UpdateSoundBehavior(this, ProjectSettings.getSimulationSpeed()));
+		addBehaviour(new GetMessageBehaviour(this));
 	}
 
 	private void soundRegister(){
@@ -121,13 +126,11 @@ public class Sound extends Agent{
 	}
 
 	private boolean isCollisionPoint() {
-		if(actualLocation.equals(collisionPoint, ERROR))
-			return true;
-		return false;
+		return actualLocation.equals(collisionPoint, ERROR);
 	}
 	
 	private void killSound() {
-		doDelete();
+		this.doDelete();
 		System.out.println("END OF SOUND!!!");
 	}
 	
@@ -158,8 +161,10 @@ public class Sound extends Agent{
 	}
 	
 	private String writeActualState(){
-		return this.getAID().getName() + ":" + "\nintensity: " + intensity + "\ndirection: " + direction + " degrees" + "\ndistance of origin: " + distanceOfPreviousColisionPoint + "\ninitial location: " 
-	+ initialLocation + "\nlocation: " + actualLocation;
+		return this.getAID().getName() + ":" + "\nintensity: " + intensity 
+				+ "\ndirection: " + direction + " degrees" + "\ndistance of origin: " 
+				+ distanceOfPreviousColisionPoint + "\ninitial location: " 
+				+ initialLocation + "\nlocation: " + actualLocation;
 	}
 	
 	private static int id = 0;
@@ -183,5 +188,29 @@ public class Sound extends Agent{
 			update();
 		}
 		
-	}	
+	}
+	
+	private class GetMessageBehaviour extends CyclicBehaviour {
+		
+		private static final long serialVersionUID = 1L;
+
+		public GetMessageBehaviour(Agent agent) {
+			super(agent);
+		}
+		
+		@Override
+		public void action() {
+			ACLMessage message = receive();
+
+			if (message != null && message.getPerformative() == ACLMessage.INFORM) {
+				if (message.getContent().equals(Message.STOP)){
+					doDelete();
+					System.out.println("Sound Source: Sounds and SoundSource destroyed successfuly!");
+				}
+				else if(message.getContent().equals(Message.PAUSE)){
+					doSuspend();
+				}
+			}
+		}
+	}
 }

@@ -14,8 +14,10 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
+import jade.wrapper.AgentController;
+import jade.wrapper.ContainerController;
+import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
-import languagesAndMessages.Language;
 import languagesAndMessages.Message;
 
 public class SoundSource extends Agent{
@@ -27,11 +29,11 @@ public class SoundSource extends Agent{
 	//private int updateTime = 10000; //Uncomment if the UpdateSoundBehaviour is activated.
 	
 	private static List <Obstacle> obstacles;
+	private List <AID> sounds = new ArrayList<>();
 	
 	private AID ambient;
 	private AID soundSource;
 	private Location location;
-	private int absorptionRate;
 	private static double soundSeparation = 1;
 	private int opening;
 	private int power;
@@ -41,25 +43,23 @@ public class SoundSource extends Agent{
 	protected void setup() {
 			getParameters();
 			registerSoundSource();		
-			addBehavior();			
-			emitSoundPulse(direction,opening,power);
-			//createSound(location,direction,power,opening);
+			addBehaviours();
 	}
 	
 	private void emitSoundPulse(double direction, int opening, double potency){
 		double angle;
-		createSound(location, direction, potency, opening);
+		sounds.add(createSound(location, direction, potency, opening));
 		for(double i = soundSeparation; i<=opening/2; i=i+soundSeparation){
 			angle = Util.normalizeAngle(direction+i);			
-			createSound(location,angle,potency, opening);
+			sounds.add(createSound(location,angle,potency, opening));
 			angle = Util.normalizeAngle(direction-i);
-			createSound(location,angle,potency, opening);
+			sounds.add(createSound(location,angle,potency, opening));
 		}
 	}
 
-	private void addBehavior() {
+	private void addBehaviours() {
 		//addBehaviour(new UpdateSoundBehaviour(this, updateTime)); //Uncomment to add this behaviour
-		addBehaviour(new GetMessageBehavior(this));
+		addBehaviour(new GetMessageBehaviour(this));
 	}
 
 	private void registerSoundSource(){
@@ -80,22 +80,23 @@ public class SoundSource extends Agent{
 		power = (int) args[1];
 		opening = (int) args[2];
 		direction = (int) args[3];
-		absorptionRate = (int) args[4];
 		ambient = (AID) args[5];
 		obstacles = (ArrayList<Obstacle>) args[6];
 	}
 
-	private void createSound(Location location, double direction, double potency, int opening){
+	private AID createSound (Location location, double direction, double potency, int opening){
 		Object[] args = {new Location(location), direction, potency, opening, ambient, soundSource, obstacles};
 		final String id = Sound.nextId();
-		new AID(id, AID.ISLOCALNAME);	
 		
 		container = getContainerController();
-		Util.initAgent(container, args, 
-				"simulator.agents.Sound", id);
+		Util.initAgent(container, args, "simulator.agents.Sound", id);
 		
 		System.out.println(id + " created at: " + location);
+		return new AID(id, AID.ISLOCALNAME);
 	}
+	
+	/*--------------------------  COMPORTAMENTS ------------------------ */
+	
 //Uncomment to add this behaviour.
 /*	
 	private class UpdateSoundBehaviour extends TickerBehaviour {
@@ -112,11 +113,12 @@ public class SoundSource extends Agent{
 		}		
 	}
 */
-	private class GetMessageBehavior extends CyclicBehaviour {
+	
+	private class GetMessageBehaviour extends CyclicBehaviour {
 		
 		private static final long serialVersionUID = 1L;
 
-		public GetMessageBehavior(Agent agent) {
+		public GetMessageBehaviour(Agent agent) {
 			super(agent);
 		}
 		
@@ -124,34 +126,27 @@ public class SoundSource extends Agent{
 		public void action() {
 			ACLMessage message = receive();
 
-			if (message != null) {
+			if (message != null && message.getPerformative() == ACLMessage.INFORM) {
 				AID sender = message.getSender();
 
-				if (message.getPerformative() == ACLMessage.REQUEST && message.getContent().equals(Message.WHAT_IS_THE_LOCATION)){
-					responseLocalization(sender);
-					System.out.println("Sound Source: Location sent.");
+				if (message.getContent().equals(Message.STOP)){
+					stopSimulation();
+					System.out.println("Simulation stoped.");
 				}
-				else if (message.getPerformative() == ACLMessage.REQUEST && message.getLanguage().equals(Language.INDEX) && message.getContent().equals(location.toString())){
-					System.out.println("SS: " + location.toString());
-					indexAnswer(sender);
+				else if(message.getContent().equals(Message.PAUSE)){
+					suspendAllSounds();
+				}
+				else if(message.getContent().equals(Message.RESUME)){
+					resumeAllSounds();
+				}
+				else if(message.getContent().equals(Message.RUN)){
+					emitSoundPulse(direction,opening,power);
 				}
 				else {
-					send(Message.getAnswerOfANotUnderstoodMessage(
-							sender));					
+					send(Message.getAnswerOfANotUnderstoodMessage(sender));					
 				}
 			}
 
-		}
-		
-		public void indexAnswer(AID destination){
-			ACLMessage message = Message.prepareMessage(ACLMessage.INFORM, Language.INDEX, Integer.toString(absorptionRate), destination);
-			send(message);
-			System.out.println("Sound Source: Index sent.");
-		}
-		
-		public void responseLocalization(AID destination){
-			ACLMessage message = Message.prepareMessage(ACLMessage.INFORM, Language.LOCATION, location.toString(), destination);
-			send(message);
 		}
 	}
 	
@@ -159,5 +154,26 @@ public class SoundSource extends Agent{
 
 	public static String nextId() {
 		return "sound_source" + (++id);
+	}
+	
+	public void suspendAllSounds() {
+		send(Message.prepareMessage(ACLMessage.INFORM, null, Message.PAUSE, sounds));		
+	}
+
+	public void resumeAllSounds() {
+		ContainerController cc = getContainerController();
+		AgentController ac;
+		for(AID sound : sounds){
+			try {
+				ac = cc.getAgent(sound.getLocalName());
+				ac.activate();
+			} catch (ControllerException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void stopSimulation(){
+		send(Message.prepareMessage(ACLMessage.INFORM, null, Message.STOP, sounds));
 	}
 }

@@ -42,7 +42,7 @@ public class Location {
 
 	@Override
 	public String toString() {
-		return "[x: "+x+"; y: "+y+"]";
+		return "(x: "+x+"; y: "+y+")";
 	}
 	
 	public boolean equals(Location location, double precision){
