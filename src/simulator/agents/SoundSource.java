@@ -80,8 +80,8 @@ public class SoundSource extends Agent{
 		power = (int) args[1];
 		opening = (int) args[2];
 		direction = (int) args[3];
-		ambient = (AID) args[5];
-		obstacles = (ArrayList<Obstacle>) args[6];
+		ambient = (AID) args[4];
+		obstacles = (ArrayList<Obstacle>) args[5];
 	}
 
 	private AID createSound (Location location, double direction, double potency, int opening){

@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import simulator.objects.Location;
 
-public class LocalizationTest {
+public class LocationTest {
 	
 	private double TOLERANCIA;
 	

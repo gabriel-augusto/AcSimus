@@ -6,8 +6,10 @@
 
 package view;
 
-import languagesAndMessages.Message;
 import simulator.agents.Ambient;
+import simulator.objects.Line;
+import simulator.objects.Location;
+import simulator.objects.Obstacle;
 
 /**
  *
@@ -156,12 +158,25 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
-        Ambient.setLenght((int)this.jSpinnerLength.getValue());
-        Ambient.setWidth((int)this.jSpinnerWidth.getValue());
         HomeFrame.jMenuItemSoundSource.setEnabled(true);
         this.setVisible(false);
-        UIController.getInstance().addNewEvent(Message.DEFINE_OBSTACLES);
+
+        int length = (int)this.jSpinnerLength.getValue();
+        int width = (int)this.jSpinnerWidth.getValue();
+        int absorptionRate = (int)this.jSpinnerAbsorptionRate.getValue();
+
+	createNewObstacle(Line.getLine(new Location(0,0), new Location(0,width)), absorptionRate);        
+        createNewObstacle(Line.getLine(new Location(0,width), new Location(length,width)), absorptionRate);        
+        createNewObstacle(Line.getLine(new Location(length,width), new Location(length,0)), absorptionRate);        
+        createNewObstacle(Line.getLine(new Location(length,0), new Location(0,0)), absorptionRate);
     }//GEN-LAST:event_jButtonOkActionPerformed
+
+    private void createNewObstacle(Line line, int absorptionRate) {
+        Obstacle wall = new Obstacle(line, absorptionRate);
+        Ambient.getObstacles().add(wall);
+        Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, wall.getLine().getInitialPoint(), wall.getLine().getFinalPoint(), wall.getAbsortionRate()};
+        HomeFrame.getObstacleModel().addRow(data);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonOk;

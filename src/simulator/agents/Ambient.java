@@ -9,8 +9,6 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.PlatformController;
 import languagesAndMessages.Message;
-import simulator.objects.Line;
-import simulator.objects.Location;
 import simulator.objects.Obstacle;
 import utils.Util;
 import view.UIController;
@@ -20,8 +18,6 @@ public class Ambient extends Agent{
 	private static final long serialVersionUID = 3849717343310509053L;
 	
 //Declaration of object variables
-	private static int width;
-	private static int lenght;
 	private static Object[] soundSourceParameters;
 //End of object variables declaration
 		
@@ -41,23 +37,9 @@ public class Ambient extends Agent{
 	public void defineAmbient() {
 		container = getContainerController();
 	}
-	
-	private void defineObstacles(){
-		Obstacle wall1 = new Obstacle(Line.getLine(new Location(0,0), new Location(0,width)), 10);
-		Obstacle wall2 = new Obstacle(Line.getLine(new Location(0,width), new Location(lenght,width)),	20);
-		Obstacle wall3 = new Obstacle(Line.getLine(new Location(lenght,width), new Location(lenght,0)), 30);
-		Obstacle wall4 = new Obstacle(Line.getLine(new Location(lenght,0), new Location(0,0)), 40);
-		//Obstacle wall5 = new Obstacle(Line.getLine(new Location(50,30), new Location(50,70)), 50);
-		
-		getObstacles().add(wall1);
-		getObstacles().add(wall2);
-		getObstacles().add(wall3);
-		getObstacles().add(wall4);
-		//obstacles.add(wall5);
-	}
 
 	private void defineSoundSource(){
-		Object[] argsSoundSource = {getSoundSourceParameters()[0], getSoundSourceParameters()[1], getSoundSourceParameters()[2],getSoundSourceParameters()[3], getSoundSourceParameters()[4], getAID(), getObstacles()};		
+		Object[] argsSoundSource = {getSoundSourceParameters()[0], getSoundSourceParameters()[1], getSoundSourceParameters()[2],getSoundSourceParameters()[3], getAID(), getObstacles()};		
 		soundSources.add(createAgent(argsSoundSource, container, this.SOUNDSOURCE));
 	}
 	
@@ -76,22 +58,6 @@ public class Ambient extends Agent{
 				break;
 		}
 		return id;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public static void setWidth(int width) {
-		Ambient.width = width;
-	}
-
-	public static int getLenght() {
-		return lenght;
-	}
-
-	public static void setLenght(int lenght) {
-		Ambient.lenght = lenght;
 	}
 
 	public static Object[] getSoundSourceParameters() {
@@ -137,9 +103,6 @@ public class Ambient extends Agent{
 					break;
 				case Message.CREATE_SOUND_SOUCE:
 					defineSoundSource();
-					break;
-				case Message.DEFINE_OBSTACLES:
-					defineObstacles();
 					break;
 				default:
 					break;

@@ -162,6 +162,11 @@ public class HomeFrame extends javax.swing.JFrame {
         });
 
         jButtonRemoveObstacle.setText("Remove");
+        jButtonRemoveObstacle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoveObstacleActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelObstaclesLayout = new javax.swing.GroupLayout(jPanelObstacles);
         jPanelObstacles.setLayout(jPanelObstaclesLayout);
@@ -204,6 +209,11 @@ public class HomeFrame extends javax.swing.JFrame {
         jScrollPaneTableSoundSources.setViewportView(jTableSoundSources);
 
         jButtonAddSoundSource.setText("ADD");
+        jButtonAddSoundSource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddSoundSourceActionPerformed(evt);
+            }
+        });
 
         jButtonRemoveSoundSource.setText("Remove");
 
@@ -350,7 +360,6 @@ public class HomeFrame extends javax.swing.JFrame {
 
         jMenuItemSoundSource.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemSoundSource.setText("Configure sound source");
-        jMenuItemSoundSource.setEnabled(false);
         jMenuItemSoundSource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemSoundSourceActionPerformed(evt);
@@ -440,12 +449,20 @@ public class HomeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonPauseActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        obstacleSettingsFrame.setVisible(true);
+        this.obstacleSettingsFrame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButtonAddObstacleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddObstacleActionPerformed
-        obstacleSettingsFrame.setVisible(true);
+        this.obstacleSettingsFrame.setVisible(true);
     }//GEN-LAST:event_jButtonAddObstacleActionPerformed
+
+    private void jButtonAddSoundSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddSoundSourceActionPerformed
+        this.soundSourceSettingsFrame.setVisible(true);
+    }//GEN-LAST:event_jButtonAddSoundSourceActionPerformed
+
+    private void jButtonRemoveObstacleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveObstacleActionPerformed
+      ((DefaultTableModel) jTableObstacles.getModel()).removeRow(jTableObstacles.getSelectedRow());
+    }//GEN-LAST:event_jButtonRemoveObstacleActionPerformed
 
     private void runSimulation(){
         this.jButtonStop.setEnabled(true);
@@ -464,6 +481,8 @@ public class HomeFrame extends javax.swing.JFrame {
         this.jButtonStop.setEnabled(false);
         this.jButtonPause.setEnabled(false);
         this.jButtonResume.setEnabled(false);
+        HomeFrame.jButtonRun.setEnabled(true);
+        HomeFrame.jMenuItemRun.setEnabled(true);
         
         UIController.getInstance().addNewEvent(Message.STOP);
     }
