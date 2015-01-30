@@ -1,12 +1,10 @@
 package simulator.objects;
 
-import static org.junit.Assert.*;
-
+import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
-import simulator.objects.Location;
+import static org.junit.Assert.*;
 
 public class LocationTest {
 	
