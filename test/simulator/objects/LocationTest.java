@@ -29,7 +29,7 @@ public class LocationTest {
 	@Test 
 	public void toStringTeste(){
 		Location location = new Location(20, 30);
-		assertEquals("[x: 20.0; y: 30.0]", location.toString());
+		assertEquals("(x: 20.0; y: 30.0)", location.toString());
 	}
 
 	@Test

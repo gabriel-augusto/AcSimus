@@ -53,8 +53,7 @@ public abstract class Line {
 		return searchIntersectionPoint((VerticalLine) line);
 	}
 	
-	public abstract Location searchIntersectionPoint(
-			VerticalLine line);
+	public abstract Location searchIntersectionPoint(VerticalLine line);
 	
 	public abstract Location searchIntersectionPoint(NormalLine line);
 	

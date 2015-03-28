@@ -71,8 +71,6 @@ public class Location {
 				coordinate = 'y';
 			}
 		}		
-		return new Location(Double.valueOf(
-				x.toString()), 
-				Double.valueOf(y.toString()));
+		return new Location(Double.valueOf(x.toString()), Double.valueOf(y.toString()));
 	}
 }
