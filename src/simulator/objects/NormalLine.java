@@ -5,7 +5,7 @@ public class NormalLine extends Line{
 	protected NormalLine(Location initialPoint, Location finalPoint) {
 		super(initialPoint, finalPoint);
 	}
-	
+
 	protected NormalLine(Location initialPoint, double direction){
 		super(initialPoint, direction);
 	}

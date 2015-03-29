@@ -1,10 +1,13 @@
 package main;
 
+import jade.wrapper.StaleProxyException;
+import utils.Util;
 import view.HomeFrame;
 
 public class Main {	
 	
     public static void main(String args[]) {
+        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -20,6 +23,12 @@ public class Main {
             @Override
             public void run() {
                 new HomeFrame().setVisible(true);
+                Util.initiateJadeRma();
+                try {
+                	Util.initiateAmbient();
+                } catch (StaleProxyException e) {
+                	e.printStackTrace();
+                }
             }
         });
     }    

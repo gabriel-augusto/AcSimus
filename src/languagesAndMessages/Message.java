@@ -9,6 +9,11 @@ public class Message {
 	public static String WHAT_IS_THE_LOCATION = "What is the location?";
 	public static String WHAT_IS_THE_INDEX = "What is the index?";
 	public static final String MSG_NOT_UNDERSTOOD =	"Message not understood.";
+	public static final String PAUSE = "pause";
+	public static final String RESUME = "resume";
+	public static final String STOP = "stop simulation";
+	public static final String RUN = "run";
+	public static final String CREATE_SOUND_SOUCE = "create sound source";
 	
 	
 	public static ACLMessage prepareMessage(int type, String language, String content, AID target){

@@ -1,14 +1,12 @@
 package simulator.objects;
 
-import static org.junit.Assert.*;
-
+import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
-import simulator.objects.Location;
+import static org.junit.Assert.*;
 
-public class LocalizationTest {
+public class LocationTest {
 	
 	private double TOLERANCIA;
 	
@@ -31,7 +29,7 @@ public class LocalizationTest {
 	@Test 
 	public void toStringTeste(){
 		Location location = new Location(20, 30);
-		assertEquals("[x: 20.0; y: 30.0]", location.toString());
+		assertEquals("(x: 20.0; y: 30.0)", location.toString());
 	}
 
 	@Test
