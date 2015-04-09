@@ -211,7 +211,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         
         HomeFrame.jButtonRun.setEnabled(true);
         HomeFrame.jMenuItemRun.setEnabled(true);
-        UIController.getInstance().addNewEvent(Message.CREATE_SOUND_SOUCE);
+        UIController.getInstance().addNewEvent(Message.CREATE_SOUND_SOURCE);
         this.setVisible(false);
     }//GEN-LAST:event_jButtonOkActionPerformed
 

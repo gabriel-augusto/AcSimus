@@ -478,13 +478,16 @@ public class HomeFrame extends javax.swing.JFrame {
     }
     
     private void stopSimulation(){
+        if(this.jButtonResume.isEnabled())
+            UIController.getInstance().addNewEvent(Message.STOP_PAUSED);
+        else
+            UIController.getInstance().addNewEvent(Message.STOP_RESUMED);
+        
         this.jButtonStop.setEnabled(false);
         this.jButtonPause.setEnabled(false);
         this.jButtonResume.setEnabled(false);
         HomeFrame.jButtonRun.setEnabled(true);
         HomeFrame.jMenuItemRun.setEnabled(true);
-        
-        UIController.getInstance().addNewEvent(Message.STOP);
     }
     
     private void pauseSimulation(){
@@ -492,7 +495,7 @@ public class HomeFrame extends javax.swing.JFrame {
         this.jMenuItemPause.setEnabled(false);
         this.jButtonResume.setEnabled(true);
         this.jMenuItemResume.setEnabled(true);
-        this.jButtonStop.setEnabled(false);
+        this.jButtonStop.setEnabled(true);
         
         UIController.getInstance().addNewEvent(Message.PAUSE);
     }

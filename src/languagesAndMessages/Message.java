@@ -11,9 +11,10 @@ public class Message {
 	public static final String MSG_NOT_UNDERSTOOD =	"Message not understood.";
 	public static final String PAUSE = "pause";
 	public static final String RESUME = "resume";
-	public static final String STOP = "stop simulation";
+	public static final String STOP_RESUMED = "stop resumed simulation";
+        public static final String STOP_PAUSED = "stop paused simulation";
 	public static final String RUN = "run";
-	public static final String CREATE_SOUND_SOUCE = "create sound source";
+	public static final String CREATE_SOUND_SOURCE = "create sound source";
 	
 	
 	public static ACLMessage prepareMessage(int type, String language, String content, AID target){

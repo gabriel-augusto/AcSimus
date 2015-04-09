@@ -203,7 +203,7 @@ public class Sound extends Agent{
 			ACLMessage message = receive();
 
 			if (message != null && message.getPerformative() == ACLMessage.INFORM) {
-				if (message.getContent().equals(Message.STOP)){
+				if (message.getContent().equals(Message.STOP_RESUMED)){
 					doDelete();
 					System.out.println("Sound Source: Sounds and SoundSource destroyed successfuly!");
 				}

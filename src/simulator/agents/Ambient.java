@@ -89,9 +89,12 @@ public class Ambient extends Agent{
 			
 			if(UIController.getInstance().getEvents().peek() != null){
 				switch(UIController.getInstance().getEvents().poll()){
-				case Message.STOP:
-					stopSimulation();
+				case Message.STOP_RESUMED:
+					stopSimulation(Message.STOP_RESUMED);
 					break;
+                                case Message.STOP_PAUSED:
+                                        stopSimulation(Message.STOP_PAUSED);
+                                        break;
 				case Message.PAUSE:
 					pauseSimulation();
 					break;
@@ -101,7 +104,7 @@ public class Ambient extends Agent{
 				case Message.RUN:
 					runSimulation();
 					break;
-				case Message.CREATE_SOUND_SOUCE:
+				case Message.CREATE_SOUND_SOURCE:
 					defineSoundSource();
 					break;
 				default:
@@ -113,8 +116,8 @@ public class Ambient extends Agent{
 			send(Message.prepareMessage(ACLMessage.INFORM, null, Message.RUN, soundSources));
 		}
 		
-		private void stopSimulation() {
-			send(Message.prepareMessage(ACLMessage.INFORM, null, Message.STOP, soundSources));
+		private void stopSimulation(String status) {
+			send(Message.prepareMessage(ACLMessage.INFORM, null, status, soundSources));
 		}
 		
 		private void pauseSimulation(){

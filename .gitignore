@@ -1,3 +1,8 @@
 *.class
+/build.xml
+/manifest.mf
 /APDescription.txt
 /MTPs-Main-Container.txt
+/nbproject/private/
+/build/
+/bin/

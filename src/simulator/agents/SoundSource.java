@@ -129,8 +129,12 @@ public class SoundSource extends Agent{
 			if (message != null && message.getPerformative() == ACLMessage.INFORM) {
 				AID sender = message.getSender();
 
-				if (message.getContent().equals(Message.STOP)){
-					stopSimulation();
+				if (message.getContent().equals(Message.STOP_RESUMED)){
+					stopSimulation(Message.STOP_RESUMED);
+					System.out.println("Simulation stoped.");
+				}
+                                else if (message.getContent().equals(Message.STOP_PAUSED)){
+					stopSimulation(Message.STOP_PAUSED);
 					System.out.println("Simulation stoped.");
 				}
 				else if(message.getContent().equals(Message.PAUSE)){
@@ -173,7 +177,21 @@ public class SoundSource extends Agent{
 		}
 	}
 
-	private void stopSimulation(){
-		send(Message.prepareMessage(ACLMessage.INFORM, null, Message.STOP, sounds));
+	private void stopSimulation(String status){
+		
+                if(status.equals(Message.STOP_RESUMED))
+                        send(Message.prepareMessage(ACLMessage.INFORM, null, Message.STOP_RESUMED, sounds));
+                else{
+                        ContainerController cc = getContainerController();
+                        AgentController ac;
+                        for(AID sound : sounds){
+                                try {
+                                        ac = cc.getAgent(sound.getLocalName());
+                                        ac.kill();
+                                } catch (ControllerException e) {
+                                        e.printStackTrace();
+                                }
+                        }
+                }
 	}
 }
