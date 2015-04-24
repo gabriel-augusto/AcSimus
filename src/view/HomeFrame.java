@@ -7,8 +7,10 @@
 package view;
 
 import javax.swing.table.DefaultTableModel;
+
 import languagesAndMessages.Message;
 import settings.ProjectSettings;
+import simulator.agents.Ambient;
 
 /**
  *
@@ -23,10 +25,11 @@ public class HomeFrame extends javax.swing.JFrame {
     private final SimulationSettingsFrame simulationSettingsFrame = new SimulationSettingsFrame();
     private final ObstaclesSettingsFrame obstacleSettingsFrame = new ObstaclesSettingsFrame();
     
-    private static DefaultTableModel obstacleModel = new DefaultTableModel(null, new String [] {"Nº", "Initial Point", "End Point", "Absorption Rate"});
+    private static DefaultTableModel obstacleModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Initial Point", "End Point", "Absorption Rate"});
     
-    private static DefaultTableModel soundSourceModel = new DefaultTableModel(null, new String [] {"Nº", "Power", "Opening", "Location", "Direction"});
-        
+    private static DefaultTableModel soundSourceModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Power", "Opening", "Location", "Direction"});
+    private static int obstacleCount = 0;    
+    
     public HomeFrame() {
         initComponents();
     }
@@ -461,7 +464,16 @@ public class HomeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonAddSoundSourceActionPerformed
 
     private void jButtonRemoveObstacleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveObstacleActionPerformed
-      ((DefaultTableModel) jTableObstacles.getModel()).removeRow(jTableObstacles.getSelectedRow());
+    	String id;
+        id = (String)jTableObstacles.getModel().getValueAt(jTableObstacles.getSelectedRow(), 1);
+    	System.out.println(id);
+        
+    	Ambient.getObstacles().remove(id);
+        
+        ((DefaultTableModel) jTableObstacles.getModel()).removeRow(jTableObstacles.getSelectedRow());
+        for(int i = 0; i < jTableObstacles.getModel().getRowCount(); i++){
+            jTableObstacles.getModel().setValueAt(i+1, i, 0);
+        }
     }//GEN-LAST:event_jButtonRemoveObstacleActionPerformed
 
     private void runSimulation(){
@@ -526,7 +538,12 @@ public class HomeFrame extends javax.swing.JFrame {
         HomeFrame.soundSourceModel = soundSourceModel;
     }
     
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    public static int getObstacleCount() {
+		obstacleCount++;
+    	return obstacleCount;
+	}
+
+	// Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddObstacle;
     private javax.swing.JButton jButtonAddSoundSource;
     private javax.swing.JButton jButtonConfig;

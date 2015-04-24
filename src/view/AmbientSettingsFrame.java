@@ -165,16 +165,17 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
         int width = (int)this.jSpinnerWidth.getValue();
         int absorptionRate = (int)this.jSpinnerAbsorptionRate.getValue();
 
-	createNewObstacle(Line.getLine(new Location(0,0), new Location(0,width)), absorptionRate);        
-        createNewObstacle(Line.getLine(new Location(0,width), new Location(length,width)), absorptionRate);        
-        createNewObstacle(Line.getLine(new Location(length,width), new Location(length,0)), absorptionRate);        
-        createNewObstacle(Line.getLine(new Location(length,0), new Location(0,0)), absorptionRate);
+	addNewObstacle(Line.getLine(new Location(0,0), new Location(0,width)), absorptionRate);        
+        addNewObstacle(Line.getLine(new Location(0,width), new Location(length,width)), absorptionRate);        
+        addNewObstacle(Line.getLine(new Location(length,width), new Location(length,0)), absorptionRate);        
+        addNewObstacle(Line.getLine(new Location(length,0), new Location(0,0)), absorptionRate);
     }//GEN-LAST:event_jButtonOkActionPerformed
 
-    private void createNewObstacle(Line line, int absorptionRate) {
+    private void addNewObstacle(Line line, int absorptionRate) {
+        String id = "Ob-"+HomeFrame.getObstacleCount();
         Obstacle wall = new Obstacle(line, absorptionRate);
-        Ambient.getObstacles().add(wall);
-        Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, wall.getLine().getInitialPoint(), wall.getLine().getFinalPoint(), wall.getAbsortionRate()};
+        Ambient.getObstacles().put(id, wall);
+        Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, id, wall.getLine().getInitialPoint(), wall.getLine().getFinalPoint(), wall.getAbsortionRate()};
         HomeFrame.getObstacleModel().addRow(data);
     }
 

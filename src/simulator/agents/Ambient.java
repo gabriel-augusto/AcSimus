@@ -1,6 +1,7 @@
 package simulator.agents;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import jade.core.AID;
@@ -23,7 +24,7 @@ public class Ambient extends Agent{
 		
 //Declaration of agent variables
 	private final String SOUNDSOURCE = "SoundSource";
-	private static List <Obstacle> obstacles = new ArrayList<>();
+	private static HashMap <String, Obstacle> obstacles = new HashMap<>();
 	private static List <AID> soundSources = new ArrayList<>();
 	private PlatformController container = null;
 //End of agent variables declaration
@@ -68,13 +69,17 @@ public class Ambient extends Agent{
 		Ambient.soundSourceParameters = soundSourceParameters;
 	}
 
-	public static List <Obstacle> getObstacles() {
+
+
+	public static HashMap <String, Obstacle> getObstacles() {
 		return obstacles;
 	}
 
-	public static void setObstacles(List <Obstacle> obstacles) {
+	public static void setObstacles(HashMap <String, Obstacle> obstacles) {
 		Ambient.obstacles = obstacles;
 	}
+
+
 
 	/*--------------------------  COMPORTAMENTS ------------------------ */
 	private class GetEventBehaviour extends CyclicBehaviour {

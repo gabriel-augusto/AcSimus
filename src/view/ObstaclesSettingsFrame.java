@@ -6,6 +6,7 @@
 package view;
 
 import javax.swing.table.DefaultTableModel;
+
 import simulator.agents.Ambient;
 import simulator.objects.Line;
 import simulator.objects.Location;
@@ -180,14 +181,15 @@ public class ObstaclesSettingsFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
-        Location initialPoint = new Location((Integer) this.jSpinnerInitialPointX.getValue(), (Integer) this.jSpinnerInitialPointY.getValue());
+        String id = "Ob-"+HomeFrame.getObstacleCount();
+    	Location initialPoint = new Location((Integer) this.jSpinnerInitialPointX.getValue(), (Integer) this.jSpinnerInitialPointY.getValue());
         Location endPoint = new Location((Integer) this.jSpinnerEndPointX.getValue(), (Integer) this.jSpinnerEndPointY.getValue());
         int absorptionRate = (int) this.jSpinnerAbsorptionRate.getValue();
         
         Obstacle obstacle = new Obstacle(Line.getLine(initialPoint, endPoint), absorptionRate);
-        Ambient.getObstacles().add(obstacle);
+        Ambient.getObstacles().put(id, obstacle);
         
-        Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, initialPoint, endPoint, absorptionRate};
+        Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, id, initialPoint, endPoint, absorptionRate};
         
         HomeFrame.getObstacleModel().addRow(data);
     }//GEN-LAST:event_jButtonAddActionPerformed

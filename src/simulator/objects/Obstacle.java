@@ -7,8 +7,7 @@ public class Obstacle {
 	private double absortionRate;
 	
 	
-	public Obstacle(Line line, 
-			double absortionRate){
+	public Obstacle(Line line, double absortionRate){
 		this.setLine(line);
 		this.absortionRate = absortionRate;
 	}
@@ -27,5 +26,5 @@ public class Obstacle {
 
 	public void setLine(Line line) {
 		this.line = line;
-	}	
+	}
 }
