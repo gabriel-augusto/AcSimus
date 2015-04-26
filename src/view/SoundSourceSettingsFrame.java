@@ -202,11 +202,12 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
+        String id = "SS-"+HomeFrame.getSoundSourceCount();
         Location location = new Location((int)this.jSpinnerX.getValue(), (int)this.jSpinnerY.getValue());
-        Object[] parameters = {location, this.jSpinnerPower.getValue(), this.jSpinnerOpening.getValue(), this.jSpinnerDirection.getValue()};
+        Object[] parameters = {location, this.jSpinnerPower.getValue(), this.jSpinnerOpening.getValue(), this.jSpinnerDirection.getValue(), id};
         Ambient.setSoundSourceParameters(parameters);        
         
-        Object[] data = {HomeFrame.jTableSoundSources.getRowCount()+1, parameters[1], parameters[2], parameters[0], parameters[3]};        
+        Object[] data = {HomeFrame.jTableSoundSources.getRowCount()+1, id, parameters[1], parameters[2], parameters[0], parameters[3]};        
         HomeFrame.getSoundSourceModel().addRow(data);
         
         HomeFrame.jButtonRun.setEnabled(true);

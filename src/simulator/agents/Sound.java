@@ -1,8 +1,6 @@
 package simulator.agents;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.HashMap;
 import settings.ProjectSettings;
 import simulator.objects.Line;
 import simulator.objects.Location;
@@ -26,7 +24,7 @@ public class Sound extends Agent{
 	private static final int SIZE_OF_STEP = 1;
 	private static final double ERROR = 1; //SIZE_OF_STEP/2;
 	
-	private static List <Obstacle> obstacles;
+	private static HashMap <String, Obstacle> obstacles;
 	
 	private Line rote;
 	private Location collisionPoint;
@@ -75,7 +73,7 @@ public class Sound extends Agent{
 		power = (double) args[2];
 		intensity = power;
 		opening = (int) args[3];
-		obstacles = (ArrayList<Obstacle>) args[6];
+		obstacles = (HashMap<String, Obstacle>) args[6];
 		rote = Line.getLine(initialLocation, direction);
 	}
 	
@@ -83,7 +81,7 @@ public class Sound extends Agent{
 		collisionPoint = null;
 		collisionObstacle = null;
 		Location intersectionPoint = null;
-		for(Obstacle obstacle : obstacles){
+		for(Obstacle obstacle : obstacles.values()){
 			intersectionPoint = rote.searchSlopePoint(obstacle.getLine());
 			if(intersectionPoint != null && !actualLocation.equals(intersectionPoint, ERROR)){
 				if(collisionPoint == null || actualLocation.distance(intersectionPoint) < actualLocation.distance(collisionPoint)){

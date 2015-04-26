@@ -1,6 +1,7 @@
 package simulator.agents;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import simulator.objects.Location;
@@ -28,7 +29,7 @@ public class SoundSource extends Agent{
 	
 	//private int updateTime = 10000; //Uncomment if the UpdateSoundBehaviour is activated.
 	
-	private static List <Obstacle> obstacles;
+	private static HashMap <String, Obstacle> obstacles;
 	private List <AID> sounds = new ArrayList<>();
 	
 	private AID ambient;
@@ -81,7 +82,7 @@ public class SoundSource extends Agent{
 		opening = (int) args[2];
 		direction = (int) args[3];
 		ambient = (AID) args[4];
-		obstacles = (ArrayList<Obstacle>) args[5];
+		obstacles = (HashMap<String, Obstacle>) args[5];
 	}
 
 	private AID createSound (Location location, double direction, double potency, int opening){

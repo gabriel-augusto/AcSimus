@@ -1,5 +1,6 @@
 package languagesAndMessages;
 
+import java.util.HashMap;
 import java.util.List;
 
 import jade.core.AID;
@@ -40,6 +41,16 @@ public class Message {
 		ACLMessage message = new ACLMessage(type);
 		message.setLanguage(language);
 		for(AID target : targets)
+			message.addReceiver(target);
+		message.setContent(content);
+		
+		return message;
+	}
+	
+	public static ACLMessage prepareMessage(int type, String language, String content, HashMap<String, AID> targets){
+		ACLMessage message = new ACLMessage(type);
+		message.setLanguage(language);
+		for(AID target : targets.values())
 			message.addReceiver(target);
 		message.setContent(content);
 		

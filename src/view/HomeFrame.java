@@ -28,7 +28,8 @@ public class HomeFrame extends javax.swing.JFrame {
     private static DefaultTableModel obstacleModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Initial Point", "End Point", "Absorption Rate"});
     
     private static DefaultTableModel soundSourceModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Power", "Opening", "Location", "Direction"});
-    private static int obstacleCount = 0;    
+    private static int obstacleCount = 0;
+    private static int soundSourceCount = 0;
     
     public HomeFrame() {
         initComponents();
@@ -219,6 +220,11 @@ public class HomeFrame extends javax.swing.JFrame {
         });
 
         jButtonRemoveSoundSource.setText("Remove");
+        jButtonRemoveSoundSource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoveSoundSourceActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelSoundSourcesLayout = new javax.swing.GroupLayout(jPanelSoundSources);
         jPanelSoundSources.setLayout(jPanelSoundSourcesLayout);
@@ -476,6 +482,20 @@ public class HomeFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonRemoveObstacleActionPerformed
 
+    private void jButtonRemoveSoundSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveSoundSourceActionPerformed
+        String id;
+        id = (String)jTableSoundSources.getModel().getValueAt(jTableSoundSources.getSelectedRow(), 1);
+    	System.out.println(id);
+        
+        Ambient.killSoundSource(id);
+    	Ambient.getSoundSources().remove(id);
+        
+        ((DefaultTableModel) jTableSoundSources.getModel()).removeRow(jTableSoundSources.getSelectedRow());
+        for(int i = 0; i < jTableSoundSources.getModel().getRowCount(); i++){
+            jTableSoundSources.getModel().setValueAt(i+1, i, 0);
+        }
+    }//GEN-LAST:event_jButtonRemoveSoundSourceActionPerformed
+
     private void runSimulation(){
         this.jButtonStop.setEnabled(true);
         this.jMenuItemStop.setEnabled(true);
@@ -543,7 +563,12 @@ public class HomeFrame extends javax.swing.JFrame {
     	return obstacleCount;
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
+	public static int getSoundSourceCount() {
+		soundSourceCount++;
+		return soundSourceCount;
+	}
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddObstacle;
     private javax.swing.JButton jButtonAddSoundSource;
     private javax.swing.JButton jButtonConfig;

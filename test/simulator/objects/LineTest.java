@@ -78,12 +78,16 @@ public class LineTest {
 		Line line3 = Line.getLine(new Location(-1,0), new Location(1,0));
 		Line line4 = Line.getLine(new Location(1,-1), 90);
 		
+		Line line5 = Line.getLine(new Location(0,0), new Location(0,100));
+		Line line6 = Line.getLine(new Location(50,50), 180);
 		
-		Location intersectionPoint1 = 	line1.searchSlopePoint(line2);
+		Location intersectionPoint1 = line1.searchSlopePoint(line2);
 		Location intersectionPoint2 = line3.searchSlopePoint(line4);
+		Location intersectionPoint3 = line5.searchSlopePoint(line6);
 		
 		assertTrue(intersectionPoint1.equals(new Location(1, 1), precision));
 		assertTrue(intersectionPoint2.equals(new Location(1, 0), precision));
+		assertTrue(intersectionPoint3.equals(new Location(0,50), precision));
 	}
 	
 	@Test
