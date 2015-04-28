@@ -1,11 +1,13 @@
 package simulator.agents;
 
 import java.util.HashMap;
+
 import settings.ProjectSettings;
 import simulator.objects.Line;
 import simulator.objects.Location;
 import simulator.objects.Obstacle;
 import utils.Util;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
@@ -13,6 +15,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
+import languagesAndMessages.Language;
 import languagesAndMessages.Message;
 
 
@@ -25,6 +28,9 @@ public class Sound extends Agent{
 	private static final double ERROR = 1; //SIZE_OF_STEP/2;
 	
 	private static HashMap <String, Obstacle> obstacles;
+	
+	private String identifier;
+	private AID soundSource;
 	
 	private Line rote;
 	private Location collisionPoint;
@@ -74,7 +80,9 @@ public class Sound extends Agent{
 		intensity = power;
 		opening = (int) args[3];
 		obstacles = (HashMap<String, Obstacle>) args[6];
-		rote = Line.getLine(initialLocation, direction);
+		identifier = (String) args[7];
+		soundSource = (AID) args[8];
+		rote = Line.getLine(initialLocation, direction);		
 	}
 	
 	private void findNextObstacle(){
@@ -128,6 +136,7 @@ public class Sound extends Agent{
 	}
 	
 	private void killSound() {
+		send(Message.prepareMessage(ACLMessage.INFORM, Language.FINISH, identifier, soundSource));
 		this.doDelete();
 		System.out.println("END OF SOUND!!!");
 	}

@@ -192,6 +192,11 @@ public class ObstaclesSettingsFrame extends javax.swing.JFrame {
         Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, id, initialPoint, endPoint, absorptionRate};
         
         HomeFrame.getObstacleModel().addRow(data);
+        
+        if(!Ambient.getSoundSources().isEmpty()){
+            HomeFrame.jButtonRun.setEnabled(true);
+            HomeFrame.jMenuItemRun.setEnabled(true);
+        }
     }//GEN-LAST:event_jButtonAddActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

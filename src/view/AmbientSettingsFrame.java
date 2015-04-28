@@ -169,6 +169,11 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
         addNewObstacle(Line.getLine(new Location(0,width), new Location(length,width)), absorptionRate);        
         addNewObstacle(Line.getLine(new Location(length,width), new Location(length,0)), absorptionRate);        
         addNewObstacle(Line.getLine(new Location(length,0), new Location(0,0)), absorptionRate);
+        
+        if(!Ambient.getSoundSources().isEmpty()){
+            HomeFrame.jButtonRun.setEnabled(true);
+            HomeFrame.jMenuItemRun.setEnabled(true);
+        }
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     private void addNewObstacle(Line line, int absorptionRate) {

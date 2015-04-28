@@ -210,10 +210,13 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         Object[] data = {HomeFrame.jTableSoundSources.getRowCount()+1, id, parameters[1], parameters[2], parameters[0], parameters[3]};        
         HomeFrame.getSoundSourceModel().addRow(data);
         
-        HomeFrame.jButtonRun.setEnabled(true);
-        HomeFrame.jMenuItemRun.setEnabled(true);
         UIController.getInstance().addNewEvent(Message.CREATE_SOUND_SOURCE);
         this.setVisible(false);
+        
+        if(!Ambient.getObstacles().isEmpty()){
+            HomeFrame.jButtonRun.setEnabled(true);
+            HomeFrame.jMenuItemRun.setEnabled(true);
+        }
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

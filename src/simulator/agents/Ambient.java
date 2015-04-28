@@ -13,6 +13,7 @@ import jade.wrapper.PlatformController;
 import languagesAndMessages.Message;
 import simulator.objects.Obstacle;
 import utils.Util;
+import view.HomeFrame;
 import view.UIController;
 
 public class Ambient extends Agent{
@@ -27,15 +28,17 @@ public class Ambient extends Agent{
 	private final String SOUNDSOURCE = "SoundSource";
 	private static HashMap <String, Obstacle> obstacles = new HashMap<>();
 	private static HashMap <String, AID> soundSources = new HashMap<>();
-	private static ContainerController cc = null;
+//End of agent variables declaration
 	
+	private static ContainerController cc = null;
 	private PlatformController container = null;
 	
-//End of agent variables declaration
+	private int countSoundSourcesFinished = 0;
 	
 	@Override
 	protected void setup() {
 		defineAmbient();
+		addBehaviour(new GetMessageBehaviour(this));
 		addBehaviour(new GetEventBehaviour(this));
 	}
 	
@@ -104,6 +107,40 @@ public class Ambient extends Agent{
 
 
 	/*--------------------------  COMPORTAMENTS ------------------------ */
+	private class GetMessageBehaviour extends CyclicBehaviour {
+		
+		private static final long serialVersionUID = 1L;
+
+		public GetMessageBehaviour(Agent agent) {
+			super(agent);
+		}
+		
+		@Override
+		public void action() {
+			ACLMessage message = receive();
+
+			if (message != null && message.getPerformative() == ACLMessage.INFORM) {
+				AID sender = message.getSender();
+
+				if (message.getContent().equals(Message.FINISH_SIMULATION)){
+					countSoundSourcesFinished++;
+					if(countSoundSourcesFinished==soundSources.size()){
+						finishSimulation();
+						System.out.println("Simulation finished.");
+						countSoundSourcesFinished=0;
+					}
+				}
+				else {
+					send(Message.getAnswerOfANotUnderstoodMessage(sender));					
+				}
+			}
+		}
+		private void finishSimulation() {
+			HomeFrame.getHomeFrame().stopSimulation();
+		}
+	}
+	
+	
 	private class GetEventBehaviour extends CyclicBehaviour {
 
 		private static final long serialVersionUID = 6944311014873873811L;

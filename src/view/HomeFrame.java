@@ -17,6 +17,8 @@ import simulator.agents.Ambient;
  * @author Gabriel
  */
 public class HomeFrame extends javax.swing.JFrame {
+	
+	private static HomeFrame homeFrame= null;
 
     private static final long serialVersionUID = 1L;
 	
@@ -26,13 +28,19 @@ public class HomeFrame extends javax.swing.JFrame {
     private final ObstaclesSettingsFrame obstacleSettingsFrame = new ObstaclesSettingsFrame();
     
     private static DefaultTableModel obstacleModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Initial Point", "End Point", "Absorption Rate"});
-    
     private static DefaultTableModel soundSourceModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Power", "Opening", "Location", "Direction"});
     private static int obstacleCount = 0;
     private static int soundSourceCount = 0;
     
-    public HomeFrame() {
+    private HomeFrame() {
         initComponents();
+    }
+    
+    public static HomeFrame getHomeFrame(){
+    	if(homeFrame == null){
+    		homeFrame = new HomeFrame();
+    	}
+    	return homeFrame;
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -480,6 +488,9 @@ public class HomeFrame extends javax.swing.JFrame {
         for(int i = 0; i < jTableObstacles.getModel().getRowCount(); i++){
             jTableObstacles.getModel().setValueAt(i+1, i, 0);
         }
+        if(Ambient.getObstacles().isEmpty()){
+            jButtonRun.setEnabled(false);
+        }
     }//GEN-LAST:event_jButtonRemoveObstacleActionPerformed
 
     private void jButtonRemoveSoundSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveSoundSourceActionPerformed
@@ -493,6 +504,9 @@ public class HomeFrame extends javax.swing.JFrame {
         ((DefaultTableModel) jTableSoundSources.getModel()).removeRow(jTableSoundSources.getSelectedRow());
         for(int i = 0; i < jTableSoundSources.getModel().getRowCount(); i++){
             jTableSoundSources.getModel().setValueAt(i+1, i, 0);
+        }
+        if(Ambient.getSoundSources().isEmpty()){
+            jButtonRun.setEnabled(false);
         }
     }//GEN-LAST:event_jButtonRemoveSoundSourceActionPerformed
 
@@ -509,15 +523,18 @@ public class HomeFrame extends javax.swing.JFrame {
         UIController.getInstance().addNewEvent(Message.RUN);
     }
     
-    private void stopSimulation(){
+    public void stopSimulation(){
         if(this.jButtonResume.isEnabled())
             UIController.getInstance().addNewEvent(Message.STOP_PAUSED);
         else
             UIController.getInstance().addNewEvent(Message.STOP_RESUMED);
         
         this.jButtonStop.setEnabled(false);
+        this.jMenuItemStop.setEnabled(false);
         this.jButtonPause.setEnabled(false);
+        this.jMenuItemPause.setEnabled(false);
         this.jButtonResume.setEnabled(false);
+        this.jMenuItemResume.setEnabled(false);
         HomeFrame.jButtonRun.setEnabled(true);
         HomeFrame.jMenuItemRun.setEnabled(true);
     }
