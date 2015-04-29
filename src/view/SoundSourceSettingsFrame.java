@@ -82,6 +82,14 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
 
         jLabelY.setText("Y:");
 
+        jSpinnerOpening.setModel(new javax.swing.SpinnerNumberModel(70, 0, 360, 1));
+
+        jSpinnerPower.setModel(new javax.swing.SpinnerNumberModel(100, 1, 10000, 1));
+
+        jSpinnerX.setModel(new javax.swing.SpinnerNumberModel(5, 0, 1000, 1));
+
+        jSpinnerY.setModel(new javax.swing.SpinnerNumberModel(5, 0, 1000, 1));
+
         jButtonOk.setText("OK");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,6 +98,8 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         });
 
         jLabelDirection.setText("Direction (degrees):");
+
+        jSpinnerDirection.setModel(new javax.swing.SpinnerNumberModel(0, 0, 360, 1));
 
         javax.swing.GroupLayout jPanelBodyLayout = new javax.swing.GroupLayout(jPanelBody);
         jPanelBody.setLayout(jPanelBodyLayout);
@@ -103,14 +113,10 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
                     .addComponent(jSeparator1)
                     .addGroup(jPanelBodyLayout.createSequentialGroup()
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanelBodyLayout.createSequentialGroup()
-                                .addComponent(jLabelY)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanelBodyLayout.createSequentialGroup()
-                                .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabelLocation)
-                                    .addComponent(jLabelX))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabelY)
+                            .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabelLocation)
+                                .addComponent(jLabelX)))
                         .addGap(10, 10, 10)
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jSpinnerY, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)

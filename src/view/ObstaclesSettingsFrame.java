@@ -77,6 +77,16 @@ public class ObstaclesSettingsFrame extends javax.swing.JFrame {
             }
         });
 
+        jSpinnerInitialPointX.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 1));
+
+        jSpinnerEndPointX.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 1));
+
+        jSpinnerAbsorptionRate.setModel(new javax.swing.SpinnerNumberModel(10, 0, 100, 1));
+
+        jSpinnerInitialPointY.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 1));
+
+        jSpinnerEndPointY.setModel(new javax.swing.SpinnerNumberModel(10, 0, 1000, 1));
+
         jLabel1.setText("X:");
 
         jLabel2.setText("Y:");

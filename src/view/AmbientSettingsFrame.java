@@ -71,7 +71,13 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
 
         jLabelWidth.setText("Width:");
 
+        jSpinnerLength.setModel(new javax.swing.SpinnerNumberModel(10, 1, 1000, 1));
+
+        jSpinnerWidth.setModel(new javax.swing.SpinnerNumberModel(10, 1, 1000, 1));
+
         jLabelAbsorptionRate.setText("Absorption rate:");
+
+        jSpinnerAbsorptionRate.setModel(new javax.swing.SpinnerNumberModel(10, 0, 100, 1));
 
         jButtonOk.setText("OK");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
