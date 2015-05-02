@@ -6,6 +6,10 @@
 
 package view;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.io.PrintStream;
 import javax.swing.table.DefaultTableModel;
 
 import languagesAndMessages.Message;
@@ -18,7 +22,8 @@ import simulator.agents.Ambient;
  */
 public class HomeFrame extends javax.swing.JFrame {
 	
-	private static HomeFrame homeFrame= null;
+    private static HomeFrame homeFrame= null;
+    private PrintStream standardOut;
 
     private static final long serialVersionUID = 1L;
 	
@@ -34,6 +39,14 @@ public class HomeFrame extends javax.swing.JFrame {
     
     private HomeFrame() {
         initComponents();
+        PrintStream printStream = new PrintStream(new CustomOutputStream(jTextAreaLog));
+         
+        // keeps reference of standard output stream
+        standardOut = System.out;
+         
+        // re-assigns standard output stream and error output stream
+        System.setOut(printStream);
+        System.setErr(printStream);        
     }
     
     public static HomeFrame getHomeFrame(){
@@ -70,7 +83,9 @@ public class HomeFrame extends javax.swing.JFrame {
         jTableSoundSources = new javax.swing.JTable();
         jButtonAddSoundSource = new javax.swing.JButton();
         jButtonRemoveSoundSource = new javax.swing.JButton();
-        jPanelContent = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextAreaLog = new javax.swing.JTextArea();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemRun = new javax.swing.JMenuItem();
@@ -270,18 +285,25 @@ public class HomeFrame extends javax.swing.JFrame {
 
         jSplitPaneBody.setLeftComponent(jSplitPaneMenu);
 
-        javax.swing.GroupLayout jPanelContentLayout = new javax.swing.GroupLayout(jPanelContent);
-        jPanelContent.setLayout(jPanelContentLayout);
-        jPanelContentLayout.setHorizontalGroup(
-            jPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 393, Short.MAX_VALUE)
+        jTextAreaLog.setEditable(false);
+        jTextAreaLog.setColumns(20);
+        jTextAreaLog.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaLog);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
         );
-        jPanelContentLayout.setVerticalGroup(
-            jPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 439, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 292, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jSplitPaneBody.setRightComponent(jPanelContent);
+        jSplitPaneBody.setRightComponent(jPanel1);
 
         javax.swing.GroupLayout jPanelBodyLayout = new javax.swing.GroupLayout(jPanelBody);
         jPanelBody.setLayout(jPanelBodyLayout);
@@ -300,7 +322,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jPanelHome.setLayout(jPanelHomeLayout);
         jPanelHomeLayout.setHorizontalGroup(
             jPanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelBody, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelHomeLayout.setVerticalGroup(
             jPanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,9 +424,7 @@ public class HomeFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(jToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                .addComponent(jPanelHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanelHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -609,11 +629,12 @@ public class HomeFrame extends javax.swing.JFrame {
     public static javax.swing.JMenuItem jMenuItemSoundSource;
     private javax.swing.JMenuItem jMenuItemStop;
     private javax.swing.JMenu jMenuSoundEdit;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelBody;
-    private javax.swing.JPanel jPanelContent;
     private javax.swing.JPanel jPanelHome;
     private javax.swing.JPanel jPanelObstacles;
     private javax.swing.JPanel jPanelSoundSources;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneTableObstacles;
     private javax.swing.JScrollPane jScrollPaneTableSoundSources;
     private javax.swing.JToolBar.Separator jSeparator1;
@@ -622,6 +643,7 @@ public class HomeFrame extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPaneMenu;
     public static javax.swing.JTable jTableObstacles;
     public static javax.swing.JTable jTableSoundSources;
+    private javax.swing.JTextArea jTextAreaLog;
     private javax.swing.JToolBar jToolBar;
     // End of variables declaration//GEN-END:variables
 }
