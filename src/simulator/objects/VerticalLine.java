@@ -7,11 +7,11 @@ public class VerticalLine extends Line{
 	private static final double TOLERANCE = 0.000001;
 	
 	protected VerticalLine(Location initialPoint, Location finalPoint) {
-		super(initialPoint, finalPoint);
+		super(initialPoint, finalPoint, Line.VERTICAL);
 	}
 	
 	protected VerticalLine(Location initialPoint, double direction){
-		super(initialPoint, direction);
+		super(initialPoint, direction, Line.VERTICAL);
 	}
 	
 	public Location searchIntersectionPoint(VerticalLine line){		
@@ -25,12 +25,6 @@ public class VerticalLine extends Line{
 		if(this.belongsToTheInterval(y))
 			return new Location(this.getConstant(), y);		
 		return null;
-	}
-	
-	public Location searchSlopePoint(Line line){
-		if(line instanceof NormalLine)
-			return searchIntersectionPoint((NormalLine)line);
-		return searchIntersectionPoint((VerticalLine) line);
 	}
 	
 	protected boolean belongsToTheInterval(double y){

@@ -90,7 +90,7 @@ public class Sound extends Agent{
 		collisionObstacle = null;
 		Location intersectionPoint = null;
 		for(Obstacle obstacle : obstacles.values()){
-			intersectionPoint = rote.searchSlopePoint(obstacle.getLine());
+			intersectionPoint = rote.searchIntersectionPoint(obstacle.getLine());
 			if(intersectionPoint != null && !actualLocation.equals(intersectionPoint, ERROR)){
 				if(collisionPoint == null || actualLocation.distance(intersectionPoint) < actualLocation.distance(collisionPoint)){
 					collisionObstacle = obstacle;

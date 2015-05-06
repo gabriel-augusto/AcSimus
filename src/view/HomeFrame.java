@@ -6,9 +6,6 @@
 
 package view;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.io.PrintStream;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,8 +20,6 @@ import simulator.agents.Ambient;
 public class HomeFrame extends javax.swing.JFrame {
 	
     private static HomeFrame homeFrame= null;
-    private PrintStream standardOut;
-
     private static final long serialVersionUID = 1L;
 	
     private final AmbientSettingsFrame ambienteSettingsFrame = new AmbientSettingsFrame();
@@ -39,14 +34,15 @@ public class HomeFrame extends javax.swing.JFrame {
     
     private HomeFrame() {
         initComponents();
+        
+        /*
+        //Put console in application
         PrintStream printStream = new PrintStream(new CustomOutputStream(jTextAreaLog));
-         
-        // keeps reference of standard output stream
-        standardOut = System.out;
          
         // re-assigns standard output stream and error output stream
         System.setOut(printStream);
-        System.setErr(printStream);        
+        System.setErr(printStream);  
+        */
     }
     
     public static HomeFrame getHomeFrame(){

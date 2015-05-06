@@ -6,24 +6,31 @@ public abstract class Line {
 	private Location initialPoint = null;
 	private Location finalPoint = null;
 	private double directionAngle = 0;
+	private int type; // 0 para normal e 1 para vertical
+	public static final int VERTICAL = 1;
+	public static final int NORMAL = 0;
 	
-	protected Line(Location initialPoint, Location finalPoint){
+	//Constructors methods
+	
+	protected Line(Location initialPoint, Location finalPoint, int tipo){
 		this.initialPoint = initialPoint;
 		this.finalPoint = finalPoint;
+		this.type = tipo;
 	}
 	
-	protected Line(Location initialPoint, double direction){
+	protected Line(Location initialPoint, double direction, int tipo){
 		this.initialPoint = initialPoint;
 		this.directionAngle = direction;
+		this.type = tipo;
 	}
+	
+	//Static methods
 	
 	public static Line getLine(Location initialPoint, Location finalPoint){
 		if(isVertical(initialPoint, finalPoint)){
-			return new VerticalLine(initialPoint, 
-					finalPoint);
+			return new VerticalLine(initialPoint, finalPoint);
 		}
-		return new NormalLine(initialPoint, 
-				finalPoint);
+		return new NormalLine(initialPoint, finalPoint);
 	}
 	
 	public static Line getLine(Location initialPoint, double direction){
@@ -45,21 +52,31 @@ public abstract class Line {
 		return false;
 	}
 	
+	//Abstract methods
+	
+	protected abstract double getConstant();
 	public abstract double getSlope();
-	
-	public Location searchSlopePoint(Line line){
-		if(line instanceof NormalLine)
-			return searchIntersectionPoint((NormalLine)line);
-		return searchIntersectionPoint((VerticalLine) line);
-	}
-	
+	public abstract Location searchIntersectionPoint(NormalLine line);	
 	public abstract Location searchIntersectionPoint(VerticalLine line);
+
+	//Public methods
 	
-	public abstract Location searchIntersectionPoint(NormalLine line);
-	
-	public double getConstant() {
-		return 0;
+	public Location searchIntersectionPoint(Line line){
+		Location intersectionPoint = null;
+		switch(line.getType()){
+		case 0:
+			intersectionPoint = searchIntersectionPoint((NormalLine)line);
+			break;
+		case 1:
+			intersectionPoint = searchIntersectionPoint((VerticalLine)line);
+			break;
+		default:
+			System.out.println("Unknown line type!");
+		}
+		return intersectionPoint;
 	}
+	
+	//Gets and Sets
 	
 	public Location getInitialPoint() {
 		return initialPoint;
@@ -83,5 +100,13 @@ public abstract class Line {
 
 	public void setDirection(double direction) {
 		this.directionAngle = direction;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int vertical) {
+		this.type = vertical;
 	}	
 }
