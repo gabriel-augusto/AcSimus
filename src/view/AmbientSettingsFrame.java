@@ -184,9 +184,8 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
 
     private void addNewObstacle(Line line, int absorptionRate) {
         String id = "Ob-"+HomeFrame.getObstacleCount();
-        Obstacle wall = new Obstacle(line, absorptionRate);
-        Ambient.getObstacles().put(id, wall);
-        Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, id, wall.getLine().getInitialPoint(), wall.getLine().getFinalPoint(), wall.getAbsortionRate()};
+        Obstacle.createObstacle(id, line, absorptionRate);
+        Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, id, Obstacle.getObstacles().get(id).getLine().getInitialPoint(), Obstacle.getObstacles().get(id).getLine().getFinalPoint(), Obstacle.getObstacles().get(id).getAbsortionRate()};
         HomeFrame.getObstacleModel().addRow(data);
     }
 

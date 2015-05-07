@@ -1,15 +1,21 @@
 package simulator.objects;
 
+import java.util.HashMap;
+
 
 public class Obstacle {
 
 	private Line line;
 	private double absortionRate;
+	private static HashMap <String, Obstacle> obstacles = new HashMap<>();
 	
-	
-	public Obstacle(Line line, double absortionRate){
+	private Obstacle(Line line, double absortionRate){
 		this.setLine(line);
 		this.absortionRate = absortionRate;
+	}
+	
+	public static void createObstacle(String id, Line line, double absorptionRate){
+		getObstacles().put(id, new Obstacle(line, absorptionRate));
 	}
 	
 	public double getAbsortionRate() {
@@ -26,5 +32,9 @@ public class Obstacle {
 
 	public void setLine(Line line) {
 		this.line = line;
+	}
+
+	public static HashMap <String, Obstacle> getObstacles() {
+		return obstacles;
 	}
 }

@@ -9,6 +9,7 @@ package view;
 import languagesAndMessages.Message;
 import simulator.agents.Ambient;
 import simulator.objects.Location;
+import simulator.objects.Obstacle;
 
 /**
  *
@@ -219,7 +220,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         UIController.getInstance().addNewEvent(Message.CREATE_SOUND_SOURCE);
         this.setVisible(false);
         
-        if(!Ambient.getObstacles().isEmpty()){
+        if(!Obstacle.getObstacles().isEmpty()){
             HomeFrame.jButtonRun.setEnabled(true);
             HomeFrame.jMenuItemRun.setEnabled(true);
         }

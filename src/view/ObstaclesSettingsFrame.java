@@ -196,8 +196,7 @@ public class ObstaclesSettingsFrame extends javax.swing.JFrame {
         Location endPoint = new Location((Integer) this.jSpinnerEndPointX.getValue(), (Integer) this.jSpinnerEndPointY.getValue());
         int absorptionRate = (int) this.jSpinnerAbsorptionRate.getValue();
         
-        Obstacle obstacle = new Obstacle(Line.getLine(initialPoint, endPoint), absorptionRate);
-        Ambient.getObstacles().put(id, obstacle);
+        Obstacle.createObstacle(id, Line.getLine(initialPoint, endPoint), absorptionRate);
         
         Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, id, initialPoint, endPoint, absorptionRate};
         

@@ -6,12 +6,12 @@
 
 package view;
 
-import java.io.PrintStream;
 import javax.swing.table.DefaultTableModel;
 
 import languagesAndMessages.Message;
 import settings.ProjectSettings;
 import simulator.agents.Ambient;
+import simulator.objects.Obstacle;
 
 /**
  *
@@ -498,13 +498,13 @@ public class HomeFrame extends javax.swing.JFrame {
         id = (String)jTableObstacles.getModel().getValueAt(jTableObstacles.getSelectedRow(), 1);
     	System.out.println(id);
         
-    	Ambient.getObstacles().remove(id);
+    	Obstacle.getObstacles().remove(id);
         
         ((DefaultTableModel) jTableObstacles.getModel()).removeRow(jTableObstacles.getSelectedRow());
         for(int i = 0; i < jTableObstacles.getModel().getRowCount(); i++){
             jTableObstacles.getModel().setValueAt(i+1, i, 0);
         }
-        if(Ambient.getObstacles().isEmpty()){
+        if(Obstacle.getObstacles().isEmpty()){
             jButtonRun.setEnabled(false);
         }
     }//GEN-LAST:event_jButtonRemoveObstacleActionPerformed

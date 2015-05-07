@@ -3,7 +3,6 @@ package simulator.agents;
 import java.util.HashMap;
 
 import simulator.objects.Location;
-import simulator.objects.Obstacle;
 import utils.Util;
 import jade.core.AID;
 import jade.core.Agent;
@@ -27,7 +26,6 @@ public class SoundSource extends Agent{
 	
 	//private int updateTime = 10000; //Uncomment if the UpdateSoundBehaviour is activated.
 	
-	private static HashMap <String, Obstacle> obstacles;
 	private HashMap <String, AID> sounds = new HashMap<>();
 	
 	private AID ambient;
@@ -71,7 +69,6 @@ public class SoundSource extends Agent{
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void getParameters() {
 		soundSource = this.getAID();
 		Object[] args = getArguments();
@@ -80,12 +77,11 @@ public class SoundSource extends Agent{
 		opening = (int) args[2];
 		direction = (int) args[3];
 		ambient = (AID) args[4];
-		obstacles = (HashMap<String, Obstacle>) args[5];
 	}
 
 	private AID createSound (Location location, double direction, double potency, int opening){
 		final String id = Sound.nextId();
-		Object[] args = {new Location(location), direction, potency, opening, ambient, soundSource, obstacles, id, this.getAID()};
+		Object[] args = {new Location(location), direction, potency, opening, ambient, soundSource, id, this.getAID()};
 		
 		container = getContainerController();
 		Util.initAgent(container, args, "simulator.agents.Sound", id);

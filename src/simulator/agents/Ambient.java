@@ -11,7 +11,6 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
 import languagesAndMessages.Message;
-import simulator.objects.Obstacle;
 import utils.Util;
 import view.HomeFrame;
 import view.UIController;
@@ -26,7 +25,6 @@ public class Ambient extends Agent{
 		
 //Declaration of agent variables
 	private final String SOUNDSOURCE = "SoundSource";
-	private static HashMap <String, Obstacle> obstacles = new HashMap<>();
 	private static HashMap <String, AID> soundSources = new HashMap<>();
 //End of agent variables declaration
 	
@@ -48,7 +46,7 @@ public class Ambient extends Agent{
 	}
 
 	private void defineSoundSource(){
-		Object[] argsSoundSource = {getSoundSourceParameters()[0], getSoundSourceParameters()[1], getSoundSourceParameters()[2],getSoundSourceParameters()[3], getAID(), getObstacles()};		
+		Object[] argsSoundSource = {getSoundSourceParameters()[0], getSoundSourceParameters()[1], getSoundSourceParameters()[2],getSoundSourceParameters()[3], getAID()};		
 		String id = (String)getSoundSourceParameters()[4];
 		getSoundSources().put(id, createAgent(argsSoundSource, container, this.SOUNDSOURCE));
 	}
@@ -86,14 +84,6 @@ public class Ambient extends Agent{
         } catch (ControllerException e) {
             e.printStackTrace();
         }
-	}
-	
-	public static HashMap <String, Obstacle> getObstacles() {
-		return obstacles;
-	}
-
-	public static void setObstacles(HashMap <String, Obstacle> obstacles) {
-		Ambient.obstacles = obstacles;
 	}
 
 	public static HashMap <String, AID> getSoundSources() {
