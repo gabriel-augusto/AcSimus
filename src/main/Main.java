@@ -22,7 +22,7 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new HomeFrame().setVisible(true);
+                HomeFrame.getHomeFrame().setVisible(true);
                 Util.initiateJadeRma();
                 try {
                 	Util.initiateAmbient();

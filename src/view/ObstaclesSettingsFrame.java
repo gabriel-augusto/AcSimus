@@ -77,6 +77,16 @@ public class ObstaclesSettingsFrame extends javax.swing.JFrame {
             }
         });
 
+        jSpinnerInitialPointX.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 1));
+
+        jSpinnerEndPointX.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 1));
+
+        jSpinnerAbsorptionRate.setModel(new javax.swing.SpinnerNumberModel(10, 0, 100, 1));
+
+        jSpinnerInitialPointY.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 1));
+
+        jSpinnerEndPointY.setModel(new javax.swing.SpinnerNumberModel(10, 0, 1000, 1));
+
         jLabel1.setText("X:");
 
         jLabel2.setText("Y:");
@@ -186,12 +196,16 @@ public class ObstaclesSettingsFrame extends javax.swing.JFrame {
         Location endPoint = new Location((Integer) this.jSpinnerEndPointX.getValue(), (Integer) this.jSpinnerEndPointY.getValue());
         int absorptionRate = (int) this.jSpinnerAbsorptionRate.getValue();
         
-        Obstacle obstacle = new Obstacle(Line.getLine(initialPoint, endPoint), absorptionRate);
-        Ambient.getObstacles().put(id, obstacle);
+        Obstacle.createObstacle(id, Line.getLine(initialPoint, endPoint), absorptionRate);
         
         Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, id, initialPoint, endPoint, absorptionRate};
         
         HomeFrame.getObstacleModel().addRow(data);
+        
+        if(!Ambient.getSoundSources().isEmpty()){
+            HomeFrame.jButtonRun.setEnabled(true);
+            HomeFrame.jMenuItemRun.setEnabled(true);
+        }
     }//GEN-LAST:event_jButtonAddActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -9,6 +9,7 @@ package view;
 import languagesAndMessages.Message;
 import simulator.agents.Ambient;
 import simulator.objects.Location;
+import simulator.objects.Obstacle;
 
 /**
  *
@@ -82,6 +83,14 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
 
         jLabelY.setText("Y:");
 
+        jSpinnerOpening.setModel(new javax.swing.SpinnerNumberModel(70, 0, 360, 1));
+
+        jSpinnerPower.setModel(new javax.swing.SpinnerNumberModel(100, 1, 10000, 1));
+
+        jSpinnerX.setModel(new javax.swing.SpinnerNumberModel(5, 0, 1000, 1));
+
+        jSpinnerY.setModel(new javax.swing.SpinnerNumberModel(5, 0, 1000, 1));
+
         jButtonOk.setText("OK");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,6 +99,8 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         });
 
         jLabelDirection.setText("Direction (degrees):");
+
+        jSpinnerDirection.setModel(new javax.swing.SpinnerNumberModel(0, 0, 360, 1));
 
         javax.swing.GroupLayout jPanelBodyLayout = new javax.swing.GroupLayout(jPanelBody);
         jPanelBody.setLayout(jPanelBodyLayout);
@@ -103,14 +114,10 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
                     .addComponent(jSeparator1)
                     .addGroup(jPanelBodyLayout.createSequentialGroup()
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanelBodyLayout.createSequentialGroup()
-                                .addComponent(jLabelY)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanelBodyLayout.createSequentialGroup()
-                                .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabelLocation)
-                                    .addComponent(jLabelX))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabelY)
+                            .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabelLocation)
+                                .addComponent(jLabelX)))
                         .addGap(10, 10, 10)
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jSpinnerY, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
@@ -202,17 +209,21 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
+        String id = "SS-"+HomeFrame.getSoundSourceCount();
         Location location = new Location((int)this.jSpinnerX.getValue(), (int)this.jSpinnerY.getValue());
-        Object[] parameters = {location, this.jSpinnerPower.getValue(), this.jSpinnerOpening.getValue(), this.jSpinnerDirection.getValue()};
+        Object[] parameters = {location, this.jSpinnerPower.getValue(), this.jSpinnerOpening.getValue(), this.jSpinnerDirection.getValue(), id};
         Ambient.setSoundSourceParameters(parameters);        
         
-        Object[] data = {HomeFrame.jTableSoundSources.getRowCount()+1, parameters[1], parameters[2], parameters[0], parameters[3]};        
+        Object[] data = {HomeFrame.jTableSoundSources.getRowCount()+1, id, parameters[1], parameters[2], parameters[0], parameters[3]};        
         HomeFrame.getSoundSourceModel().addRow(data);
         
-        HomeFrame.jButtonRun.setEnabled(true);
-        HomeFrame.jMenuItemRun.setEnabled(true);
         UIController.getInstance().addNewEvent(Message.CREATE_SOUND_SOURCE);
         this.setVisible(false);
+        
+        if(!Obstacle.getObstacles().isEmpty()){
+            HomeFrame.jButtonRun.setEnabled(true);
+            HomeFrame.jMenuItemRun.setEnabled(true);
+        }
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

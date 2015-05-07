@@ -1,5 +1,6 @@
 package languagesAndMessages;
 
+import java.util.HashMap;
 import java.util.List;
 
 import jade.core.AID;
@@ -12,9 +13,10 @@ public class Message {
 	public static final String PAUSE = "pause";
 	public static final String RESUME = "resume";
 	public static final String STOP_RESUMED = "stop resumed simulation";
-        public static final String STOP_PAUSED = "stop paused simulation";
+    public static final String STOP_PAUSED = "stop paused simulation";
 	public static final String RUN = "run";
 	public static final String CREATE_SOUND_SOURCE = "create sound source";
+	public static final String FINISH_SIMULATION = "finish simultaion";
 	
 	
 	public static ACLMessage prepareMessage(int type, String language, String content, AID target){
@@ -40,6 +42,16 @@ public class Message {
 		ACLMessage message = new ACLMessage(type);
 		message.setLanguage(language);
 		for(AID target : targets)
+			message.addReceiver(target);
+		message.setContent(content);
+		
+		return message;
+	}
+	
+	public static ACLMessage prepareMessage(int type, String language, String content, HashMap<String, AID> targets){
+		ACLMessage message = new ACLMessage(type);
+		message.setLanguage(language);
+		for(AID target : targets.values())
 			message.addReceiver(target);
 		message.setContent(content);
 		

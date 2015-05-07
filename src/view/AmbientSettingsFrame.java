@@ -71,7 +71,13 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
 
         jLabelWidth.setText("Width:");
 
+        jSpinnerLength.setModel(new javax.swing.SpinnerNumberModel(10, 1, 1000, 1));
+
+        jSpinnerWidth.setModel(new javax.swing.SpinnerNumberModel(10, 1, 1000, 1));
+
         jLabelAbsorptionRate.setText("Absorption rate:");
+
+        jSpinnerAbsorptionRate.setModel(new javax.swing.SpinnerNumberModel(10, 0, 100, 1));
 
         jButtonOk.setText("OK");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
@@ -169,13 +175,17 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
         addNewObstacle(Line.getLine(new Location(0,width), new Location(length,width)), absorptionRate);        
         addNewObstacle(Line.getLine(new Location(length,width), new Location(length,0)), absorptionRate);        
         addNewObstacle(Line.getLine(new Location(length,0), new Location(0,0)), absorptionRate);
+        
+        if(!Ambient.getSoundSources().isEmpty()){
+            HomeFrame.jButtonRun.setEnabled(true);
+            HomeFrame.jMenuItemRun.setEnabled(true);
+        }
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     private void addNewObstacle(Line line, int absorptionRate) {
         String id = "Ob-"+HomeFrame.getObstacleCount();
-        Obstacle wall = new Obstacle(line, absorptionRate);
-        Ambient.getObstacles().put(id, wall);
-        Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, id, wall.getLine().getInitialPoint(), wall.getLine().getFinalPoint(), wall.getAbsortionRate()};
+        Obstacle.createObstacle(id, line, absorptionRate);
+        Object[] data = {HomeFrame.jTableObstacles.getRowCount()+1, id, Obstacle.getObstacles().get(id).getLine().getInitialPoint(), Obstacle.getObstacles().get(id).getLine().getFinalPoint(), Obstacle.getObstacles().get(id).getAbsortionRate()};
         HomeFrame.getObstacleModel().addRow(data);
     }
 

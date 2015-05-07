@@ -1,15 +1,12 @@
 package simulator.agents;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import simulator.objects.Location;
-import simulator.objects.Obstacle;
 import utils.Util;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-//import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -18,6 +15,7 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
+import languagesAndMessages.Language;
 import languagesAndMessages.Message;
 
 public class SoundSource extends Agent{
@@ -28,8 +26,7 @@ public class SoundSource extends Agent{
 	
 	//private int updateTime = 10000; //Uncomment if the UpdateSoundBehaviour is activated.
 	
-	private static List <Obstacle> obstacles;
-	private List <AID> sounds = new ArrayList<>();
+	private HashMap <String, AID> sounds = new HashMap<>();
 	
 	private AID ambient;
 	private AID soundSource;
@@ -48,12 +45,12 @@ public class SoundSource extends Agent{
 	
 	private void emitSoundPulse(double direction, int opening, double potency){
 		double angle;
-		sounds.add(createSound(location, direction, potency, opening));
+		createSound(location, direction, potency, opening);
 		for(double i = soundSeparation; i<=opening/2; i=i+soundSeparation){
 			angle = Util.normalizeAngle(direction+i);			
-			sounds.add(createSound(location,angle,potency, opening));
+			createSound(location,angle,potency, opening);
 			angle = Util.normalizeAngle(direction-i);
-			sounds.add(createSound(location,angle,potency, opening));
+			createSound(location,angle,potency, opening);
 		}
 	}
 
@@ -72,7 +69,6 @@ public class SoundSource extends Agent{
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void getParameters() {
 		soundSource = this.getAID();
 		Object[] args = getArguments();
@@ -81,24 +77,23 @@ public class SoundSource extends Agent{
 		opening = (int) args[2];
 		direction = (int) args[3];
 		ambient = (AID) args[4];
-		obstacles = (ArrayList<Obstacle>) args[5];
 	}
 
 	private AID createSound (Location location, double direction, double potency, int opening){
-		Object[] args = {new Location(location), direction, potency, opening, ambient, soundSource, obstacles};
 		final String id = Sound.nextId();
+		Object[] args = {new Location(location), direction, potency, opening, ambient, soundSource, id, this.getAID()};
 		
 		container = getContainerController();
 		Util.initAgent(container, args, "simulator.agents.Sound", id);
 		
 		System.out.println(id + " created at: " + location);
-		return new AID(id, AID.ISLOCALNAME);
+		AID sound = new AID(id, AID.ISLOCALNAME);
+		sounds.put(id, sound);
+		return sound;
 	}
 	
 	/*--------------------------  COMPORTAMENTS ------------------------ */
-	
-//Uncomment to add this behaviour.
-/*	
+	/* Uncomment to implement this behaviour
 	private class UpdateSoundBehaviour extends TickerBehaviour {
 
 		private static final long serialVersionUID = 1L;
@@ -109,7 +104,7 @@ public class SoundSource extends Agent{
 
 		@Override
 		protected void onTick() {
-			createSound(location, 0, 60);
+			emitSoundPulse(direction, opening, power);
 		}		
 	}
 */
@@ -133,7 +128,7 @@ public class SoundSource extends Agent{
 					stopSimulation(Message.STOP_RESUMED);
 					System.out.println("Simulation stoped.");
 				}
-                                else if (message.getContent().equals(Message.STOP_PAUSED)){
+                else if (message.getContent().equals(Message.STOP_PAUSED)){
 					stopSimulation(Message.STOP_PAUSED);
 					System.out.println("Simulation stoped.");
 				}
@@ -145,6 +140,12 @@ public class SoundSource extends Agent{
 				}
 				else if(message.getContent().equals(Message.RUN)){
 					emitSoundPulse(direction,opening,power);
+				}
+				else if(message.getLanguage().equals(Language.FINISH)){
+					sounds.remove(message.getContent());
+					if(sounds.isEmpty()){
+						send(Message.prepareMessage(ACLMessage.INFORM, null, Message.FINISH_SIMULATION, ambient));
+					}
 				}
 				else {
 					send(Message.getAnswerOfANotUnderstoodMessage(sender));					
@@ -167,7 +168,7 @@ public class SoundSource extends Agent{
 	public void resumeAllSounds() {
 		ContainerController cc = getContainerController();
 		AgentController ac;
-		for(AID sound : sounds){
+		for(AID sound : sounds.values()){
 			try {
 				ac = cc.getAgent(sound.getLocalName());
 				ac.activate();
@@ -184,7 +185,7 @@ public class SoundSource extends Agent{
                 else{
                         ContainerController cc = getContainerController();
                         AgentController ac;
-                        for(AID sound : sounds){
+                        for(AID sound : sounds.values()){
                                 try {
                                         ac = cc.getAgent(sound.getLocalName());
                                         ac.kill();

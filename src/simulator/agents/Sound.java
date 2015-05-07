@@ -1,13 +1,11 @@
 package simulator.agents;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import settings.ProjectSettings;
 import simulator.objects.Line;
 import simulator.objects.Location;
 import simulator.objects.Obstacle;
 import utils.Util;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
@@ -15,6 +13,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
+import languagesAndMessages.Language;
 import languagesAndMessages.Message;
 
 
@@ -26,7 +25,8 @@ public class Sound extends Agent{
 	private static final int SIZE_OF_STEP = 1;
 	private static final double ERROR = 1; //SIZE_OF_STEP/2;
 	
-	private static List <Obstacle> obstacles;
+	private String identifier;
+	private AID soundSource;
 	
 	private Line rote;
 	private Location collisionPoint;
@@ -65,7 +65,6 @@ public class Sound extends Agent{
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void getParameters() {
 		Object[] args = getArguments();
 		actualLocation = new Location((Location) args[0]);
@@ -75,16 +74,17 @@ public class Sound extends Agent{
 		power = (double) args[2];
 		intensity = power;
 		opening = (int) args[3];
-		obstacles = (ArrayList<Obstacle>) args[6];
-		rote = Line.getLine(initialLocation, direction);
+		identifier = (String) args[6];
+		soundSource = (AID) args[7];
+		rote = Line.getLine(initialLocation, direction);		
 	}
 	
 	private void findNextObstacle(){
 		collisionPoint = null;
 		collisionObstacle = null;
 		Location intersectionPoint = null;
-		for(Obstacle obstacle : obstacles){
-			intersectionPoint = rote.searchSlopePoint(obstacle.getLine());
+		for(Obstacle obstacle : Obstacle.getObstacles().values()){
+			intersectionPoint = rote.searchIntersectionPoint(obstacle.getLine());
 			if(intersectionPoint != null && !actualLocation.equals(intersectionPoint, ERROR)){
 				if(collisionPoint == null || actualLocation.distance(intersectionPoint) < actualLocation.distance(collisionPoint)){
 					collisionObstacle = obstacle;
@@ -130,6 +130,7 @@ public class Sound extends Agent{
 	}
 	
 	private void killSound() {
+		send(Message.prepareMessage(ACLMessage.INFORM, Language.FINISH, identifier, soundSource));
 		this.doDelete();
 		System.out.println("END OF SOUND!!!");
 	}

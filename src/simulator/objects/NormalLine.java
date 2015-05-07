@@ -3,11 +3,11 @@ package simulator.objects;
 public class NormalLine extends Line{
 	
 	protected NormalLine(Location initialPoint, Location finalPoint) {
-		super(initialPoint, finalPoint);
+		super(initialPoint, finalPoint, Line.NORMAL);
 	}
 
 	protected NormalLine(Location initialPoint, double direction){
-		super(initialPoint, direction);
+		super(initialPoint, direction, Line.NORMAL);
 	}
 	
 	public Location searchIntersectionPoint(NormalLine line){
@@ -67,12 +67,11 @@ public class NormalLine extends Line{
 				Math.toRadians(this.getDirection()));
 	}
 	
-	public double getConstant() {
-		return this.getInitialPoint().getY() - this.getSlope() 
-				* this.getInitialPoint().getX();
+	protected double getConstant() {
+		return this.getInitialPoint().getY() - this.getSlope() * this.getInitialPoint().getX();
 	}
 	
-	public Double getY(double x){
+	protected Double getY(double x){
 		return this.getSlope() * x + this.getConstant();
 	}
 }

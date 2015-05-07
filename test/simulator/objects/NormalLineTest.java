@@ -37,19 +37,4 @@ public class NormalLineTest {
     public void testBelongsToTheInterval() throws Exception {
 
     }
-
-    @Test
-    public void testGetSlope() throws Exception {
-
-    }
-
-    @Test
-    public void testGetConstant() throws Exception {
-
-    }
-
-    @Test
-    public void testGetY() throws Exception {
-
-    }
 }
