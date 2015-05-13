@@ -96,7 +96,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jMenuItemSimulationSetting = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(ProjectSettings.getProjectName());
+        setTitle(ProjectSettings.PROJECT_NAME);
         setExtendedState(MAXIMIZED_BOTH);
 
         jToolBar.setFloatable(false);
