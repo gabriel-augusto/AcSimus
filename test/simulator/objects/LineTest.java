@@ -81,13 +81,23 @@ public class LineTest {
 		Line line5 = Line.getLine(new Location(0,0), new Location(0,100));
 		Line line6 = Line.getLine(new Location(50,50), 180);
 		
+		Line line7 = Line.getLine(new Location(0,0), new Location(0,100));
+		Line line8 = Line.getLine(new Location(10,0), new Location(20,0));
+		
+		Line line9 = Line.getLine(new Location(0,10), new Location(0,20));
+		Line line10 = Line.getLine(new Location(0,0), new Location(10,0));
+		
 		Location intersectionPoint1 = line1.searchIntersectionPoint(line2);
 		Location intersectionPoint2 = line3.searchIntersectionPoint(line4);
 		Location intersectionPoint3 = line5.searchIntersectionPoint(line6);
+		Location intersectionPoint4 = line7.searchIntersectionPoint(line8);
+		Location intersectionPoint5 = line9.searchIntersectionPoint(line10);
 		
 		assertTrue(intersectionPoint1.equals(new Location(1, 1), precision));
 		assertTrue(intersectionPoint2.equals(new Location(1, 0), precision));
 		assertTrue(intersectionPoint3.equals(new Location(0,50), precision));
+		assertEquals(intersectionPoint4, null);
+		assertEquals(intersectionPoint5, null);
 	}
 	
 	@Test
