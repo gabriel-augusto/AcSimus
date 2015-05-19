@@ -51,7 +51,7 @@ public class Sound extends Agent{
 	}
 
 	private void addBehavior() {
-		addBehaviour(new UpdateSoundBehavior(this, ProjectSettings.getSimulationSpeed()));
+		addBehaviour(new UpdateSoundBehavior(this, ProjectSettings.getProjectSettings().getSimulationSpeed()));
 		addBehaviour(new GetMessageBehaviour(this));
 	}
 

@@ -98,7 +98,7 @@ public class SimulationSettingsFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
-        ProjectSettings.setSimulationSpeed((int)this.jSpinnerSimulationSpeed.getValue());
+        ProjectSettings.getProjectSettings().setSimulationSpeed((int)this.jSpinnerSimulationSpeed.getValue());
         this.dispose();
     }//GEN-LAST:event_jButtonOkActionPerformed
 

@@ -34,12 +34,6 @@ public class NormalLine extends Line{
 		return null;
 	}
 	
-	public Location searchSlopePoint(Line line){
-		if(line instanceof NormalLine)
-			return searchIntersectionPoint((NormalLine)line);
-		return searchIntersectionPoint((VerticalLine) line);
-	}
-	
 	protected boolean belongsToTheInterval(double x){
 		if(this.getFinalPoint() != null){
 			if(x <= Math.max(this.getInitialPoint().getX(), this.getFinalPoint().getX()) && x >= Math.min(this.getInitialPoint().getX(), this.getFinalPoint().getX())){

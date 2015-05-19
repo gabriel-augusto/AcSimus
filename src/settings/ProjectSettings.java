@@ -5,19 +5,26 @@ package settings;
  * @author Gabriel
  */
 public class ProjectSettings {
-    private static final String projectName = "Acoustic Simulator";
-    
+
+	private static ProjectSettings settings = null;
+	public static final String PROJECT_NAME = "Acoustic Simulator";
     private static int simulationSpeed = 200; //Simulation speed in milliseconds.
 
-    public static String getProjectName() {
-        return projectName;
+    private ProjectSettings(){
+    	
     }
-
-	public static int getSimulationSpeed() {
+    
+    public static ProjectSettings getProjectSettings(){
+    	if(settings == null)
+    		settings = new ProjectSettings();
+    	return settings;
+    }
+    
+	public int getSimulationSpeed() {
 		return simulationSpeed;
 	}
 
-	public static void setSimulationSpeed(int simulationSpeed) {
+	public void setSimulationSpeed(int simulationSpeed) {
 		ProjectSettings.simulationSpeed = simulationSpeed;
 	}
 }

@@ -22,7 +22,7 @@ public class VerticalLine extends Line{
 		double y;
 		y = line.getY(this.getConstant());
 		
-		if(this.belongsToTheInterval(y))
+		if(this.belongsToTheInterval(y) && line.belongsToTheInterval(this.getConstant()))
 			return new Location(this.getConstant(), y);		
 		return null;
 	}

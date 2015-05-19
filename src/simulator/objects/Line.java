@@ -70,8 +70,6 @@ public abstract class Line {
 		case 1:
 			intersectionPoint = searchIntersectionPoint((VerticalLine)line);
 			break;
-		default:
-			System.out.println("Unknown line type!");
 		}
 		return intersectionPoint;
 	}
