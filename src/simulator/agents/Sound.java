@@ -80,7 +80,7 @@ public class Sound extends Agent{
 				killSound();
 			}
 			System.out.println("\n"+getActualState());
-			if(sound.getIntensity()<5){
+			if(sound.getIntensity() < 5){
 				killSound();
 			}
 		}

@@ -93,6 +93,14 @@ public class Util{
 		}
 		return angle;
 	}
+	
+	public static double calculateX(double angle, int hypotenuse){
+		return Math.cos(Math.toRadians(angle)) * hypotenuse;
+	}
+	
+	public static double calculateY(double angle, int hypotenuse){
+		return Math.sin(Math.toRadians(angle)) * hypotenuse;
+	}
 
 	public static AgentController getAmbient() {
 		return ambient;

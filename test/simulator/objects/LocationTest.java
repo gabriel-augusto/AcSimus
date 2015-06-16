@@ -22,8 +22,11 @@ public class LocationTest {
 	@Test
 	public void distanciaTeste(){
 		Location location = new Location(0,0);
-		double distancia = location.distance(new Location(1,1));
-		assertEquals(1.414213,distancia,.000001);
+		double distancia1 = location.distance(new Location(1,1));
+		double distancia2 = location.distance(new Location(0,0));
+		
+		assertEquals(1.414213,distancia1,.000001);
+		assertEquals(0,distancia2,0);
 	}
 	
 	@Test 

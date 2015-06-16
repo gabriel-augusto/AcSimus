@@ -26,8 +26,8 @@ public class SoundObject {
 	private int distanceTraveled = 0;
 	
 	public SoundObject(Location location, double direction, double power, int opening, AID ambient, AID soundSource, String id){
-		this.initialLocation = location;
-		this.actualLocation = location;
+		this.initialLocation = new Location(location);
+		this.actualLocation = new Location(location);
 		System.out.println("\nInitial Location: " + initialLocation + "\nActual Location: " + actualLocation);
 		this.direction = direction;
 		this.power = power;
@@ -45,7 +45,7 @@ public class SoundObject {
 		for(Obstacle obstacle : Obstacle.getObstacles().values()){
 			intersectionPoint = this.getRote().searchIntersectionPoint(obstacle.getLine());
 			if(intersectionPoint != null && !this.getActualLocation().equals(intersectionPoint, ERROR)){
-				if(this.getCollisionPoint() == null || this.getActualLocation().distance(intersectionPoint)<this.getActualLocation().distance(this.getCollisionPoint())){
+				if(this.getCollisionPoint() == null || this.getActualLocation().distance(intersectionPoint) < this.getActualLocation().distance(this.getCollisionPoint())){
 					this.setCollisionObstacle(obstacle);
 					this.setCollisionPoint(intersectionPoint);
 					System.out.println("Obstacle found in "+this.getActualLocation().distance(this.getCollisionPoint())+" meters:: \nindex: " + obstacle.getAbsortionRate() + "\ncollision point: " + this.getCollisionPoint().toString());
@@ -63,23 +63,19 @@ public class SoundObject {
 		if(isCollisionPoint()){
 			updateParameters();
 			System.out.println("\nCOLLIDED!!!!!");
-			this.setState(this.getActualState());
-			if(this.getIntensity() < 5){
-				return;
-			}
 			findNextObstacle();
-		}else
-			this.setState(this.getActualState());
+		}
+		this.setState(this.getActualState());
 	}
 	
 	public void updateLocation() {
-		this.getActualLocation().setX(calculateX(this.getDirection(), this.getDistanceOfPreviousColisionPoint()) + this.getInitialLocation().getX());
-		this.getActualLocation().setY(calculateY(this.getDirection(), this.getDistanceOfPreviousColisionPoint()) + this.getInitialLocation().getY());
+		this.getActualLocation().setX(Util.calculateX(this.getDirection(), this.getDistanceOfPreviousColisionPoint()) + this.getInitialLocation().getX());
+		this.getActualLocation().setY(Util.calculateY(this.getDirection(), this.getDistanceOfPreviousColisionPoint()) + this.getInitialLocation().getY());
 	}
 	
-	public double calculateIntensityBySoundPropagation(double actualIntensity, double angle, double radius){
+	public double calculateIntensityBySoundPropagation(double intensity, double angle, double radius){
 		double archLenght = angle * Math.PI * radius / 180;
-		return actualIntensity/archLenght;
+		return intensity/archLenght;
 	}
 	
 	public boolean isCollisionPoint() {
@@ -102,14 +98,6 @@ public class SoundObject {
 		double obstacleSlopeAngle = Math.toDegrees(Math.atan(this.getCollisionObstacle().getLine().getSlope()));		  
 		double newDirection = 2 * obstacleSlopeAngle - this.getDirection();			
 		return Util.normalizeAngle(newDirection);
-	}
-	
-	public double calculateX(double angle, int hypotenuse){
-		return Math.cos(Math.toRadians(angle)) * hypotenuse;
-	}
-	
-	public double calculateY(double angle, int hypotenuse){
-		return Math.sin(Math.toRadians(angle)) * hypotenuse;
 	}
 	
 	public String getActualState(){
@@ -163,7 +151,7 @@ public class SoundObject {
 	}
 
 	public void setInitialLocation(Location initialLocation) {
-		this.initialLocation = initialLocation;
+		this.initialLocation = new Location(initialLocation);
 	}
 
 	public Location getActualLocation() {
@@ -171,7 +159,7 @@ public class SoundObject {
 	}
 
 	public void setActualLocation(Location actualLocation) {
-		this.actualLocation = actualLocation;
+		this.actualLocation = new Location(actualLocation);
 	}
 
 	public double getDirection() {
