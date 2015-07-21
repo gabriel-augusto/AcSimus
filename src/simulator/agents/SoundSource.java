@@ -80,7 +80,8 @@ public class SoundSource extends Agent{
 
 	private AID createSound (Location location, double direction, double potency, int opening){
 		final String id = Sound.nextId();
-		Object[] args = {new SoundObject(new Location(location), direction, potency, opening, ambient, this.getAID(), id)};
+		SoundObject.createSound(new Location(location), direction, potency, opening, ambient, this.getAID(), id);
+		Object[] args = {SoundObject.getSounds().get(id)};
 		container = getContainerController();
 		Util.initAgent(container, args, "simulator.agents.Sound", id);
 		
@@ -90,7 +91,7 @@ public class SoundSource extends Agent{
 		return sound;
 	}
 	
-	/*--------------------------  COMPORTAMENTS ------------------------ */
+	/*--------------------------  COMPORTAMENTS ------------------------*/
 	/* Uncomment to implement this behaviour
 	private class UpdateSoundBehaviour extends TickerBehaviour {
 

@@ -26,7 +26,8 @@ public class SoundObjectTest {
 	
 	@Test
 	public void testUpdate(){
-		SoundObject sound = new SoundObject(new Location(8, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(8, 5), 0, 100, 90, null, null, "s1");
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.findNextObstacle();
 		sound.update();
 		assertEquals(sound.getActualState(), sound.getState());
@@ -35,11 +36,16 @@ public class SoundObjectTest {
 	}
 
 	@Test
-	public void testFindNextObstacle() {		
-		SoundObject sound1 = new SoundObject(new Location(5, 5), 0, 100, 90, null, null, null);
-		SoundObject sound2 = new SoundObject(new Location(5, 5), 90, 100, 90, null, null, null);
-		SoundObject sound3 = new SoundObject(new Location(5, 5), 180, 100, 90, null, null, null);
-		SoundObject sound4 = new SoundObject(new Location(5, 5), 270, 100, 90, null, null, null);
+	public void testFindNextObstacle() {	
+		SoundObject.createSound(new Location(5, 5), 0, 100, 90, null, null, "s1");
+		SoundObject.createSound(new Location(5, 5), 90, 100, 90, null, null, "s2");
+		SoundObject.createSound(new Location(5, 5), 180, 100, 90, null, null, "s3");
+		SoundObject.createSound(new Location(5, 5), 270, 100, 90, null, null, "s4");
+		
+		SoundObject sound1 = SoundObject.getSounds().get("s1");
+		SoundObject sound2 = SoundObject.getSounds().get("s2");
+		SoundObject sound3 = SoundObject.getSounds().get("s3");
+		SoundObject sound4 = SoundObject.getSounds().get("s4");
 		
 		sound1.findNextObstacle();
 		sound2.findNextObstacle();
@@ -65,8 +71,11 @@ public class SoundObjectTest {
 	
 	@Test
 	public void testIsColisionPoint() {
-		SoundObject sound1 = new SoundObject(new Location(0, 5), 180, 100, 90, null, null, null);
-		SoundObject sound2 = new SoundObject(new Location(5, 5), 180, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 180, 100, 90, null, null, "s1");
+		SoundObject.createSound(new Location(5, 5), 180, 100, 90, null, null, "s2");
+		
+		SoundObject sound1 = SoundObject.getSounds().get("s1");
+		SoundObject sound2 = SoundObject.getSounds().get("s2");
 		
 		sound1.setCollisionPoint(new Location(0,5));		
 		sound2.setCollisionPoint(new Location(0,5));
@@ -77,7 +86,9 @@ public class SoundObjectTest {
 	
 	@Test
 	public void testCalculateIntencityAfterColisionPoint(){
-		SoundObject sound = new SoundObject(new Location(5, 5), 180, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(5, 5), 180, 100, 90, null, null, "s1");
+				
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setIntensity(sound.calculateIntencityAfterColisionPoint(10));
 		
 		assertEquals(sound.getIntensity(), 90, TOLERANCE);
@@ -85,7 +96,9 @@ public class SoundObjectTest {
 	
 	@Test
 	public void testCalculateNewDirection(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 135, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 135, 100, 90, null, null, "s1");
+		
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		
 		sound.setCollisionObstacle(Obstacle.getObstacles().get("ob1"));
 		sound.setDirection(sound.calculateNewDirection());		
@@ -102,14 +115,18 @@ public class SoundObjectTest {
 	
 	@Test
 	public void testCalculateIntensityBySoundPropagation(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
+		
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		double result = sound.calculateIntensityBySoundPropagation(sound.getIntensity(), sound.getOpening(), 1);
 		assertEquals(63.661977237, result, .0000001);
 	}
 	
 	@Test
 	public void testUpdateParameters(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 180, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 180, 100, 90, null, null, "s1");
+		
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setDistanceOfPreviousColisionPoint(20);
 		sound.setCollisionObstacle(Obstacle.getObstacles().get("ob1"));
 		sound.setCollisionPoint(new Location(0,5));
@@ -126,7 +143,9 @@ public class SoundObjectTest {
 	
 	@Test
 	public void testUpdateLocation() {
-		SoundObject sound = new SoundObject(new Location(0, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
+		
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setDistanceOfPreviousColisionPoint(5);
 		sound.updateLocation();
 		assertEquals(5, sound.getActualLocation().getX(), TOLERANCE);
@@ -135,21 +154,25 @@ public class SoundObjectTest {
 	
 	@Test
 	public void testGetActualState(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");		
+		
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		String response = "\nintensity: 100.0\ndirection: 0.0 degrees\ndistance of origin: 0\ninitial location: (x: 0.0; y: 5.0)\nlocation: (x: 0.0; y: 5.0)";
 		assertEquals(response, sound.getActualState());
 	}
 	
 	@Test
 	public void testIdentifier(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setIdentifier("sound1");
 		assertEquals("sound1",sound.getIdentifier());
 	}
 	
 	@Test
 	public void testActualLocation(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setActualLocation(new Location(5,0));
 		assertEquals(5, sound.getActualLocation().getX(), TOLERANCE);
 		assertEquals(0, sound.getActualLocation().getY(), TOLERANCE);
@@ -157,28 +180,32 @@ public class SoundObjectTest {
 	
 	@Test
 	public void testPower(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setPower(50);
 		assertEquals(50, sound.getPower(), TOLERANCE);
 	}
 	
 	@Test
 	public void testOpening(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setOpening(50);
 		assertEquals(50, sound.getOpening(), TOLERANCE);
 	}
 	
 	@Test
 	public void testDistanceTraveled(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setDistanceTraveled(10);
 		assertEquals(10, sound.getDistanceTraveled());
 	}
 	
 	@Test
 	public void testState(){
-		SoundObject sound = new SoundObject(new Location(0, 5), 0, 100, 90, null, null, null);
+		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
+		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setState("asdf");
 		assertEquals("asdf", sound.getState());
 	}

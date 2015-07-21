@@ -48,6 +48,7 @@ public class Sound extends Agent{
 
 	private void killSound() {
 		send(Message.prepareMessage(ACLMessage.INFORM, Language.FINISH, sound.getIdentifier(), sound.getSoundSource()));
+		SoundObject.getSounds().remove(sound.getIdentifier());
 		this.doDelete();
 		System.out.println("END OF SOUND!!!");
 	}

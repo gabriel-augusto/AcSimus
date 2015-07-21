@@ -1,5 +1,7 @@
 package simulator.objects;
 
+import java.util.HashMap;
+
 import utils.Util;
 import jade.core.AID;
 
@@ -25,7 +27,17 @@ public class SoundObject {
 	private int distanceOfPreviousColisionPoint = 0;
 	private int distanceTraveled = 0;
 	
-	public SoundObject(Location location, double direction, double power, int opening, AID ambient, AID soundSource, String id){
+	private static HashMap <String, SoundObject> sounds = new HashMap<>();
+	
+	public static HashMap <String, SoundObject> getSounds() {
+		return sounds;
+	}
+	
+	public static void createSound(Location location, double direction, double power, int opening, AID ambient, AID soundSource, String id){
+		getSounds().put(id, new SoundObject(location, direction, power, opening, ambient, soundSource, id));
+	}
+	
+	private SoundObject(Location location, double direction, double power, int opening, AID ambient, AID soundSource, String id){
 		this.initialLocation = new Location(location);
 		this.actualLocation = new Location(location);
 		System.out.println("\nInitial Location: " + initialLocation + "\nActual Location: " + actualLocation);
