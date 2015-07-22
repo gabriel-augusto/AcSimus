@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.swing.JPanel;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
@@ -19,50 +17,115 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import simulator.objects.SoundObject;
+import simulator.objects.SoundSourceObject;
 
-public class GraphicGenerator {
+public class GraphicGenerator implements Runnable {
 	
 	private JFreeChart graphic;
-	private XYSeries series = null;
+	private XYItemRenderer renderer = null;
+	private XYSeries sounds = new XYSeries("Sound");
+    private XYSeries soundSources = new XYSeries("SoundSource");
+    private int length = 10;
+    private int width = 10;
 	
 	public GraphicGenerator() {
-		generateGraphic();
+		
 	}
 	
-	public void generateGraphic(){
-		this.graphic = ChartFactory.createScatterPlot("Ambiente", "Largura", "Comprimento", createSampleData(), PlotOrientation.VERTICAL, true, true, false);	
-		XYPlot xyPlot = (XYPlot) graphic.getPlot();
+	public void run(){
+		while(UIController.getInstance().isRunning())
+			this.updateGraphic();
+		this.clearGraphic();
+	}
+	
+	public ChartPanel createPanel() {
+        graphic = ChartFactory.createScatterPlot("Ambiente", "Largura", "Comprimento", createSampleData(), PlotOrientation.VERTICAL, true, true, false);
+        
+        XYPlot xyPlot = (XYPlot) graphic.getPlot();
         xyPlot.setDomainCrosshairVisible(true);
         xyPlot.setRangeCrosshairVisible(true);
-        XYItemRenderer renderer = xyPlot.getRenderer();
-        renderer.setSeriesPaint(0, Color.red);
-        adjustAxis((NumberAxis) xyPlot.getDomainAxis(), true);
-        adjustAxis((NumberAxis) xyPlot.getRangeAxis(), false);
         xyPlot.setBackgroundPaint(Color.white);
-	}
+        
+        renderer = xyPlot.getRenderer();
+        renderer.setSeriesPaint(0, new Color(0,150,0));
+        
+        NumberAxis domain = (NumberAxis) xyPlot.getDomainAxis();
+        adjustAxis((NumberAxis) xyPlot.getDomainAxis(), width, true);
+        adjustAxis((NumberAxis) xyPlot.getRangeAxis(), length, false);
+        
+        domain.setVerticalTickLabels(true);
+        
+        return new ChartPanel(graphic);
+    }
 	
 	private XYDataset createSampleData() {
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
-        series = new XYSeries("Data");
-        for(SoundObject sound : SoundObject.getSounds().values()){
-            series.add(sound.getActualLocation().getX(), sound.getActualLocation().getY());
-        }
-        xySeriesCollection.addSeries(series);
+        xySeriesCollection.addSeries(soundSources);
+        xySeriesCollection.addSeries(sounds);
         return xySeriesCollection;
     }
 	
-	private void adjustAxis(NumberAxis axis, boolean vertical) {
-        axis.setRange(0, 10);
+	private void updateSounds(){
+		double maxSoundPower = 0;
+		int maxPower = 0;
+		
+		for(SoundSourceObject soundSource : SoundSourceObject.getSoundSources().values()){
+			if(soundSource.getPower() > maxPower){
+				maxPower = soundSource.getPower();
+			}
+		}		
+		sounds.clear();		
+		for(SoundObject sound : SoundObject.getSounds().values()){
+			if(sound.getPower() > maxSoundPower){
+				maxSoundPower = sound.getPower();
+			}
+            sounds.add(sound.getActualLocation().getX(), sound.getActualLocation().getY());
+        }
+		double red = maxSoundPower/maxPower * 255;
+		double blue = 255 - (maxSoundPower/maxPower * 255);
+		renderer.setSeriesPaint(1, new Color((int)red,0,(int)blue));
+	}
+	
+	private void updateSoundSources(){
+		soundSources.clear();
+		for(SoundSourceObject soundSource : SoundSourceObject.getSoundSources().values()){
+			soundSources.add(soundSource.getLocation().getX(), soundSource.getLocation().getY());
+		}
+	}
+	
+	private void updateGraphic(){
+		updateSoundSources();
+		updateSounds();
+	}
+	
+	private void clearGraphic(){
+		sounds.clear();
+		soundSources.clear();
+	}
+	
+	private void adjustAxis(NumberAxis axis, int value, boolean vertical) {
+        axis.setRange(0, value);
         axis.setTickUnit(new NumberTickUnit(1));
         axis.setVerticalTickLabels(vertical);
     }
-	
-	public JPanel getPanel() {
-		generateGraphic();
-		return new ChartPanel(graphic);
-	}
 	 
 	public void save(OutputStream out) throws IOException {
 		ChartUtilities.writeChartAsPNG(out, graphic, 500, 350);
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
 	}
 }

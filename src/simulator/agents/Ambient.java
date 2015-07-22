@@ -11,6 +11,8 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
 import languagesAndMessages.Message;
+import simulator.objects.Location;
+import simulator.objects.SoundSourceObject;
 import utils.Util;
 import view.HomeFrame;
 import view.UIController;
@@ -46,8 +48,15 @@ public class Ambient extends Agent{
 	}
 
 	private void defineSoundSource(){
-		Object[] argsSoundSource = {getSoundSourceParameters()[0], getSoundSourceParameters()[1], getSoundSourceParameters()[2],getSoundSourceParameters()[3], getAID()};		
+		Location location = (Location) getSoundSourceParameters()[0];
+		int power = (int) getSoundSourceParameters()[1];
+		int opening = (int) getSoundSourceParameters()[2];
+		int direction = (int) getSoundSourceParameters()[3];
 		String id = (String)getSoundSourceParameters()[4];
+		
+		SoundSourceObject.createSoundSource(id, this.getAID(), location, opening, power, direction);
+		Object[] argsSoundSource = {SoundSourceObject.getSoundSources().get(id)};
+		
 		getSoundSources().put(id, createAgent(argsSoundSource, container, this.SOUNDSOURCE));
 	}
 	

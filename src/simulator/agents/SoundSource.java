@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import simulator.objects.Location;
 import simulator.objects.SoundObject;
+import simulator.objects.SoundSourceObject;
 import utils.Util;
 import jade.core.AID;
 import jade.core.Agent;
@@ -29,12 +30,8 @@ public class SoundSource extends Agent{
 	
 	private HashMap <String, AID> sounds = new HashMap<>();
 	
-	private AID ambient;
-	private Location location;
 	private static double soundSeparation = 1;
-	private int opening;
-	private int power;
-	private int direction;
+	private SoundSourceObject soundSource;
 
 	@Override
 	protected void setup() {
@@ -45,12 +42,12 @@ public class SoundSource extends Agent{
 	
 	private void emitSoundPulse(double direction, int opening, double potency){
 		double angle;
-		createSound(location, direction, potency, opening);
+		createSound(soundSource.getLocation(), direction, potency, opening);
 		for(double i = soundSeparation; i<=opening/2; i=i+soundSeparation){
 			angle = Util.normalizeAngle(direction+i);			
-			createSound(location,angle,potency, opening);
+			createSound(soundSource.getLocation(),angle,potency, opening);
 			angle = Util.normalizeAngle(direction-i);
-			createSound(location,angle,potency, opening);
+			createSound(soundSource.getLocation(),angle,potency, opening);
 		}
 	}
 
@@ -71,16 +68,12 @@ public class SoundSource extends Agent{
 
 	private void getParameters() {
 		Object[] args = getArguments();
-		location = (Location) args[0];
-		power = (int) args[1];
-		opening = (int) args[2];
-		direction = (int) args[3];
-		ambient = (AID) args[4];
+		soundSource = (SoundSourceObject) args[0];
 	}
 
 	private AID createSound (Location location, double direction, double potency, int opening){
 		final String id = Sound.nextId();
-		SoundObject.createSound(new Location(location), direction, potency, opening, ambient, this.getAID(), id);
+		SoundObject.createSound(new Location(location), direction, potency, opening, soundSource.getAmbient(), this.getAID(), id);
 		Object[] args = {SoundObject.getSounds().get(id)};
 		container = getContainerController();
 		Util.initAgent(container, args, "simulator.agents.Sound", id);
@@ -138,12 +131,12 @@ public class SoundSource extends Agent{
 					resumeAllSounds();
 				}
 				else if(message.getContent().equals(Message.RUN)){
-					emitSoundPulse(direction,opening,power);
+					emitSoundPulse(soundSource.getDirection(),soundSource.getOpening(),soundSource.getPower());
 				}
 				else if(message.getLanguage().equals(Language.FINISH)){
 					sounds.remove(message.getContent());
 					if(sounds.isEmpty()){
-						send(Message.prepareMessage(ACLMessage.INFORM, null, Message.FINISH_SIMULATION, ambient));
+						send(Message.prepareMessage(ACLMessage.INFORM, null, Message.FINISH_SIMULATION, soundSource.getAmbient()));
 					}
 				}
 				else {
