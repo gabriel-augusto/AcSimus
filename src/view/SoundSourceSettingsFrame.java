@@ -113,15 +113,14 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
                     .addComponent(jSeparator2)
                     .addComponent(jSeparator1)
                     .addGroup(jPanelBodyLayout.createSequentialGroup()
-                        .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelY)
-                            .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabelLocation)
-                                .addComponent(jLabelX)))
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jSpinnerY, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                            .addComponent(jSpinnerX)))
+                        .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelLocation)
+                            .addComponent(jLabelX)
+                            .addComponent(jLabelY))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSpinnerX, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSpinnerY, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)))
                     .addGroup(jPanelBodyLayout.createSequentialGroup()
                         .addComponent(jLabelDirection)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -219,6 +218,8 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         
         UIController.getInstance().addNewEvent(Message.CREATE_SOUND_SOURCE);
         this.setVisible(false);
+        
+        GraphicGenerator.getInstance().updateSoundSources();
         
         if(!Obstacle.getObstacles().isEmpty()){
             HomeFrame.jButtonRun.setEnabled(true);

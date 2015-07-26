@@ -16,32 +16,36 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
 import simulator.objects.SoundObject;
 import simulator.objects.SoundSourceObject;
 
-public class GraphicGenerator implements Runnable {
+public class GraphicGenerator{
 	
 	private JFreeChart graphic;
 	private XYItemRenderer renderer = null;
 	private XYSeries sounds = new XYSeries("Sound");
     private XYSeries soundSources = new XYSeries("SoundSource");
-    private int length = 10;
-    private int width = 10;
+    private XYPlot xyPlot = null;
+    private static GraphicGenerator graphicGenerator = null;
+    private int red;
+    private int blue;
 	
-	public GraphicGenerator() {
+	private GraphicGenerator() {
 		
 	}
 	
-	public void run(){
-		while(UIController.getInstance().isRunning())
-			this.updateGraphic();
-		this.clearGraphic();
+	public static GraphicGenerator getInstance(){
+		if(graphicGenerator == null){
+			graphicGenerator = new GraphicGenerator();
+		}
+		return graphicGenerator;
 	}
 	
 	public ChartPanel createPanel() {
         graphic = ChartFactory.createScatterPlot("Ambiente", "Largura", "Comprimento", createSampleData(), PlotOrientation.VERTICAL, true, true, false);
         
-        XYPlot xyPlot = (XYPlot) graphic.getPlot();
+        xyPlot = (XYPlot) graphic.getPlot();
         xyPlot.setDomainCrosshairVisible(true);
         xyPlot.setRangeCrosshairVisible(true);
         xyPlot.setBackgroundPaint(Color.white);
@@ -49,14 +53,16 @@ public class GraphicGenerator implements Runnable {
         renderer = xyPlot.getRenderer();
         renderer.setSeriesPaint(0, new Color(0,150,0));
         
-        NumberAxis domain = (NumberAxis) xyPlot.getDomainAxis();
+        return new ChartPanel(graphic);
+    }
+	
+	public void setBounds(int width, int length){
+		NumberAxis domain = (NumberAxis) xyPlot.getDomainAxis();
         adjustAxis((NumberAxis) xyPlot.getDomainAxis(), width, true);
         adjustAxis((NumberAxis) xyPlot.getRangeAxis(), length, false);
         
         domain.setVerticalTickLabels(true);
-        
-        return new ChartPanel(graphic);
-    }
+	}
 	
 	private XYDataset createSampleData() {
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
@@ -65,7 +71,7 @@ public class GraphicGenerator implements Runnable {
         return xySeriesCollection;
     }
 	
-	private void updateSounds(){
+	public void updateSounds(){
 		double maxSoundPower = 0;
 		int maxPower = 0;
 		
@@ -74,31 +80,27 @@ public class GraphicGenerator implements Runnable {
 				maxPower = soundSource.getPower();
 			}
 		}		
-		sounds.clear();		
+		sounds.clear();	
+		renderer.setSeriesPaint(1, new Color(red,0,blue));
 		for(SoundObject sound : SoundObject.getSounds().values()){
 			if(sound.getPower() > maxSoundPower){
 				maxSoundPower = sound.getPower();
 			}
             sounds.add(sound.getActualLocation().getX(), sound.getActualLocation().getY());
         }
-		double red = maxSoundPower/maxPower * 255;
-		double blue = 255 - (maxSoundPower/maxPower * 255);
-		renderer.setSeriesPaint(1, new Color((int)red,0,(int)blue));
+		red = (int)(maxSoundPower/maxPower * 255);
+		blue = (int)(255 - (maxSoundPower/maxPower * 255));
+		
 	}
 	
-	private void updateSoundSources(){
+	public void updateSoundSources(){
 		soundSources.clear();
 		for(SoundSourceObject soundSource : SoundSourceObject.getSoundSources().values()){
 			soundSources.add(soundSource.getLocation().getX(), soundSource.getLocation().getY());
 		}
 	}
 	
-	private void updateGraphic(){
-		updateSoundSources();
-		updateSounds();
-	}
-	
-	private void clearGraphic(){
+	public void clearGraphic(){
 		sounds.clear();
 		soundSources.clear();
 	}
@@ -111,21 +113,5 @@ public class GraphicGenerator implements Runnable {
 	 
 	public void save(OutputStream out) throws IOException {
 		ChartUtilities.writeChartAsPNG(out, graphic, 500, 350);
-	}
-
-	public int getLength() {
-		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
 	}
 }

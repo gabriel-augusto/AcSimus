@@ -22,15 +22,18 @@ import languagesAndMessages.Message;
 
 public class SoundSource extends Agent{
 
-	private static final long serialVersionUID = 1L;
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3414148236747846279L;
+
 	PlatformController container;
 	
 	//private int updateTime = 10000; //Uncomment if the UpdateSoundBehaviour is activated.
 	
-	private HashMap <String, AID> sounds = new HashMap<>();
+	private final HashMap <String, AID> sounds = new HashMap<>();
 	
-	private static double soundSeparation = 1;
+	private static final double soundSeparation = 10;
 	private SoundSourceObject soundSource;
 
 	@Override
@@ -62,7 +65,6 @@ public class SoundSource extends Agent{
 			dfd.setName(getAID());
 			DFService.register(this, dfd);
 		} catch (FIPAException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -72,15 +74,15 @@ public class SoundSource extends Agent{
 	}
 
 	private AID createSound (Location location, double direction, double potency, int opening){
-		final String id = Sound.nextId();
-		SoundObject.createSound(new Location(location), direction, potency, opening, soundSource.getAmbient(), this.getAID(), id);
-		Object[] args = {SoundObject.getSounds().get(id)};
+		final String identifier = Sound.nextId();
+		SoundObject.createSound(new Location(location), direction, potency, opening, soundSource.getAmbient(), this.getAID(), identifier);
+		Object[] args = {SoundObject.getSounds().get(identifier)};
 		container = getContainerController();
-		Util.initAgent(container, args, "simulator.agents.Sound", id);
+		Util.initAgent(container, args, "simulator.agents.Sound", identifier);
 		
-		System.out.println(id + " created at: " + location);
-		AID sound = new AID(id, AID.ISLOCALNAME);
-		sounds.put(id, sound);
+		System.out.println(identifier + " created at: " + location);
+		AID sound = new AID(identifier, AID.ISLOCALNAME);
+		sounds.put(identifier, sound);
 		return sound;
 	}
 	
@@ -165,7 +167,6 @@ public class SoundSource extends Agent{
 				ac = cc.getAgent(sound.getLocalName());
 				ac.activate();
 			} catch (ControllerException e) {
-				e.printStackTrace();
 			}
 		}
 	}
@@ -182,7 +183,6 @@ public class SoundSource extends Agent{
                                         ac = cc.getAgent(sound.getLocalName());
                                         ac.kill();
                                 } catch (ControllerException e) {
-                                        e.printStackTrace();
                                 }
                         }
                 }

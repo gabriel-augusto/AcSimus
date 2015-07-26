@@ -170,6 +170,8 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
         int length = (int)this.jSpinnerLength.getValue();
         int width = (int)this.jSpinnerWidth.getValue();
         int absorptionRate = (int)this.jSpinnerAbsorptionRate.getValue();
+        
+        GraphicGenerator.getInstance().setBounds(length, width);
 
 	addNewObstacle(Line.getLine(new Location(0,0), new Location(0,width)), absorptionRate);        
         addNewObstacle(Line.getLine(new Location(0,width), new Location(length,width)), absorptionRate);        

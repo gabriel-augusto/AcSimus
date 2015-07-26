@@ -6,12 +6,16 @@
 
 package view;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 import languagesAndMessages.Message;
 import settings.ProjectSettings;
 import simulator.agents.Ambient;
 import simulator.objects.Obstacle;
+import simulator.objects.SoundObject;
+import simulator.objects.SoundSourceObject;
 
 /**
  *
@@ -21,7 +25,9 @@ public class HomeFrame extends javax.swing.JFrame {
 	
     private static HomeFrame homeFrame= null;
     private static final long serialVersionUID = 1L;
-	
+    
+    private GraphicGenerator graphicGenerator = GraphicGenerator.getInstance();
+    
     private final AmbientSettingsFrame ambienteSettingsFrame = new AmbientSettingsFrame();
     private final SoundSourceSettingsFrame soundSourceSettingsFrame = new SoundSourceSettingsFrame();
     private final SimulationSettingsFrame simulationSettingsFrame = new SimulationSettingsFrame();
@@ -34,7 +40,7 @@ public class HomeFrame extends javax.swing.JFrame {
     
     private HomeFrame() {
         initComponents();
-        
+
         /*
         //Put console in application
         PrintStream printStream = new PrintStream(new CustomOutputStream(jTextAreaLog));
@@ -79,9 +85,8 @@ public class HomeFrame extends javax.swing.JFrame {
         jTableSoundSources = new javax.swing.JTable();
         jButtonAddSoundSource = new javax.swing.JButton();
         jButtonRemoveSoundSource = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaLog = new javax.swing.JTextArea();
+        jPanelRight = new javax.swing.JPanel();
+        jPanelMonitor = graphicGenerator.createPanel();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemRun = new javax.swing.JMenuItem();
@@ -96,7 +101,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jMenuItemSimulationSetting = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(ProjectSettings.PROJECT_NAME);
+        setTitle(ProjectSettings.getProjectSettings().getProjectName());
         setExtendedState(MAXIMIZED_BOTH);
 
         jToolBar.setFloatable(false);
@@ -166,7 +171,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jToolBar.add(jButtonConfig);
         jToolBar.add(jSeparator2);
 
-        jSplitPaneBody.setDividerLocation(350);
+        jSplitPaneBody.setDividerLocation(500);
 
         jSplitPaneMenu.setDividerLocation(350);
         jSplitPaneMenu.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -206,7 +211,7 @@ public class HomeFrame extends javax.swing.JFrame {
                                 .addComponent(jButtonAddObstacle)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButtonRemoveObstacle)))
-                        .addGap(0, 193, Short.MAX_VALUE)))
+                        .addGap(0, 343, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelObstaclesLayout.setVerticalGroup(
@@ -260,7 +265,7 @@ public class HomeFrame extends javax.swing.JFrame {
                                 .addComponent(jButtonAddSoundSource)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButtonRemoveSoundSource)))
-                        .addGap(0, 193, Short.MAX_VALUE)))
+                        .addGap(0, 343, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelSoundSourcesLayout.setVerticalGroup(
@@ -281,25 +286,29 @@ public class HomeFrame extends javax.swing.JFrame {
 
         jSplitPaneBody.setLeftComponent(jSplitPaneMenu);
 
-        jTextAreaLog.setEditable(false);
-        jTextAreaLog.setColumns(20);
-        jTextAreaLog.setRows(5);
-        jScrollPane1.setViewportView(jTextAreaLog);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanelMonitorLayout = new javax.swing.GroupLayout(jPanelMonitor);
+        jPanelMonitor.setLayout(jPanelMonitorLayout);
+        jPanelMonitorLayout.setHorizontalGroup(
+            jPanelMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 182, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 292, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+        jPanelMonitorLayout.setVerticalGroup(
+            jPanelMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 462, Short.MAX_VALUE)
         );
 
-        jSplitPaneBody.setRightComponent(jPanel1);
+        javax.swing.GroupLayout jPanelRightLayout = new javax.swing.GroupLayout(jPanelRight);
+        jPanelRight.setLayout(jPanelRightLayout);
+        jPanelRightLayout.setHorizontalGroup(
+            jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelMonitor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanelRightLayout.setVerticalGroup(
+            jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelMonitor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jSplitPaneBody.setRightComponent(jPanelRight);
 
         javax.swing.GroupLayout jPanelBodyLayout = new javax.swing.GroupLayout(jPanelBody);
         jPanelBody.setLayout(jPanelBodyLayout);
@@ -516,6 +525,8 @@ public class HomeFrame extends javax.swing.JFrame {
         
         Ambient.killSoundSource(id);
     	Ambient.getSoundSources().remove(id);
+        SoundSourceObject.getSoundSources().remove(id);
+        graphicGenerator.updateSoundSources();
         
         ((DefaultTableModel) jTableSoundSources.getModel()).removeRow(jTableSoundSources.getSelectedRow());
         for(int i = 0; i < jTableSoundSources.getModel().getRowCount(); i++){
@@ -527,6 +538,9 @@ public class HomeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonRemoveSoundSourceActionPerformed
 
     private void runSimulation(){
+        graphicGenerator.clearGraphic();
+        graphicGenerator.updateSoundSources();
+        
         this.jButtonStop.setEnabled(true);
         this.jMenuItemStop.setEnabled(true);
         HomeFrame.jButtonRun.setEnabled(false);
@@ -535,6 +549,8 @@ public class HomeFrame extends javax.swing.JFrame {
         this.jMenuItemPause.setEnabled(true);
         this.jButtonResume.setEnabled(false);
         this.jMenuItemResume.setEnabled(false);
+        
+        UIController.getInstance().setRunning(true);
         
         UIController.getInstance().addNewEvent(Message.RUN);
     }
@@ -545,6 +561,8 @@ public class HomeFrame extends javax.swing.JFrame {
         else
             UIController.getInstance().addNewEvent(Message.STOP_RESUMED);
         
+        UIController.getInstance().setRunning(false);
+        
         this.jButtonStop.setEnabled(false);
         this.jMenuItemStop.setEnabled(false);
         this.jButtonPause.setEnabled(false);
@@ -553,6 +571,15 @@ public class HomeFrame extends javax.swing.JFrame {
         this.jMenuItemResume.setEnabled(false);
         HomeFrame.jButtonRun.setEnabled(true);
         HomeFrame.jMenuItemRun.setEnabled(true);
+        
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(HomeFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        SoundObject.getSounds().clear();
+        graphicGenerator.updateSounds();
+        graphicGenerator.updateSoundSources();
     }
     
     private void pauseSimulation(){
@@ -625,12 +652,12 @@ public class HomeFrame extends javax.swing.JFrame {
     public static javax.swing.JMenuItem jMenuItemSoundSource;
     private javax.swing.JMenuItem jMenuItemStop;
     private javax.swing.JMenu jMenuSoundEdit;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelBody;
     private javax.swing.JPanel jPanelHome;
+    private javax.swing.JPanel jPanelMonitor;
     private javax.swing.JPanel jPanelObstacles;
+    private javax.swing.JPanel jPanelRight;
     private javax.swing.JPanel jPanelSoundSources;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneTableObstacles;
     private javax.swing.JScrollPane jScrollPaneTableSoundSources;
     private javax.swing.JToolBar.Separator jSeparator1;
@@ -639,7 +666,6 @@ public class HomeFrame extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPaneMenu;
     public static javax.swing.JTable jTableObstacles;
     public static javax.swing.JTable jTableSoundSources;
-    private javax.swing.JTextArea jTextAreaLog;
     private javax.swing.JToolBar jToolBar;
     // End of variables declaration//GEN-END:variables
 }

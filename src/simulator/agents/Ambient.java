@@ -27,6 +27,7 @@ public class Ambient extends Agent{
 		
 //Declaration of agent variables
 	private final String SOUNDSOURCE = "SoundSource";
+	private final String GUI = "GUIAgentController";
 	private static HashMap <String, AID> soundSources = new HashMap<>();
 //End of agent variables declaration
 	
@@ -40,6 +41,7 @@ public class Ambient extends Agent{
 		defineAmbient();
 		addBehaviour(new GetMessageBehaviour(this));
 		addBehaviour(new GetEventBehaviour(this));
+		createAgent(null, container, this.GUI);
 	}
 	
 	public void defineAmbient() {
@@ -63,7 +65,9 @@ public class Ambient extends Agent{
 	private AID createAgent(Object[] args, PlatformController container, String type) {
 		String id = getNextId(type);		
 		Util.initAgent(container, args, "simulator.agents."+type, id);
-		System.out.println(type + " criado(a) em: " + args[0]);
+		if(type.equals(this.SOUNDSOURCE)){
+			System.out.println(type + " criado(a) em: " + args[0]);
+		}
 		return new AID(id, AID.ISLOCALNAME);
 	}
 
@@ -72,6 +76,9 @@ public class Ambient extends Agent{
 		switch(type){
 			case SOUNDSOURCE:
 				id = SoundSource.nextId();
+				break;
+			case GUI:
+				id = GUIAgentController.nextId();
 				break;
 		}
 		return id;
