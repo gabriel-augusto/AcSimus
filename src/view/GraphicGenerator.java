@@ -22,12 +22,13 @@ import simulator.objects.SoundSourceObject;
 
 public class GraphicGenerator{
 	
-	private JFreeChart graphic;
+	private JFreeChart graphic = null;
 	private XYItemRenderer renderer = null;
 	private XYSeries sounds = new XYSeries("Sound");
     private XYSeries soundSources = new XYSeries("SoundSource");
     private XYPlot xyPlot = null;
     private static GraphicGenerator graphicGenerator = null;
+    ChartPanel panel = new ChartPanel(graphic);
     private int red;
     private int blue;
 	
@@ -42,21 +43,22 @@ public class GraphicGenerator{
 		return graphicGenerator;
 	}
 	
-	public ChartPanel createPanel() {
-        graphic = ChartFactory.createScatterPlot("Ambiente", "Largura", "Comprimento", createSampleData(), PlotOrientation.VERTICAL, true, true, false);
-        
-        xyPlot = (XYPlot) graphic.getPlot();
+	public ChartPanel createPanel() {        
+        return panel;
+    }
+	
+	public void setBounds(int width, int length){
+		graphic = ChartFactory.createScatterPlot("Ambiente", "Largura", "Comprimento", createSampleData(), PlotOrientation.VERTICAL, true, true, false);
+		panel.setChart(graphic);
+		
+		xyPlot = (XYPlot) graphic.getPlot();
         xyPlot.setDomainCrosshairVisible(true);
         xyPlot.setRangeCrosshairVisible(true);
         xyPlot.setBackgroundPaint(Color.white);
         
         renderer = xyPlot.getRenderer();
         renderer.setSeriesPaint(0, new Color(0,150,0));
-        
-        return new ChartPanel(graphic);
-    }
-	
-	public void setBounds(int width, int length){
+		
 		NumberAxis domain = (NumberAxis) xyPlot.getDomainAxis();
         adjustAxis((NumberAxis) xyPlot.getDomainAxis(), width, true);
         adjustAxis((NumberAxis) xyPlot.getRangeAxis(), length, false);

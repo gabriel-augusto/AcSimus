@@ -33,7 +33,7 @@ public class SoundSource extends Agent{
 	
 	private final HashMap <String, AID> sounds = new HashMap<>();
 	
-	private static final double soundSeparation = 10;
+	private static final double soundSeparation = 5;
 	private SoundSourceObject soundSource;
 
 	@Override
