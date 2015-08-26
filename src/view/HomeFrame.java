@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import languagesAndMessages.Message;
 import settings.ProjectSettings;
 import simulator.agents.Ambient;
+import simulator.agents.GUIAgentController;
 import simulator.objects.Obstacle;
 import simulator.objects.SoundObject;
 import simulator.objects.SoundSourceObject;
@@ -87,6 +88,8 @@ public class HomeFrame extends javax.swing.JFrame {
         jButtonRemoveSoundSource = new javax.swing.JButton();
         jPanelRight = new javax.swing.JPanel();
         jPanelMonitor = graphicGenerator.createPanel();
+        jLabelReverberacao = new javax.swing.JLabel();
+        jLabelNivel = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemRun = new javax.swing.JMenuItem();
@@ -203,7 +206,7 @@ public class HomeFrame extends javax.swing.JFrame {
             .addGroup(jPanelObstaclesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
                     .addGroup(jPanelObstaclesLayout.createSequentialGroup()
                         .addGroup(jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelObstacles)
@@ -220,7 +223,7 @@ public class HomeFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabelObstacles)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAddObstacle)
@@ -274,7 +277,7 @@ public class HomeFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabelSoundSources)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneTableSoundSources, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .addComponent(jScrollPaneTableSoundSources, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelSoundSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAddSoundSource)
@@ -290,22 +293,41 @@ public class HomeFrame extends javax.swing.JFrame {
         jPanelMonitor.setLayout(jPanelMonitorLayout);
         jPanelMonitorLayout.setHorizontalGroup(
             jPanelMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 182, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanelMonitorLayout.setVerticalGroup(
             jPanelMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 462, Short.MAX_VALUE)
+            .addGap(0, 409, Short.MAX_VALUE)
         );
+
+        jLabelReverberacao.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabelReverberacao.setText("Reverberation time:");
+
+        jLabelNivel.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabelNivel.setText("Sound intensity level:");
 
         javax.swing.GroupLayout jPanelRightLayout = new javax.swing.GroupLayout(jPanelRight);
         jPanelRight.setLayout(jPanelRightLayout);
         jPanelRightLayout.setHorizontalGroup(
             jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelMonitor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanelRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelNivel, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .addComponent(jLabelReverberacao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanelRightLayout.setVerticalGroup(
             jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelMonitor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelReverberacao)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelMonitor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelNivel)
+                .addContainerGap())
         );
 
         jSplitPaneBody.setRightComponent(jPanelRight);
@@ -314,7 +336,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jPanelBody.setLayout(jPanelBodyLayout);
         jPanelBodyLayout.setHorizontalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneBody)
+            .addComponent(jSplitPaneBody, javax.swing.GroupLayout.DEFAULT_SIZE, 792, Short.MAX_VALUE)
         );
         jPanelBodyLayout.setVerticalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -541,6 +563,9 @@ public class HomeFrame extends javax.swing.JFrame {
         graphicGenerator.clearGraphic();
         graphicGenerator.updateSoundSources();
         
+        GUIAgentController.setDecibel(0);
+        GUIAgentController.setReverberationTime(0);
+        
         this.jButtonStop.setEnabled(true);
         this.jMenuItemStop.setEnabled(true);
         HomeFrame.jButtonRun.setEnabled(false);
@@ -638,7 +663,9 @@ public class HomeFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButtonResume;
     public static javax.swing.JButton jButtonRun;
     private javax.swing.JButton jButtonStop;
+    public static javax.swing.JLabel jLabelNivel;
     private javax.swing.JLabel jLabelObstacles;
+    public static javax.swing.JLabel jLabelReverberacao;
     private javax.swing.JLabel jLabelSoundSources;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenu jMenuFile;

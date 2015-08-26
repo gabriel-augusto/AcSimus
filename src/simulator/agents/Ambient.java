@@ -51,7 +51,7 @@ public class Ambient extends Agent{
 
 	private void defineSoundSource(){
 		Location location = (Location) getSoundSourceParameters()[0];
-		int power = (int) getSoundSourceParameters()[1];
+        double power = (double) getSoundSourceParameters()[1];
 		int opening = (int) getSoundSourceParameters()[2];
 		int direction = (int) getSoundSourceParameters()[3];
 		String id = (String)getSoundSourceParameters()[4];

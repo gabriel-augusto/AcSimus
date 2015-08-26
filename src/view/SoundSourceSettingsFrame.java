@@ -72,7 +72,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
             .addComponent(jLabelTitle, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        jLabelPower.setText("Power (Watts):");
+        jLabelPower.setText("Power (dBPWL):");
 
         jLabelOpening.setText("Opening (graus):");
 
@@ -85,7 +85,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
 
         jSpinnerOpening.setModel(new javax.swing.SpinnerNumberModel(70, 0, 360, 1));
 
-        jSpinnerPower.setModel(new javax.swing.SpinnerNumberModel(100, 1, 10000, 1));
+        jSpinnerPower.setModel(new javax.swing.SpinnerNumberModel(50, 1, 120, 1));
 
         jSpinnerX.setModel(new javax.swing.SpinnerNumberModel(5, 0, 1000, 1));
 
@@ -120,7 +120,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSpinnerX, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jSpinnerY, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)))
+                            .addComponent(jSpinnerY, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, Short.MAX_VALUE)))
                     .addGroup(jPanelBodyLayout.createSequentialGroup()
                         .addComponent(jLabelDirection)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -131,7 +131,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
                             .addComponent(jLabelOpening))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jSpinnerOpening, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+                            .addComponent(jSpinnerOpening, javax.swing.GroupLayout.PREFERRED_SIZE, 67, Short.MAX_VALUE)
                             .addComponent(jSpinnerPower))))
                 .addContainerGap())
         );
@@ -201,7 +201,9 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelSoundSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanelSoundSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -209,8 +211,14 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
         String id = "SS-"+HomeFrame.getSoundSourceCount();
+        
+        int opening = (int)this.jSpinnerOpening.getValue();
+        
+        //convert dBPWL to watt/m²
+        double power = (Math.pow(10.0, ((int)this.jSpinnerPower.getValue()/10.0))*Math.pow(10.0, -13))*(360/opening);
+        
         Location location = new Location((int)this.jSpinnerX.getValue(), (int)this.jSpinnerY.getValue());
-        Object[] parameters = {location, this.jSpinnerPower.getValue(), this.jSpinnerOpening.getValue(), this.jSpinnerDirection.getValue(), id};
+        Object[] parameters = {location, power, opening, this.jSpinnerDirection.getValue(), id};
         Ambient.setSoundSourceParameters(parameters);        
         
         Object[] data = {HomeFrame.jTableSoundSources.getRowCount()+1, id, parameters[1], parameters[2], parameters[0], parameters[3]};        

@@ -17,6 +17,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import simulator.agents.GUIAgentController;
 import simulator.objects.SoundObject;
 import simulator.objects.SoundSourceObject;
 
@@ -74,25 +75,24 @@ public class GraphicGenerator{
     }
 	
 	public void updateSounds(){
-		double maxSoundPower = 0;
-		int maxPower = 0;
-		
-		for(SoundSourceObject soundSource : SoundSourceObject.getSoundSources().values()){
-			if(soundSource.getPower() > maxPower){
-				maxPower = soundSource.getPower();
-			}
-		}		
 		sounds.clear();	
 		renderer.setSeriesPaint(1, new Color(red,0,blue));
+		
+		red = (int) (GUIAgentController.getDecibel()*255)/120;
+		blue = (int)(255 - (GUIAgentController.getDecibel()*255)/120);
+		
+		if(red > 255)
+			red=255;
+		if(red < 0)
+			red = 0;
+		if(blue > 255)
+			blue = 255;
+		if(blue < 0)
+			blue = 0;	
+		
 		for(SoundObject sound : SoundObject.getSounds().values()){
-			if(sound.getPower() > maxSoundPower){
-				maxSoundPower = sound.getPower();
-			}
             sounds.add(sound.getActualLocation().getX(), sound.getActualLocation().getY());
         }
-		red = (int)(maxSoundPower/maxPower * 255);
-		blue = (int)(255 - (maxSoundPower/maxPower * 255));
-		
 	}
 	
 	public void updateSoundSources(){

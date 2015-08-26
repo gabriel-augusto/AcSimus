@@ -8,7 +8,7 @@ public class SoundSourceObject {
 	private AID ambient;
 	private Location location;
 	private int opening;
-	private int power;
+	private double power;
 	private int direction;
 	
 	private static HashMap <String, SoundSourceObject> soundSources = new HashMap<>();
@@ -17,11 +17,11 @@ public class SoundSourceObject {
 		return soundSources;
 	}
 	
-	public static void createSoundSource(String id, AID ambient, Location location, int opening, int power, int direction){
+	public static void createSoundSource(String id, AID ambient, Location location, int opening, double power, int direction){
 		getSoundSources().put(id, new SoundSourceObject(ambient, location, opening, power, direction));
 	}
 	
-	private SoundSourceObject(AID ambient, Location location, int opening, int power, int direction){
+	private SoundSourceObject(AID ambient, Location location, int opening, double power, int direction){
 		this.setAmbient(ambient);
 		this.setLocation(location);
 		this.setOpening(opening);
@@ -53,11 +53,11 @@ public class SoundSourceObject {
 		this.opening = opening;
 	}
 
-	public int getPower() {
+	public double getPower() {
 		return power;
 	}
 
-	public void setPower(int power) {
+	public void setPower(double power) {
 		this.power = power;
 	}
 

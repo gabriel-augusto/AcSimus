@@ -22,6 +22,7 @@ public class SoundObject {
 	private Location actualLocation;
 	private double direction;
 	private double power;
+	private double actualVirtualSoundSourcePower;
 	private int opening;
 	private double intensity;
 	private int distanceOfPreviousColisionPoint = 0;
@@ -43,6 +44,7 @@ public class SoundObject {
 		System.out.println("\nInitial Location: " + initialLocation + "\nActual Location: " + actualLocation);
 		this.direction = direction;
 		this.power = power;
+		this.setActualVirtualSoundSourcePower(power);
 		this.intensity = power;
 		this.opening = opening;
 		this.soundSource = soundSource;
@@ -69,7 +71,7 @@ public class SoundObject {
 	public void update(){
 		this.setDistanceOfPreviousColisionPoint(this.getDistanceOfPreviousColisionPoint() + SIZE_OF_STEP);
 		this.setDistanceTraveled(this.getDistanceTraveled() + SIZE_OF_STEP);
-		this.setIntensity(calculateIntensityBySoundPropagation(this.getPower(), this.getOpening(), this.getDistanceTraveled()));
+		this.setIntensity(calculateIntensityBySoundPropagation(this.getActualVirtualSoundSourcePower(), this.getOpening(), this.getDistanceTraveled()));
 		updateLocation();
 		
 		if(isCollisionPoint()){
@@ -85,9 +87,8 @@ public class SoundObject {
 		this.getActualLocation().setY(Util.calculateY(this.getDirection(), this.getDistanceOfPreviousColisionPoint()) + this.getInitialLocation().getY());
 	}
 	
-	public double calculateIntensityBySoundPropagation(double intensity, double angle, double radius){
-		double archLenght = angle * Math.PI * radius / 180;
-		return intensity/archLenght;
+	public double calculateIntensityBySoundPropagation(double power, double angle, double radius){
+		return (power / (4 * Math.PI * radius * radius)) * (360 / angle);
 	}
 	
 	public boolean isCollisionPoint() {
@@ -99,9 +100,14 @@ public class SoundObject {
 		this.setInitialLocation(this.getCollisionPoint());
 		this.setDirection(calculateNewDirection());
 		this.setIntensity(calculateIntencityAfterColisionPoint(this.getCollisionObstacle().getAbsortionRate()));
+		this.setActualVirtualSoundSourcePower(this.calculateNewVirtualSoundSourcePower(this.getIntensity(), this.getDistanceTraveled(), this.getOpening()));
 		this.setRote(Line.getLine(this.getInitialLocation(), this.getDirection()));
 	}
 
+	public double calculateNewVirtualSoundSourcePower(double intensity, double distance, double angle){
+		return (intensity * angle * 4 * Math.PI * distance * distance)/360;
+	}
+	
 	public double calculateIntencityAfterColisionPoint(double absorptionRate) {
 		return this.getIntensity() - (this.getIntensity()*(absorptionRate/100));
 	}
@@ -113,7 +119,7 @@ public class SoundObject {
 	}
 	
 	public String getActualState(){
-		return "\nintensity: " + this.getIntensity() 
+		return "\ndecibel: " + this.getDecibel() 
 				+ "\ndirection: " + this.getDirection() + " degrees" + "\ndistance of origin: " 
 				+ this.getDistanceOfPreviousColisionPoint() + "\ninitial location: " 
 				+ this.getInitialLocation() + "\nlocation: " + this.getActualLocation();
@@ -229,5 +235,21 @@ public class SoundObject {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public double getActualVirtualSoundSourcePower() {
+		return actualVirtualSoundSourcePower;
+	}
+
+	public void setActualVirtualSoundSourcePower(double actualVirtualSoundSourcePower) {
+		this.actualVirtualSoundSourcePower = actualVirtualSoundSourcePower;
+	}
+	
+	public double getDecibel(){
+		return 10 * Math.log10(this.getIntensity() / Math.pow(10.0, -12.0));
+	}
+	
+	public double getReverberationTime(){
+		return this.distanceTraveled * (1/0.34029);
 	}
 }
