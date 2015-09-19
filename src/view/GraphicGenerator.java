@@ -17,7 +17,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import simulator.agents.GUIAgentController;
+import simulator.objects.SimulationStatus;
 import simulator.objects.SoundObject;
 import simulator.objects.SoundSourceObject;
 
@@ -32,6 +32,7 @@ public class GraphicGenerator{
     ChartPanel panel = new ChartPanel(graphic);
     private int red;
     private int blue;
+    private SimulationStatus simulation = SimulationStatus.getInstance();
 	
 	private GraphicGenerator() {
 		
@@ -78,8 +79,8 @@ public class GraphicGenerator{
 		sounds.clear();	
 		renderer.setSeriesPaint(1, new Color(red,0,blue));
 		
-		red = (int) (GUIAgentController.getDecibel()*255)/120;
-		blue = (int)(255 - (GUIAgentController.getDecibel()*255)/120);
+		red = (int) (simulation.getDecibel()*255)/120;
+		blue = (int)(255 - (simulation.getDecibel()*255)/120);
 		
 		if(red > 255)
 			red=255;

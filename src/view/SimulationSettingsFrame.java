@@ -45,6 +45,7 @@ public class SimulationSettingsFrame extends javax.swing.JFrame {
 
         jLabelSimulationSpeed.setText("Simulation speed (miliseconds):");
 
+        jSpinnerSimulationSpeed.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(100), Integer.valueOf(0), null, Integer.valueOf(1)));
         jSpinnerSimulationSpeed.setValue(20);
 
         jButtonOk.setText("Ok");
@@ -61,7 +62,7 @@ public class SimulationSettingsFrame extends javax.swing.JFrame {
             .addGroup(jPanelSimulationSettingsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelSimulationSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelSimulationSettings, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .addComponent(jLabelSimulationSettings, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
                     .addGroup(jPanelSimulationSettingsLayout.createSequentialGroup()
                         .addComponent(jLabelSimulationSpeed)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

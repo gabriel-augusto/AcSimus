@@ -13,8 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import languagesAndMessages.Message;
 import settings.ProjectSettings;
 import simulator.agents.Ambient;
-import simulator.agents.GUIAgentController;
 import simulator.objects.Obstacle;
+import simulator.objects.SimulationStatus;
 import simulator.objects.SoundObject;
 import simulator.objects.SoundSourceObject;
 
@@ -28,6 +28,7 @@ public class HomeFrame extends javax.swing.JFrame {
     private static final long serialVersionUID = 1L;
     
     private GraphicGenerator graphicGenerator = GraphicGenerator.getInstance();
+    private SimulationStatus simulation = SimulationStatus.getInstance();
     
     private final AmbientSettingsFrame ambienteSettingsFrame = new AmbientSettingsFrame();
     private final SoundSourceSettingsFrame soundSourceSettingsFrame = new SoundSourceSettingsFrame();
@@ -104,7 +105,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jMenuItemSimulationSetting = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(ProjectSettings.getProjectSettings().getProjectName());
+        setTitle(ProjectSettings.getProjectSettings().PROJECT_NAME);
         setExtendedState(MAXIMIZED_BOTH);
 
         jToolBar.setFloatable(false);
@@ -563,8 +564,8 @@ public class HomeFrame extends javax.swing.JFrame {
         graphicGenerator.clearGraphic();
         graphicGenerator.updateSoundSources();
         
-        GUIAgentController.setDecibel(0);
-        GUIAgentController.setReverberationTime(0);
+        simulation.setDecibel(0);
+        simulation.setReverberationTime(0);
         
         this.jButtonStop.setEnabled(true);
         this.jMenuItemStop.setEnabled(true);

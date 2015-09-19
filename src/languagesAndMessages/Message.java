@@ -7,8 +7,8 @@ import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 
 public class Message {
-	public static String WHAT_IS_THE_LOCATION = "What is the location?";
-	public static String WHAT_IS_THE_INDEX = "What is the index?";
+	public static final String WHAT_IS_THE_LOCATION = "What is the location?";
+	public static final String WHAT_IS_THE_INDEX = "What is the index?";
 	public static final String MSG_NOT_UNDERSTOOD =	"Message not understood.";
 	public static final String PAUSE = "pause";
 	public static final String RESUME = "resume";

@@ -71,9 +71,9 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
 
         jLabelWidth.setText("Width:");
 
-        jSpinnerLength.setModel(new javax.swing.SpinnerNumberModel(10, 1, 1000, 1));
+        jSpinnerLength.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(0), null, Integer.valueOf(1)));
 
-        jSpinnerWidth.setModel(new javax.swing.SpinnerNumberModel(10, 1, 1000, 1));
+        jSpinnerWidth.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(0), null, Integer.valueOf(1)));
 
         jLabelAbsorptionRate.setText("Absorption rate:");
 
@@ -157,7 +157,7 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelAmbient, javax.swing.GroupLayout.PREFERRED_SIZE, 222, Short.MAX_VALUE)
+            .addComponent(jPanelAmbient, javax.swing.GroupLayout.PREFERRED_SIZE, 237, Short.MAX_VALUE)
         );
 
         pack();

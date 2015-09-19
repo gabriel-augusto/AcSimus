@@ -87,9 +87,9 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
 
         jSpinnerPower.setModel(new javax.swing.SpinnerNumberModel(50, 1, 120, 1));
 
-        jSpinnerX.setModel(new javax.swing.SpinnerNumberModel(5, 0, 1000, 1));
+        jSpinnerX.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(5), Integer.valueOf(0), null, Integer.valueOf(1)));
 
-        jSpinnerY.setModel(new javax.swing.SpinnerNumberModel(5, 0, 1000, 1));
+        jSpinnerY.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(5), Integer.valueOf(0), null, Integer.valueOf(1)));
 
         jButtonOk.setText("OK");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
@@ -120,7 +120,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSpinnerX, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jSpinnerY, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, Short.MAX_VALUE)))
+                            .addComponent(jSpinnerY, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)))
                     .addGroup(jPanelBodyLayout.createSequentialGroup()
                         .addComponent(jLabelDirection)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

@@ -119,7 +119,7 @@ public class SoundObjectTest {
 		
 		SoundObject sound = SoundObject.getSounds().get("s1");
 		double result = sound.calculateIntensityBySoundPropagation(sound.getIntensity(), sound.getOpening(), 1);
-		assertEquals(63.661977237, result, .0000001);
+		assertEquals(31.83098861, result, .0000001);
 	}
 	
 	@Test
@@ -154,10 +154,10 @@ public class SoundObjectTest {
 	
 	@Test
 	public void testGetActualState(){
-		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");		
+		SoundObject.createSound(new Location(0, 5), 0, 0.1, 90, null, null, "s1");		
 		
 		SoundObject sound = SoundObject.getSounds().get("s1");
-		String response = "\nintensity: 100.0\ndirection: 0.0 degrees\ndistance of origin: 0\ninitial location: (x: 0.0; y: 5.0)\nlocation: (x: 0.0; y: 5.0)";
+		String response = "\ndecibel: 110.0\ndirection: 0.0 degrees\ndistance of origin: 0\ninitial location: (x: 0.0; y: 5.0)\nlocation: (x: 0.0; y: 5.0)";
 		assertEquals(response, sound.getActualState());
 	}
 	
