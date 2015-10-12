@@ -58,8 +58,7 @@ public class Message {
 		return message;
 	}
 	
-	public static ACLMessage 
-	getAnswerOfANotUnderstoodMessage(AID target) {
+	public static ACLMessage getAnswerOfANotUnderstoodMessage(AID target) {
 		ACLMessage answer = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
 		answer.addReceiver(target);
 		answer.setContent(Message.MSG_NOT_UNDERSTOOD);
