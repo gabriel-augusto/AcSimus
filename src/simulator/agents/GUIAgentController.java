@@ -7,9 +7,9 @@ package simulator.agents;
 
 import simulator.objects.SimulationStatus;
 import simulator.objects.SoundObject;
+import simulator.objects.UIController;
 import view.GraphicGenerator;
 import view.HomeFrame;
-import view.UIController;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 

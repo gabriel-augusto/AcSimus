@@ -1,4 +1,4 @@
-package view;
+package simulator.objects;
 
 import java.util.LinkedList;
 import java.util.Queue;

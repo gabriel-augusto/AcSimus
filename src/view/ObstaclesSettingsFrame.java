@@ -7,7 +7,7 @@ package view;
 
 import javax.swing.table.DefaultTableModel;
 
-import simulator.agents.Ambient;
+import simulator.objects.AmbientObject;
 import simulator.objects.Line;
 import simulator.objects.Location;
 import simulator.objects.Obstacle;
@@ -204,7 +204,7 @@ public class ObstaclesSettingsFrame extends javax.swing.JFrame {
         
         HomeFrame.getObstacleModel().addRow(data);
         
-        if(!Ambient.getSoundSources().isEmpty()){
+        if(!AmbientObject.getInstance().getSoundSources().isEmpty()){
             HomeFrame.jButtonRun.setEnabled(true);
             HomeFrame.jMenuItemRun.setEnabled(true);
         }

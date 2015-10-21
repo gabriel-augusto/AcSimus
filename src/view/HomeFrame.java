@@ -12,11 +12,12 @@ import javax.swing.table.DefaultTableModel;
 
 import languagesAndMessages.Message;
 import settings.ProjectSettings;
-import simulator.agents.Ambient;
+import simulator.objects.AmbientObject;
 import simulator.objects.Obstacle;
 import simulator.objects.SimulationStatus;
 import simulator.objects.SoundObject;
 import simulator.objects.SoundSourceObject;
+import simulator.objects.UIController;
 
 /**
  *
@@ -543,11 +544,12 @@ public class HomeFrame extends javax.swing.JFrame {
 
     private void jButtonRemoveSoundSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveSoundSourceActionPerformed
         String id;
+        AmbientObject ambient = AmbientObject.getInstance();
         id = (String)jTableSoundSources.getModel().getValueAt(jTableSoundSources.getSelectedRow(), 1);
     	System.out.println(id);
         
-        Ambient.killSoundSource(id);
-    	Ambient.getSoundSources().remove(id);
+        ambient.killSoundSource(id);
+    	ambient.getSoundSources().remove(id);
         SoundSourceObject.getSoundSources().remove(id);
         graphicGenerator.updateSoundSources();
         
@@ -555,7 +557,7 @@ public class HomeFrame extends javax.swing.JFrame {
         for(int i = 0; i < jTableSoundSources.getModel().getRowCount(); i++){
             jTableSoundSources.getModel().setValueAt(i+1, i, 0);
         }
-        if(Ambient.getSoundSources().isEmpty()){
+        if(ambient.getSoundSources().isEmpty()){
             jButtonRun.setEnabled(false);
         }
     }//GEN-LAST:event_jButtonRemoveSoundSourceActionPerformed

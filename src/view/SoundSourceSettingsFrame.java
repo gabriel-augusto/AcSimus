@@ -7,9 +7,10 @@
 package view;
 
 import languagesAndMessages.Message;
-import simulator.agents.Ambient;
+import simulator.objects.AmbientObject;
 import simulator.objects.Location;
 import simulator.objects.Obstacle;
+import simulator.objects.UIController;
 
 /**
  *
@@ -219,7 +220,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         
         Location location = new Location((int)this.jSpinnerX.getValue(), (int)this.jSpinnerY.getValue());
         Object[] parameters = {location, power, opening, this.jSpinnerDirection.getValue(), id};
-        Ambient.setSoundSourceParameters(parameters);        
+        AmbientObject.getInstance().setSoundSourceParameters(parameters);        
         
         Object[] data = {HomeFrame.jTableSoundSources.getRowCount()+1, id, parameters[1], parameters[2], parameters[0], parameters[3]};        
         HomeFrame.getSoundSourceModel().addRow(data);

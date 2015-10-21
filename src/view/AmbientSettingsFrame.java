@@ -6,7 +6,7 @@
 
 package view;
 
-import simulator.agents.Ambient;
+import simulator.objects.AmbientObject;
 import simulator.objects.Line;
 import simulator.objects.Location;
 import simulator.objects.Obstacle;
@@ -178,7 +178,7 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
         addNewObstacle(Line.getLine(new Location(length,width), new Location(length,0)), absorptionRate);        
         addNewObstacle(Line.getLine(new Location(length,0), new Location(0,0)), absorptionRate);
         
-        if(!Ambient.getSoundSources().isEmpty()){
+        if(!AmbientObject.getInstance().getSoundSources().isEmpty()){
             HomeFrame.jButtonRun.setEnabled(true);
             HomeFrame.jMenuItemRun.setEnabled(true);
         }

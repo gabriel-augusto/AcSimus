@@ -1,38 +1,20 @@
 package simulator.agents;
 
-import java.util.HashMap;
-
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
-import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
-import jade.wrapper.ControllerException;
-import jade.wrapper.PlatformController;
 import languagesAndMessages.Message;
-import simulator.objects.Location;
-import simulator.objects.SoundSourceObject;
-import utils.Util;
+import simulator.objects.AmbientObject;
+import simulator.objects.UIController;
 import view.HomeFrame;
-import view.UIController;
 
 public class Ambient extends Agent{
 
 	private static final long serialVersionUID = 3849717343310509053L;
-	
-//Declaration of object variables
-	private static Object[] soundSourceParameters;
-//End of object variables declaration
-		
-//Declaration of agent variables
-	private final String SOUNDSOURCE = "SoundSource";
-	private final String GUI = "GUIAgentController";
-	private static HashMap <String, AID> soundSources = new HashMap<>();
-//End of agent variables declaration
-	
-	private static ContainerController cc = null;
-	private PlatformController container = null;
+
+	private AmbientObject ambient = AmbientObject.getInstance();
 	
 	private int countSoundSourcesFinished = 0;
 	
@@ -41,76 +23,14 @@ public class Ambient extends Agent{
 		defineAmbient();
 		addBehaviour(new GetMessageBehaviour(this));
 		addBehaviour(new GetEventBehaviour(this));
-		createAgent(null, container, this.GUI);
+		ambient.createAgent(null, ambient.getContainer(), ambient.GUI);
 	}
 	
 	public void defineAmbient() {
-		container = getContainerController();
-		cc = (ContainerController) container;
-	}
-
-	private void defineSoundSource(){
-		Location location = (Location) getSoundSourceParameters()[0];
-        double power = (double) getSoundSourceParameters()[1];
-		int opening = (int) getSoundSourceParameters()[2];
-		int direction = (int) getSoundSourceParameters()[3];
-		String id = (String)getSoundSourceParameters()[4];
-		
-		SoundSourceObject.createSoundSource(id, this.getAID(), location, opening, power, direction);
-		Object[] argsSoundSource = {SoundSourceObject.getSoundSources().get(id)};
-		
-		getSoundSources().put(id, createAgent(argsSoundSource, container, this.SOUNDSOURCE));
-	}
-	
-	private AID createAgent(Object[] args, PlatformController container, String type) {
-		String id = getNextId(type);		
-		Util.initAgent(container, args, "simulator.agents."+type, id);
-		if(type.equals(this.SOUNDSOURCE)){
-			System.out.println(type + " criado(a) em: " + args[0]);
-		}
-		return new AID(id, AID.ISLOCALNAME);
-	}
-
-	public String getNextId(String type) {		
-		String id = new String();
-		switch(type){
-			case SOUNDSOURCE:
-				id = SoundSource.nextId();
-				break;
-			case GUI:
-				id = GUIAgentController.nextId();
-				break;
-		}
-		return id;
-	}
-
-	public static Object[] getSoundSourceParameters() {
-		return soundSourceParameters;
-	}
-
-	public static void setSoundSourceParameters(Object[] soundSourceParameters) {
-		Ambient.soundSourceParameters = soundSourceParameters;
-	}
-
-	public static void killSoundSource(String id){
-		AgentController ac;
-        try {
-        	ac = cc.getAgent(soundSources.get(id).getLocalName());
-            ac.kill();
-        } catch (ControllerException e) {
-            e.printStackTrace();
-        }
-	}
-
-	public static HashMap <String, AID> getSoundSources() {
-		return soundSources;
-	}
-
-	public static void setSoundSources(HashMap <String, AID> soundSources) {
-		Ambient.soundSources = soundSources;
-	}
-
-
+		ambient.setAmbientAID(this.getAID());
+		ambient.setContainer(getContainerController());
+		ambient.setCc((ContainerController) ambient.getContainer());
+	}	
 
 	/*--------------------------  COMPORTAMENTS ------------------------ */
 	private class GetMessageBehaviour extends CyclicBehaviour {
@@ -130,7 +50,7 @@ public class Ambient extends Agent{
 
 				if (message.getContent().equals(Message.FINISH_SIMULATION)){
 					countSoundSourcesFinished++;
-					if(countSoundSourcesFinished==soundSources.size()){
+					if(countSoundSourcesFinished==ambient.getSoundSources().size()){
 						finishSimulation();
 						System.out.println("Simulation finished.");
 						countSoundSourcesFinished=0;
@@ -175,7 +95,7 @@ public class Ambient extends Agent{
 					runSimulation();
 					break;
 				case Message.CREATE_SOUND_SOURCE:
-					defineSoundSource();
+					ambient.defineSoundSource();
 					break;
 				default:
 					break;
@@ -183,19 +103,19 @@ public class Ambient extends Agent{
 			}
 		}
 		private void runSimulation(){
-			send(Message.prepareMessage(ACLMessage.INFORM, null, Message.RUN, getSoundSources()));
+			send(Message.prepareMessage(ACLMessage.INFORM, null, Message.RUN, ambient.getSoundSources()));
 		}
 		
 		private void stopSimulation(String status) {
-			send(Message.prepareMessage(ACLMessage.INFORM, null, status, getSoundSources()));
+			send(Message.prepareMessage(ACLMessage.INFORM, null, status, ambient.getSoundSources()));
 		}
 		
 		private void pauseSimulation(){
-			send(Message.prepareMessage(ACLMessage.INFORM, null, Message.PAUSE, getSoundSources()));
+			send(Message.prepareMessage(ACLMessage.INFORM, null, Message.PAUSE, ambient.getSoundSources()));
 		}
 		
 		private void resumeSimulation() {
-			send(Message.prepareMessage(ACLMessage.INFORM, null, Message.RESUME, getSoundSources()));
+			send(Message.prepareMessage(ACLMessage.INFORM, null, Message.RESUME, ambient.getSoundSources()));
 		}
 	}
 }
