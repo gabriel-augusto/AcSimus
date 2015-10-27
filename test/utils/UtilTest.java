@@ -46,6 +46,8 @@ public class UtilTest {
 		
 		AgentContainer container = new AgentContainer(null, null, "container");
 		Util.setSimulatorContainer(container);
-		assertEquals("container", Util.getSimulatorContainer().getName());		
+		assertEquals("container", Util.getSimulatorContainer().getName());	
+		
+		assertTrue(Util.getMainContainer().getName().endsWith("/JADE"));
 	}
 }

@@ -34,8 +34,10 @@ public class SoundObject {
 		return sounds;
 	}
 	
-	public static void createSound(Location location, double direction, double power, int opening, AID ambient, AID soundSource, String id){
-		getSounds().put(id, new SoundObject(location, direction, power, opening, ambient, soundSource, id));
+	public static SoundObject createSound(Location location, double direction, double power, int opening, AID ambient, AID soundSource, String id){
+		SoundObject sound = new SoundObject(location, direction, power, opening, ambient, soundSource, id);
+		getSounds().put(id, sound);
+		return sound;
 	}
 	
 	private SoundObject(Location location, double direction, double power, int opening, AID ambient, AID soundSource, String id){

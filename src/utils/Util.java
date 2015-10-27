@@ -33,7 +33,7 @@ public class Util{
 		}
 	}	
 	
-	private static AgentContainer getMainContainer() {
+	public static AgentContainer getMainContainer() {
     	if(mainContainer == null){
 			mainContainer = rt.createMainContainer(profile);
 		}
@@ -73,7 +73,7 @@ public class Util{
 			} catch (StaleProxyException e1) {
 				e1.printStackTrace();
 			}
-		}else{
+		} else {
 			System.out.println("Ambient is already intiated.");
 		}
 	}

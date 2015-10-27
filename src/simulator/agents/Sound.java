@@ -42,8 +42,7 @@ public class Sound extends Agent{
 	}
 
 	private void getParameters() {
-		Object[] args = getArguments();
-		sound = (SoundObject) args[0];
+		sound = (SoundObject) getArguments()[0];
 	}
 
 	private void killSound() {

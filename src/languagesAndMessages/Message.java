@@ -17,6 +17,7 @@ public class Message {
 	public static final String RUN = "run";
 	public static final String CREATE_SOUND_SOURCE = "create sound source";
 	public static final String FINISH_SIMULATION = "finish simultaion";
+	public static final String ALREADY_STOPED = "sounds already stoped";
 	
 	
 	public static ACLMessage prepareMessage(int type, String language, String content, AID target){

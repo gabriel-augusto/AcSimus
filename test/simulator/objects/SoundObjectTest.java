@@ -6,9 +6,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import jade.core.AID;
+
 public class SoundObjectTest {
 	
-	private final double TOLERANCE = .0000000000001;
+	private final double TOLERANCE = .0000000001;
 
 	@Before
 	public void setUp() throws Exception {
@@ -208,5 +210,16 @@ public class SoundObjectTest {
 		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setState("asdf");
 		assertEquals("asdf", sound.getState());
+	}
+	
+	@Test
+	public void getteresAndSettersTest(){
+		AID soundSource = new AID();
+		soundSource.setName("ss");
+		SoundObject sound = SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
+		sound.setDistanceTraveled(34029);
+		sound.setSoundSource(soundSource);
+		assertEquals(100000, sound.getReverberationTime(), TOLERANCE);
+		assertEquals("ss", sound.getSoundSource().getName());
 	}
 }
