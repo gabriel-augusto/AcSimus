@@ -13,8 +13,6 @@ import simulator.agents.Sound;
 import utils.Util;
 
 public class SoundSourceObject {
-	public static final double SOUND_SEPARATION = 5;
-	
 	private AID ambientAID;
 	private AID selfAID;
 	private Location location;
@@ -23,53 +21,57 @@ public class SoundSourceObject {
 	private int direction;
 	private PlatformController container;
 	private ContainerController cc;
-	
-	private static HashMap <String, SoundSourceObject> soundSources = new HashMap<>();
-	private HashMap <String, AID> sounds = new HashMap<>();
-		
-	public static void createSoundSource(String id, AID ambient, Location location, int opening, double power, int direction){
-		getSoundSources().put(id, new SoundSourceObject(ambient, location, opening, power, direction));
+	private double soundSeparation;
+
+	private static HashMap<String, SoundSourceObject> soundSources = new HashMap<>();
+	private HashMap<String, AID> sounds = new HashMap<>();
+
+	public static void createSoundSource(String id, AID ambient, Location location, int opening, int numberOfSounds,
+			int direction) {
+		getSoundSources().put(id, new SoundSourceObject(ambient, location, opening, numberOfSounds, direction));
 	}
-	
-	private SoundSourceObject(AID ambient, Location location, int opening, double power, int direction){
+
+	private SoundSourceObject(AID ambient, Location location, int opening, int numberOfSounds, int direction) {
 		this.setAmbient(ambient);
 		this.setLocation(location);
 		this.setOpening(opening);
-		this.setPower(power);
+		this.setPower((Math.pow(10.0, 6.0) * Math.pow(10.0, -13)) * (360 / opening));
+		this.setSoundSeparation((double) opening / (double) numberOfSounds);
 		this.setDirection(direction);
 	}
-	
+
 	public void emitSoundPulse() {
 		double angle;
 		createSound(location, direction, power, opening);
-		for(double i = SOUND_SEPARATION; i<=opening/2; i+=SOUND_SEPARATION) {
-			angle = Util.normalizeAngle(direction+i);			
+		for (double i = soundSeparation; i <= opening / 2; i += soundSeparation) {
+			angle = Util.normalizeAngle(direction + i);
 			createSound(this.getLocation(), angle, power, opening);
-			angle = Util.normalizeAngle(direction-i);
+			angle = Util.normalizeAngle(direction - i);
 			createSound(this.getLocation(), angle, power, opening);
 		}
 	}
-	
-	public AID createSound (Location location, double direction, double potency, int opening){
+
+	public AID createSound(Location location, double direction, double potency, int opening) {
 		final String identifier = Sound.nextId();
-		SoundObject.createSound(new Location(location), direction, potency, opening, this.getAmbient(), this.getSelfAID(), identifier);
-		Object[] args = {SoundObject.getSounds().get(identifier)};
+		SoundObject.createSound(new Location(location), direction, potency, opening, this.getAmbient(),
+				this.getSelfAID(), identifier);
+		Object[] args = { SoundObject.getSounds().get(identifier) };
 		Util.initAgent(getContainer(), args, "simulator.agents.Sound", identifier);
-		
+
 		System.out.println(identifier + " created at: " + location);
 		AID sound = new AID(identifier, AID.ISLOCALNAME);
 		getSounds().put(identifier, sound);
 		return sound;
 	}
-	
+
 	public ACLMessage suspendAllSounds() {
-		return Message.prepareMessage(ACLMessage.INFORM, null, Message.PAUSE, this.getSounds());		
+		return Message.prepareMessage(ACLMessage.INFORM, null, Message.PAUSE, this.getSounds());
 	}
 
 	public boolean resumeAllSounds() {
 		AgentController ac;
 		boolean resumed = false;
-		for(AID sound : this.getSounds().values()){
+		for (AID sound : this.getSounds().values()) {
 			try {
 				ac = cc.getAgent(sound.getLocalName());
 				ac.activate();
@@ -82,23 +84,23 @@ public class SoundSourceObject {
 
 	public ACLMessage stopSimulation(String status) {
 		ACLMessage message = null;
-		if(status.equals(Message.STOP_RESUMED)) {
+		if (status.equals(Message.STOP_RESUMED)) {
 			message = Message.prepareMessage(ACLMessage.INFORM, null, Message.STOP_RESUMED, this.getSounds());
 		} else {
-            AgentController ac;
-            for(AID sound : this.getSounds().values()){
-            	try {
-            		ac = cc.getAgent(sound.getLocalName());
-                    ac.kill();
-                } catch (ControllerException e) {
-                }
-            }
-            message = Message.prepareMessage(ACLMessage.INFORM, null, Message.ALREADY_STOPED, this.getSounds());
-        }
+			AgentController ac;
+			for (AID sound : this.getSounds().values()) {
+				try {
+					ac = cc.getAgent(sound.getLocalName());
+					ac.kill();
+				} catch (ControllerException e) {
+				}
+			}
+			message = Message.prepareMessage(ACLMessage.INFORM, null, Message.ALREADY_STOPED, this.getSounds());
+		}
 		return message;
 	}
-	
-	public static HashMap <String, SoundSourceObject> getSoundSources() {
+
+	public static HashMap<String, SoundSourceObject> getSoundSources() {
 		return soundSources;
 	}
 
@@ -158,11 +160,11 @@ public class SoundSourceObject {
 		this.container = container;
 	}
 
-	public HashMap <String, AID> getSounds() {
+	public HashMap<String, AID> getSounds() {
 		return sounds;
 	}
 
-	public void setSounds(HashMap <String, AID> sounds) {
+	public void setSounds(HashMap<String, AID> sounds) {
 		this.sounds = sounds;
 	}
 
@@ -172,5 +174,13 @@ public class SoundSourceObject {
 
 	public void setCc(ContainerController cc) {
 		this.cc = cc;
+	}
+
+	public double getSoundSeparation() {
+		return soundSeparation;
+	}
+
+	public void setSoundSeparation(double soundSeparation) {
+		this.soundSeparation = soundSeparation;
 	}
 }

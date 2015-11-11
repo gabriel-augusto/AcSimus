@@ -37,7 +37,7 @@ public class HomeFrame extends javax.swing.JFrame {
     private final ObstaclesSettingsFrame obstacleSettingsFrame = new ObstaclesSettingsFrame();
     
     private static DefaultTableModel obstacleModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Initial Point", "End Point", "Absorption Rate"});
-    private static DefaultTableModel soundSourceModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Power", "Opening", "Location", "Direction"});
+    private static DefaultTableModel soundSourceModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Nº of Sounds", "Opening", "Location", "Direction"});
     private static int obstacleCount = 0;
     private static int soundSourceCount = 0;
     
@@ -427,7 +427,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jMenuSoundEdit.add(jMenuItem1);
 
         jMenuItemSoundSource.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemSoundSource.setText("Configure sound source");
+        jMenuItemSoundSource.setText("Add Sound Source");
         jMenuItemSoundSource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemSoundSourceActionPerformed(evt);

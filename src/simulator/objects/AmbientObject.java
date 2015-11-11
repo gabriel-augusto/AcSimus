@@ -37,12 +37,12 @@ public class AmbientObject {
 	
 	public void defineSoundSource(){
 		Location location = (Location) getSoundSourceParameters()[0];
-        double power = (double) getSoundSourceParameters()[1];
+        int numberOfSounds = (int) getSoundSourceParameters()[1];
 		int opening = (int) getSoundSourceParameters()[2];
 		int direction = (int) getSoundSourceParameters()[3];
 		String id = (String)getSoundSourceParameters()[4];
 		
-		SoundSourceObject.createSoundSource(id, ambientAID, location, opening, power, direction);
+		SoundSourceObject.createSoundSource(id, ambientAID, location, opening, numberOfSounds, direction);
 		Object[] argsSoundSource = {SoundSourceObject.getSoundSources().get(id)};
 		
 		getSoundSources().put(id, createAgent(argsSoundSource, getContainer(), this.SOUNDSOURCE));
