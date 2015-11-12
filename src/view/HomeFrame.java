@@ -371,6 +371,7 @@ public class HomeFrame extends javax.swing.JFrame {
         });
         jMenuFile.add(jMenuItemRun);
 
+        jMenuItemStop.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/stopIcon.png"))); // NOI18N
         jMenuItemStop.setText("Stop simulation");
         jMenuItemStop.setEnabled(false);
@@ -394,8 +395,14 @@ public class HomeFrame extends javax.swing.JFrame {
         jMenuItemResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/resumeIcon.png"))); // NOI18N
         jMenuItemResume.setText("Resume simulation");
         jMenuItemResume.setEnabled(false);
+        jMenuItemResume.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemResumeActionPerformed(evt);
+            }
+        });
         jMenuFile.add(jMenuItemResume);
 
+        jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
         jMenuItemExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/exitIcon.png"))); // NOI18N
         jMenuItemExit.setText("Exit");
         jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
@@ -409,7 +416,7 @@ public class HomeFrame extends javax.swing.JFrame {
 
         jMenuSoundEdit.setText("Edit");
 
-        jMenuItemAmbient.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemAmbient.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemAmbient.setText("Define ambient");
         jMenuItemAmbient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -418,6 +425,7 @@ public class HomeFrame extends javax.swing.JFrame {
         });
         jMenuSoundEdit.add(jMenuItemAmbient);
 
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem1.setText("Add Obstacles");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -426,7 +434,7 @@ public class HomeFrame extends javax.swing.JFrame {
         });
         jMenuSoundEdit.add(jMenuItem1);
 
-        jMenuItemSoundSource.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemSoundSource.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemSoundSource.setText("Add Sound Source");
         jMenuItemSoundSource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -435,6 +443,7 @@ public class HomeFrame extends javax.swing.JFrame {
         });
         jMenuSoundEdit.add(jMenuItemSoundSource);
 
+        jMenuItemSimulationSetting.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemSimulationSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/settingsIcon.png"))); // NOI18N
         jMenuItemSimulationSetting.setText("Simulation settings");
         jMenuItemSimulationSetting.addActionListener(new java.awt.event.ActionListener() {
@@ -561,6 +570,10 @@ public class HomeFrame extends javax.swing.JFrame {
             jButtonRun.setEnabled(false);
         }
     }//GEN-LAST:event_jButtonRemoveSoundSourceActionPerformed
+
+    private void jMenuItemResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemResumeActionPerformed
+        this.resumeSimulation();
+    }//GEN-LAST:event_jMenuItemResumeActionPerformed
 
     private void runSimulation(){
         graphicGenerator.clearGraphic();
