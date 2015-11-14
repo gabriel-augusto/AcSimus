@@ -6,7 +6,8 @@
 
 package view;
 
-import simulator.agents.Ambient;
+import settings.ProjectSettings;
+import simulator.objects.AmbientObject;
 import simulator.objects.Line;
 import simulator.objects.Location;
 import simulator.objects.Obstacle;
@@ -39,13 +40,15 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
         jPanelHead = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanelBody = new javax.swing.JPanel();
-        jLabelLenght = new javax.swing.JLabel();
+        jLabelLength = new javax.swing.JLabel();
         jLabelWidth = new javax.swing.JLabel();
         jSpinnerLength = new javax.swing.JSpinner();
         jSpinnerWidth = new javax.swing.JSpinner();
         jLabelAbsorptionRate = new javax.swing.JLabel();
         jSpinnerAbsorptionRate = new javax.swing.JSpinner();
         jButtonOk = new javax.swing.JButton();
+        jLabelHeight = new javax.swing.JLabel();
+        jSpinnerHeight = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -67,13 +70,13 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        jLabelLenght.setText("Lenght:");
+        jLabelLength.setText("Length:");
 
         jLabelWidth.setText("Width:");
 
-        jSpinnerLength.setModel(new javax.swing.SpinnerNumberModel(10, 1, 1000, 1));
+        jSpinnerLength.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(4), Integer.valueOf(1), null, Integer.valueOf(1)));
 
-        jSpinnerWidth.setModel(new javax.swing.SpinnerNumberModel(10, 1, 1000, 1));
+        jSpinnerWidth.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(4), Integer.valueOf(1), null, Integer.valueOf(1)));
 
         jLabelAbsorptionRate.setText("Absorption rate:");
 
@@ -85,6 +88,10 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
                 jButtonOkActionPerformed(evt);
             }
         });
+
+        jLabelHeight.setText("Height:");
+
+        jSpinnerHeight.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(3), Integer.valueOf(1), null, Integer.valueOf(1)));
 
         javax.swing.GroupLayout jPanelBodyLayout = new javax.swing.GroupLayout(jPanelBody);
         jPanelBody.setLayout(jPanelBodyLayout);
@@ -98,22 +105,28 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
                         .addComponent(jLabelAbsorptionRate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jSpinnerAbsorptionRate, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelBodyLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBodyLayout.createSequentialGroup()
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelLenght)
-                            .addComponent(jLabelWidth))
+                            .addComponent(jLabelLength)
+                            .addComponent(jLabelWidth)
+                            .addComponent(jLabelHeight))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSpinnerWidth, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSpinnerLength, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jSpinnerLength, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSpinnerHeight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanelBodyLayout.setVerticalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelBodyLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelLenght)
+                    .addComponent(jLabelHeight)
+                    .addComponent(jSpinnerHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelLength)
                     .addComponent(jSpinnerLength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -123,8 +136,8 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
                 .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelAbsorptionRate)
                     .addComponent(jSpinnerAbsorptionRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButtonOk, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonOk)
                 .addContainerGap())
         );
 
@@ -144,8 +157,8 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
             .addGroup(jPanelAmbientLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanelHead, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanelBody, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanelBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -157,7 +170,7 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelAmbient, javax.swing.GroupLayout.PREFERRED_SIZE, 222, Short.MAX_VALUE)
+            .addComponent(jPanelAmbient, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -169,14 +182,23 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
 
         int length = (int)this.jSpinnerLength.getValue();
         int width = (int)this.jSpinnerWidth.getValue();
+        int height = (int)this.jSpinnerHeight.getValue();
         int absorptionRate = (int)this.jSpinnerAbsorptionRate.getValue();
+        
+        ProjectSettings settings = ProjectSettings.getProjectSettings();
+        settings.setHeight(height);
+        settings.setLenght(length);
+        settings.setWidth(width);
+        settings.setProjectAbsorption(absorptionRate);
+        
+        GraphicGenerator.getInstance().setBounds(length, width);
 
 	addNewObstacle(Line.getLine(new Location(0,0), new Location(0,width)), absorptionRate);        
         addNewObstacle(Line.getLine(new Location(0,width), new Location(length,width)), absorptionRate);        
         addNewObstacle(Line.getLine(new Location(length,width), new Location(length,0)), absorptionRate);        
         addNewObstacle(Line.getLine(new Location(length,0), new Location(0,0)), absorptionRate);
         
-        if(!Ambient.getSoundSources().isEmpty()){
+        if(!AmbientObject.getInstance().getSoundSources().isEmpty()){
             HomeFrame.jButtonRun.setEnabled(true);
             HomeFrame.jMenuItemRun.setEnabled(true);
         }
@@ -193,12 +215,14 @@ public class AmbientSettingsFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButtonOk;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelAbsorptionRate;
-    private javax.swing.JLabel jLabelLenght;
+    private javax.swing.JLabel jLabelHeight;
+    private javax.swing.JLabel jLabelLength;
     private javax.swing.JLabel jLabelWidth;
     private javax.swing.JPanel jPanelAmbient;
     private javax.swing.JPanel jPanelBody;
     private javax.swing.JPanel jPanelHead;
     private javax.swing.JSpinner jSpinnerAbsorptionRate;
+    private javax.swing.JSpinner jSpinnerHeight;
     private javax.swing.JSpinner jSpinnerLength;
     private javax.swing.JSpinner jSpinnerWidth;
     // End of variables declaration//GEN-END:variables

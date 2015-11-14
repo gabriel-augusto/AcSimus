@@ -34,7 +34,7 @@ public class Location {
 		this.y = y;
 	}
 	
-	public double distance(Location location) {
+	public double distance(Location location){
 		double dx = Math.abs(this.getX() - location.getX());
 		double dy = Math.abs(this.getY() - location.getY());
 		return Math.sqrt((dx*dx) + (dy*dy));

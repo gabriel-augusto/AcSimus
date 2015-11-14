@@ -6,12 +6,18 @@
 
 package view;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 import languagesAndMessages.Message;
 import settings.ProjectSettings;
-import simulator.agents.Ambient;
+import simulator.objects.AmbientObject;
 import simulator.objects.Obstacle;
+import simulator.objects.SimulationStatus;
+import simulator.objects.SoundObject;
+import simulator.objects.SoundSourceObject;
+import simulator.objects.UIController;
 
 /**
  *
@@ -21,20 +27,23 @@ public class HomeFrame extends javax.swing.JFrame {
 	
     private static HomeFrame homeFrame= null;
     private static final long serialVersionUID = 1L;
-	
+    
+    private GraphicGenerator graphicGenerator = GraphicGenerator.getInstance();
+    private SimulationStatus simulation = SimulationStatus.getInstance();
+    
     private final AmbientSettingsFrame ambienteSettingsFrame = new AmbientSettingsFrame();
     private final SoundSourceSettingsFrame soundSourceSettingsFrame = new SoundSourceSettingsFrame();
     private final SimulationSettingsFrame simulationSettingsFrame = new SimulationSettingsFrame();
     private final ObstaclesSettingsFrame obstacleSettingsFrame = new ObstaclesSettingsFrame();
     
     private static DefaultTableModel obstacleModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Initial Point", "End Point", "Absorption Rate"});
-    private static DefaultTableModel soundSourceModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Power", "Opening", "Location", "Direction"});
+    private static DefaultTableModel soundSourceModel = new DefaultTableModel(null, new String [] {"Nº", "ID", "Nº of Sounds", "Opening", "Location", "Direction"});
     private static int obstacleCount = 0;
     private static int soundSourceCount = 0;
     
     private HomeFrame() {
         initComponents();
-        
+
         /*
         //Put console in application
         PrintStream printStream = new PrintStream(new CustomOutputStream(jTextAreaLog));
@@ -79,9 +88,10 @@ public class HomeFrame extends javax.swing.JFrame {
         jTableSoundSources = new javax.swing.JTable();
         jButtonAddSoundSource = new javax.swing.JButton();
         jButtonRemoveSoundSource = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaLog = new javax.swing.JTextArea();
+        jPanelRight = new javax.swing.JPanel();
+        jPanelMonitor = graphicGenerator.createPanel();
+        jLabelReverberacao = new javax.swing.JLabel();
+        jLabelNivel = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemRun = new javax.swing.JMenuItem();
@@ -96,7 +106,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jMenuItemSimulationSetting = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(ProjectSettings.PROJECT_NAME);
+        setTitle(ProjectSettings.getProjectSettings().PROJECT_NAME);
         setExtendedState(MAXIMIZED_BOTH);
 
         jToolBar.setFloatable(false);
@@ -117,6 +127,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jToolBar.add(jButtonRun);
 
         jButtonStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/stopIcon.png"))); // NOI18N
+        jButtonStop.setToolTipText("Stop");
         jButtonStop.setEnabled(false);
         jButtonStop.setFocusable(false);
         jButtonStop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -166,7 +177,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jToolBar.add(jButtonConfig);
         jToolBar.add(jSeparator2);
 
-        jSplitPaneBody.setDividerLocation(350);
+        jSplitPaneBody.setDividerLocation(500);
 
         jSplitPaneMenu.setDividerLocation(350);
         jSplitPaneMenu.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -198,7 +209,7 @@ public class HomeFrame extends javax.swing.JFrame {
             .addGroup(jPanelObstaclesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
                     .addGroup(jPanelObstaclesLayout.createSequentialGroup()
                         .addGroup(jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelObstacles)
@@ -206,7 +217,7 @@ public class HomeFrame extends javax.swing.JFrame {
                                 .addComponent(jButtonAddObstacle)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButtonRemoveObstacle)))
-                        .addGap(0, 193, Short.MAX_VALUE)))
+                        .addGap(0, 343, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelObstaclesLayout.setVerticalGroup(
@@ -215,7 +226,7 @@ public class HomeFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabelObstacles)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                .addComponent(jScrollPaneTableObstacles, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelObstaclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAddObstacle)
@@ -260,7 +271,7 @@ public class HomeFrame extends javax.swing.JFrame {
                                 .addComponent(jButtonAddSoundSource)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButtonRemoveSoundSource)))
-                        .addGap(0, 193, Short.MAX_VALUE)))
+                        .addGap(0, 343, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelSoundSourcesLayout.setVerticalGroup(
@@ -269,7 +280,7 @@ public class HomeFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabelSoundSources)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneTableSoundSources, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .addComponent(jScrollPaneTableSoundSources, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelSoundSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAddSoundSource)
@@ -281,31 +292,54 @@ public class HomeFrame extends javax.swing.JFrame {
 
         jSplitPaneBody.setLeftComponent(jSplitPaneMenu);
 
-        jTextAreaLog.setEditable(false);
-        jTextAreaLog.setColumns(20);
-        jTextAreaLog.setRows(5);
-        jScrollPane1.setViewportView(jTextAreaLog);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanelMonitorLayout = new javax.swing.GroupLayout(jPanelMonitor);
+        jPanelMonitor.setLayout(jPanelMonitorLayout);
+        jPanelMonitorLayout.setHorizontalGroup(
+            jPanelMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 292, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+        jPanelMonitorLayout.setVerticalGroup(
+            jPanelMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 409, Short.MAX_VALUE)
         );
 
-        jSplitPaneBody.setRightComponent(jPanel1);
+        jLabelReverberacao.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabelReverberacao.setText("Reverberation time: --");
+
+        jLabelNivel.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabelNivel.setText("Sound intensity level:");
+
+        javax.swing.GroupLayout jPanelRightLayout = new javax.swing.GroupLayout(jPanelRight);
+        jPanelRight.setLayout(jPanelRightLayout);
+        jPanelRightLayout.setHorizontalGroup(
+            jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelMonitor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanelRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelNivel, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .addComponent(jLabelReverberacao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanelRightLayout.setVerticalGroup(
+            jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelReverberacao)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelMonitor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelNivel)
+                .addContainerGap())
+        );
+
+        jSplitPaneBody.setRightComponent(jPanelRight);
 
         javax.swing.GroupLayout jPanelBodyLayout = new javax.swing.GroupLayout(jPanelBody);
         jPanelBody.setLayout(jPanelBodyLayout);
         jPanelBodyLayout.setHorizontalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneBody)
+            .addComponent(jSplitPaneBody, javax.swing.GroupLayout.DEFAULT_SIZE, 792, Short.MAX_VALUE)
         );
         jPanelBodyLayout.setVerticalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,7 +359,7 @@ public class HomeFrame extends javax.swing.JFrame {
             .addComponent(jPanelBody, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jMenuFile.setText("File");
+        jMenuFile.setText("Action");
 
         jMenuItemRun.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/runIcon.png"))); // NOI18N
@@ -338,6 +372,7 @@ public class HomeFrame extends javax.swing.JFrame {
         });
         jMenuFile.add(jMenuItemRun);
 
+        jMenuItemStop.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/stopIcon.png"))); // NOI18N
         jMenuItemStop.setText("Stop simulation");
         jMenuItemStop.setEnabled(false);
@@ -361,8 +396,14 @@ public class HomeFrame extends javax.swing.JFrame {
         jMenuItemResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/resumeIcon.png"))); // NOI18N
         jMenuItemResume.setText("Resume simulation");
         jMenuItemResume.setEnabled(false);
+        jMenuItemResume.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemResumeActionPerformed(evt);
+            }
+        });
         jMenuFile.add(jMenuItemResume);
 
+        jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
         jMenuItemExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/exitIcon.png"))); // NOI18N
         jMenuItemExit.setText("Exit");
         jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
@@ -376,7 +417,7 @@ public class HomeFrame extends javax.swing.JFrame {
 
         jMenuSoundEdit.setText("Edit");
 
-        jMenuItemAmbient.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemAmbient.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemAmbient.setText("Define ambient");
         jMenuItemAmbient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -385,6 +426,7 @@ public class HomeFrame extends javax.swing.JFrame {
         });
         jMenuSoundEdit.add(jMenuItemAmbient);
 
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem1.setText("Add Obstacles");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -393,8 +435,8 @@ public class HomeFrame extends javax.swing.JFrame {
         });
         jMenuSoundEdit.add(jMenuItem1);
 
-        jMenuItemSoundSource.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemSoundSource.setText("Configure sound source");
+        jMenuItemSoundSource.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemSoundSource.setText("Add Sound Source");
         jMenuItemSoundSource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemSoundSourceActionPerformed(evt);
@@ -402,6 +444,7 @@ public class HomeFrame extends javax.swing.JFrame {
         });
         jMenuSoundEdit.add(jMenuItemSoundSource);
 
+        jMenuItemSimulationSetting.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemSimulationSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/settingsIcon.png"))); // NOI18N
         jMenuItemSimulationSetting.setText("Simulation settings");
         jMenuItemSimulationSetting.addActionListener(new java.awt.event.ActionListener() {
@@ -511,22 +554,35 @@ public class HomeFrame extends javax.swing.JFrame {
 
     private void jButtonRemoveSoundSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveSoundSourceActionPerformed
         String id;
+        AmbientObject ambient = AmbientObject.getInstance();
         id = (String)jTableSoundSources.getModel().getValueAt(jTableSoundSources.getSelectedRow(), 1);
     	System.out.println(id);
         
-        Ambient.killSoundSource(id);
-    	Ambient.getSoundSources().remove(id);
+        ambient.killSoundSource(id);
+    	ambient.getSoundSources().remove(id);
+        SoundSourceObject.getSoundSources().remove(id);
+        graphicGenerator.updateSoundSources();
         
         ((DefaultTableModel) jTableSoundSources.getModel()).removeRow(jTableSoundSources.getSelectedRow());
         for(int i = 0; i < jTableSoundSources.getModel().getRowCount(); i++){
             jTableSoundSources.getModel().setValueAt(i+1, i, 0);
         }
-        if(Ambient.getSoundSources().isEmpty()){
+        if(ambient.getSoundSources().isEmpty()){
             jButtonRun.setEnabled(false);
         }
     }//GEN-LAST:event_jButtonRemoveSoundSourceActionPerformed
 
+    private void jMenuItemResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemResumeActionPerformed
+        this.resumeSimulation();
+    }//GEN-LAST:event_jMenuItemResumeActionPerformed
+
     private void runSimulation(){
+        graphicGenerator.clearGraphic();
+        graphicGenerator.updateSoundSources();
+        
+        simulation.setDecibel(0);
+        simulation.setReverberationTime(0);
+        
         this.jButtonStop.setEnabled(true);
         this.jMenuItemStop.setEnabled(true);
         HomeFrame.jButtonRun.setEnabled(false);
@@ -535,6 +591,8 @@ public class HomeFrame extends javax.swing.JFrame {
         this.jMenuItemPause.setEnabled(true);
         this.jButtonResume.setEnabled(false);
         this.jMenuItemResume.setEnabled(false);
+        
+        UIController.getInstance().setRunning(true);
         
         UIController.getInstance().addNewEvent(Message.RUN);
     }
@@ -545,6 +603,8 @@ public class HomeFrame extends javax.swing.JFrame {
         else
             UIController.getInstance().addNewEvent(Message.STOP_RESUMED);
         
+        UIController.getInstance().setRunning(false);
+        
         this.jButtonStop.setEnabled(false);
         this.jMenuItemStop.setEnabled(false);
         this.jButtonPause.setEnabled(false);
@@ -553,6 +613,15 @@ public class HomeFrame extends javax.swing.JFrame {
         this.jMenuItemResume.setEnabled(false);
         HomeFrame.jButtonRun.setEnabled(true);
         HomeFrame.jMenuItemRun.setEnabled(true);
+        
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(HomeFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        SoundObject.getSounds().clear();
+        graphicGenerator.updateSounds();
+        graphicGenerator.updateSoundSources();
     }
     
     private void pauseSimulation(){
@@ -611,7 +680,9 @@ public class HomeFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButtonResume;
     public static javax.swing.JButton jButtonRun;
     private javax.swing.JButton jButtonStop;
+    public static javax.swing.JLabel jLabelNivel;
     private javax.swing.JLabel jLabelObstacles;
+    public static javax.swing.JLabel jLabelReverberacao;
     private javax.swing.JLabel jLabelSoundSources;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenu jMenuFile;
@@ -625,12 +696,12 @@ public class HomeFrame extends javax.swing.JFrame {
     public static javax.swing.JMenuItem jMenuItemSoundSource;
     private javax.swing.JMenuItem jMenuItemStop;
     private javax.swing.JMenu jMenuSoundEdit;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelBody;
     private javax.swing.JPanel jPanelHome;
+    private javax.swing.JPanel jPanelMonitor;
     private javax.swing.JPanel jPanelObstacles;
+    private javax.swing.JPanel jPanelRight;
     private javax.swing.JPanel jPanelSoundSources;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneTableObstacles;
     private javax.swing.JScrollPane jScrollPaneTableSoundSources;
     private javax.swing.JToolBar.Separator jSeparator1;
@@ -639,7 +710,6 @@ public class HomeFrame extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPaneMenu;
     public static javax.swing.JTable jTableObstacles;
     public static javax.swing.JTable jTableSoundSources;
-    private javax.swing.JTextArea jTextAreaLog;
     private javax.swing.JToolBar jToolBar;
     // End of variables declaration//GEN-END:variables
 }

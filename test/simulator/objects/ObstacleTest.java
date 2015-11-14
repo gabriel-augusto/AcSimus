@@ -23,4 +23,11 @@ public class ObstacleTest {
 		assertEquals(Obstacle.getObstacles().get("o1").getAbsortionRate(), 10, .0000001);
 		assertEquals(Obstacle.getObstacles().get("o1").getLine(), line);
 	}
+	
+	@Test 
+	public void getSizeTest() {
+		Line line = Line.getLine(new Location(0,0), new Location(1,1));
+		Obstacle.createObstacle("o1", line, 10);
+		assertEquals(Obstacle.getObstacles().get("o1").getSize(), Math.sqrt(2), .0000001);
+	}
 }

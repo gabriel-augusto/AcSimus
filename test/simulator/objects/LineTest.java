@@ -7,11 +7,10 @@ import static org.junit.Assert.*;
 
 public class LineTest {
 	
-	private double precision;
+	private final double TOLERANCE = 0.00001;
 	
 	@Before
 	public void setup(){
-		precision = 0.00001;
 	}
 	
 	@Test
@@ -66,8 +65,8 @@ public class LineTest {
 		Location intersectionPoint1 = line1.searchIntersectionPoint(line2);
 		Location intersectionPoint2 = line3.searchIntersectionPoint(line4);
 		
-		assertTrue(intersectionPoint1.equals(new Location(1, 1), precision));
-		assertTrue(intersectionPoint2.equals(new Location(1, 0), precision));
+		assertTrue(intersectionPoint1.equals(new Location(1, 1), TOLERANCE));
+		assertTrue(intersectionPoint2.equals(new Location(1, 0), TOLERANCE));
 	}
 
 	@Test
@@ -93,9 +92,9 @@ public class LineTest {
 		Location intersectionPoint4 = line7.searchIntersectionPoint(line8);
 		Location intersectionPoint5 = line9.searchIntersectionPoint(line10);
 		
-		assertTrue(intersectionPoint1.equals(new Location(1, 1), precision));
-		assertTrue(intersectionPoint2.equals(new Location(1, 0), precision));
-		assertTrue(intersectionPoint3.equals(new Location(0,50), precision));
+		assertTrue(intersectionPoint1.equals(new Location(1, 1), TOLERANCE));
+		assertTrue(intersectionPoint2.equals(new Location(1, 0), TOLERANCE));
+		assertTrue(intersectionPoint3.equals(new Location(0,50), TOLERANCE));
 		assertEquals(intersectionPoint4, null);
 		assertEquals(intersectionPoint5, null);
 	}
@@ -114,5 +113,21 @@ public class LineTest {
 		
 		assertNull(intersectionPoint1);
 		assertNull(intersectionPoint2);
+	}
+	
+	@Test
+	public void gettersAndSettersTest(){
+		Line line = Line.getLine(new Location(0,0), 0);
+		line.setInitialPoint(new Location(5,6));
+		line.setFinalPoint(new Location(7,8));
+		line.setType(0);
+		line.setDirection(90);
+		
+		assertEquals(5, line.getInitialPoint().getX(), TOLERANCE);
+		assertEquals(6, line.getInitialPoint().getY(), TOLERANCE);
+		assertEquals(7, line.getFinalPoint().getX(), TOLERANCE);
+		assertEquals(8, line.getFinalPoint().getY(), TOLERANCE);
+		assertEquals(0, line.getType());
+		assertEquals(90, line.getDirection(), TOLERANCE);
 	}
 }

@@ -7,8 +7,8 @@ import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 
 public class Message {
-	public static String WHAT_IS_THE_LOCATION = "What is the location?";
-	public static String WHAT_IS_THE_INDEX = "What is the index?";
+	public static final String WHAT_IS_THE_LOCATION = "What is the location?";
+	public static final String WHAT_IS_THE_INDEX = "What is the index?";
 	public static final String MSG_NOT_UNDERSTOOD =	"Message not understood.";
 	public static final String PAUSE = "pause";
 	public static final String RESUME = "resume";
@@ -17,6 +17,7 @@ public class Message {
 	public static final String RUN = "run";
 	public static final String CREATE_SOUND_SOURCE = "create sound source";
 	public static final String FINISH_SIMULATION = "finish simultaion";
+	public static final String ALREADY_STOPED = "sounds already stoped";
 	
 	
 	public static ACLMessage prepareMessage(int type, String language, String content, AID target){
@@ -58,8 +59,7 @@ public class Message {
 		return message;
 	}
 	
-	public static ACLMessage 
-	getAnswerOfANotUnderstoodMessage(AID target) {
+	public static ACLMessage getAnswerOfANotUnderstoodMessage(AID target) {
 		ACLMessage answer = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
 		answer.addReceiver(target);
 		answer.setContent(Message.MSG_NOT_UNDERSTOOD);

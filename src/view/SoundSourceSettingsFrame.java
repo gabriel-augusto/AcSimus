@@ -7,9 +7,10 @@
 package view;
 
 import languagesAndMessages.Message;
-import simulator.agents.Ambient;
+import simulator.objects.AmbientObject;
 import simulator.objects.Location;
 import simulator.objects.Obstacle;
+import simulator.objects.UIController;
 
 /**
  *
@@ -45,7 +46,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         jLabelX = new javax.swing.JLabel();
         jLabelY = new javax.swing.JLabel();
         jSpinnerOpening = new javax.swing.JSpinner();
-        jSpinnerPower = new javax.swing.JSpinner();
+        jSpinnerNumberOfSounds = new javax.swing.JSpinner();
         jSpinnerX = new javax.swing.JSpinner();
         jSpinnerY = new javax.swing.JSpinner();
         jButtonOk = new javax.swing.JButton();
@@ -72,24 +73,24 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
             .addComponent(jLabelTitle, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        jLabelPower.setText("Power (Watts):");
+        jLabelPower.setText("Sound agents:");
 
-        jLabelOpening.setText("Opening (graus):");
+        jLabelOpening.setText("Opening (degrees):");
 
         jLabelLocation.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabelLocation.setText("Location:");
 
-        jLabelX.setText("X:");
+        jLabelX.setText("X (meters):");
 
-        jLabelY.setText("Y:");
+        jLabelY.setText("Y (meters):");
 
-        jSpinnerOpening.setModel(new javax.swing.SpinnerNumberModel(70, 0, 360, 1));
+        jSpinnerOpening.setModel(new javax.swing.SpinnerNumberModel(90, 0, 360, 1));
 
-        jSpinnerPower.setModel(new javax.swing.SpinnerNumberModel(100, 1, 10000, 1));
+        jSpinnerNumberOfSounds.setModel(new javax.swing.SpinnerNumberModel(9, 1, 100, 2));
 
-        jSpinnerX.setModel(new javax.swing.SpinnerNumberModel(5, 0, 1000, 1));
+        jSpinnerX.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(2), Integer.valueOf(0), null, Integer.valueOf(1)));
 
-        jSpinnerY.setModel(new javax.swing.SpinnerNumberModel(5, 0, 1000, 1));
+        jSpinnerY.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(2), Integer.valueOf(0), null, Integer.valueOf(1)));
 
         jButtonOk.setText("OK");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
@@ -113,15 +114,14 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
                     .addComponent(jSeparator2)
                     .addComponent(jSeparator1)
                     .addGroup(jPanelBodyLayout.createSequentialGroup()
-                        .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelY)
-                            .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabelLocation)
-                                .addComponent(jLabelX)))
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jSpinnerY, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                            .addComponent(jSpinnerX)))
+                        .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelLocation)
+                            .addComponent(jLabelX)
+                            .addComponent(jLabelY))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSpinnerX, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSpinnerY, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)))
                     .addGroup(jPanelBodyLayout.createSequentialGroup()
                         .addComponent(jLabelDirection)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -132,12 +132,12 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
                             .addComponent(jLabelOpening))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jSpinnerOpening, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-                            .addComponent(jSpinnerPower))))
+                            .addComponent(jSpinnerOpening, javax.swing.GroupLayout.PREFERRED_SIZE, 67, Short.MAX_VALUE)
+                            .addComponent(jSpinnerNumberOfSounds))))
                 .addContainerGap())
         );
 
-        jPanelBodyLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jSpinnerDirection, jSpinnerOpening, jSpinnerPower, jSpinnerX, jSpinnerY});
+        jPanelBodyLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jSpinnerDirection, jSpinnerNumberOfSounds, jSpinnerOpening, jSpinnerX, jSpinnerY});
 
         jPanelBodyLayout.setVerticalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,7 +145,7 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelPower)
-                    .addComponent(jSpinnerPower, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSpinnerNumberOfSounds, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelOpening)
@@ -202,7 +202,9 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelSoundSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanelSoundSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -210,15 +212,23 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
         String id = "SS-"+HomeFrame.getSoundSourceCount();
+        
+        int opening = (int)this.jSpinnerOpening.getValue();
+        int numberOfSounds = (int)this.jSpinnerNumberOfSounds.getValue();
+        //convert dBPWL to watt/m²
+        //double power = (Math.pow(10.0, ((int)this.jSpinnerPower.getValue()/10.0))*Math.pow(10.0, -13))*(360/opening);
+        
         Location location = new Location((int)this.jSpinnerX.getValue(), (int)this.jSpinnerY.getValue());
-        Object[] parameters = {location, this.jSpinnerPower.getValue(), this.jSpinnerOpening.getValue(), this.jSpinnerDirection.getValue(), id};
-        Ambient.setSoundSourceParameters(parameters);        
+        Object[] parameters = {location, numberOfSounds, opening, this.jSpinnerDirection.getValue(), id};
+        AmbientObject.getInstance().setSoundSourceParameters(parameters);        
         
         Object[] data = {HomeFrame.jTableSoundSources.getRowCount()+1, id, parameters[1], parameters[2], parameters[0], parameters[3]};        
         HomeFrame.getSoundSourceModel().addRow(data);
         
         UIController.getInstance().addNewEvent(Message.CREATE_SOUND_SOURCE);
         this.setVisible(false);
+        
+        GraphicGenerator.getInstance().updateSoundSources();
         
         if(!Obstacle.getObstacles().isEmpty()){
             HomeFrame.jButtonRun.setEnabled(true);
@@ -241,8 +251,8 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSpinner jSpinnerDirection;
+    private javax.swing.JSpinner jSpinnerNumberOfSounds;
     private javax.swing.JSpinner jSpinnerOpening;
-    private javax.swing.JSpinner jSpinnerPower;
     private javax.swing.JSpinner jSpinnerX;
     private javax.swing.JSpinner jSpinnerY;
     // End of variables declaration//GEN-END:variables

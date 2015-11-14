@@ -1,4 +1,4 @@
-package view;
+package simulator.objects;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -6,6 +6,7 @@ import java.util.Queue;
 public class UIController {
 	
 	private Queue<String> events = new LinkedList<String>();
+	private boolean running = false;
 	private static UIController uIController = null;
 	
 	private UIController(){
@@ -28,5 +29,13 @@ public class UIController {
 
 	public void setEvents(Queue<String> events) {
 		this.events = events;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
 	}	
 }
