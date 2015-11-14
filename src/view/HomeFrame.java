@@ -127,6 +127,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jToolBar.add(jButtonRun);
 
         jButtonStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/stopIcon.png"))); // NOI18N
+        jButtonStop.setToolTipText("Stop");
         jButtonStop.setEnabled(false);
         jButtonStop.setFocusable(false);
         jButtonStop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -303,7 +304,7 @@ public class HomeFrame extends javax.swing.JFrame {
         );
 
         jLabelReverberacao.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-        jLabelReverberacao.setText("Reverberation time:");
+        jLabelReverberacao.setText("Reverberation time: --");
 
         jLabelNivel.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         jLabelNivel.setText("Sound intensity level:");
@@ -358,7 +359,7 @@ public class HomeFrame extends javax.swing.JFrame {
             .addComponent(jPanelBody, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jMenuFile.setText("File");
+        jMenuFile.setText("Action");
 
         jMenuItemRun.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/img/runIcon.png"))); // NOI18N

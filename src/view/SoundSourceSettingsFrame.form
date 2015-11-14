@@ -186,7 +186,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelOpening">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Opening (graus):"/>
+                <Property name="text" type="java.lang.String" value="Opening (degrees):"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelLocation">
@@ -199,12 +199,12 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelX">
               <Properties>
-                <Property name="text" type="java.lang.String" value="X:"/>
+                <Property name="text" type="java.lang.String" value="X (meters):"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelY">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Y:"/>
+                <Property name="text" type="java.lang.String" value="Y (meters):"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JSpinner" name="jSpinnerOpening">
@@ -224,14 +224,14 @@
             <Component class="javax.swing.JSpinner" name="jSpinnerX">
               <Properties>
                 <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                  <SpinnerModel initial="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                  <SpinnerModel initial="2" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JSpinner" name="jSpinnerY">
               <Properties>
                 <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                  <SpinnerModel initial="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                  <SpinnerModel initial="2" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
                 </Property>
               </Properties>
             </Component>

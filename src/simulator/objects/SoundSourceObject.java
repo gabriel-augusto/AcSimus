@@ -35,7 +35,8 @@ public class SoundSourceObject {
 		this.setAmbient(ambient);
 		this.setLocation(location);
 		this.setOpening(opening);
-		this.setPower((Math.pow(10.0, 6.0) * Math.pow(10.0, -13)) * (360 / opening));
+		//this.setPower((Math.pow(10.0, 6.0) * Math.pow(10.0, -13)) * (360 / opening));
+		this.setPower(Math.pow(10.0, 6.0) * Math.pow(10.0, -13));
 		this.setSoundSeparation((double) opening / (double) numberOfSounds);
 		this.setDirection(direction);
 	}

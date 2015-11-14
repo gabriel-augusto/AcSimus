@@ -75,22 +75,22 @@ public class SoundSourceSettingsFrame extends javax.swing.JFrame {
 
         jLabelPower.setText("Sound agents:");
 
-        jLabelOpening.setText("Opening (graus):");
+        jLabelOpening.setText("Opening (degrees):");
 
         jLabelLocation.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabelLocation.setText("Location:");
 
-        jLabelX.setText("X:");
+        jLabelX.setText("X (meters):");
 
-        jLabelY.setText("Y:");
+        jLabelY.setText("Y (meters):");
 
         jSpinnerOpening.setModel(new javax.swing.SpinnerNumberModel(90, 0, 360, 1));
 
         jSpinnerNumberOfSounds.setModel(new javax.swing.SpinnerNumberModel(9, 1, 100, 2));
 
-        jSpinnerX.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(5), Integer.valueOf(0), null, Integer.valueOf(1)));
+        jSpinnerX.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(2), Integer.valueOf(0), null, Integer.valueOf(1)));
 
-        jSpinnerY.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(5), Integer.valueOf(0), null, Integer.valueOf(1)));
+        jSpinnerY.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(2), Integer.valueOf(0), null, Integer.valueOf(1)));
 
         jButtonOk.setText("OK");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {

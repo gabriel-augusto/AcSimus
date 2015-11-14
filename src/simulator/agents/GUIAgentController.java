@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package simulator.agents;
 
 import simulator.objects.SimulationStatus;
@@ -12,18 +7,12 @@ import view.GraphicGenerator;
 import view.HomeFrame;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
+import settings.ProjectSettings;
 
 import java.text.DecimalFormat;
 
-/**
- *
- * @author Gabriel
- */
 public class GUIAgentController extends Agent{
-    
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -5274242402523089774L;
 	
 	private final int FPS = 40;
@@ -45,18 +34,26 @@ public class GUIAgentController extends Agent{
 
 		@Override
 		protected void onTick() {
-			simulation.setDecibel(0);
+			double decibel = 0;
 			if(UIController.getInstance().isRunning())
 				GraphicGenerator.getInstance().updateSounds();
 			for(SoundObject sound : SoundObject.getSounds().values()){
-				if(sound.getDecibel() > simulation.getDecibel())
-					simulation.setDecibel(sound.getDecibel());
-				if(sound.getReverberationTime() > simulation.getReverberationTime())
+				if(sound.getDecibel() > decibel){
+					decibel = sound.getDecibel();
+				}
+				if(sound.getReverberationTime() > simulation.getReverberationTime()){
 					simulation.setReverberationTime(sound.getReverberationTime());
+				}
+			}
+			if(decibel != 0){
+				simulation.setDecibel(decibel);
 			}
 			HomeFrame.jLabelNivel.setText("Sound intensity level: " + new DecimalFormat("0").format(simulation.getDecibel()) + " dB");
-			HomeFrame.jLabelReverberacao.setText("Reverberation time: " + new DecimalFormat("0").format(simulation.getReverberationTime()) + "ms");
-			
+			if(simulation.getDecibel() <= 0.5 && simulation.getDecibel() != 0 && UIController.getInstance().isRunning()){
+				HomeFrame.jLabelReverberacao.setText("Reverberation time: " + new DecimalFormat("0").format(ProjectSettings.getProjectSettings().getRT()) + "ms");
+			}else if(simulation.getDecibel() > 1){
+				HomeFrame.jLabelReverberacao.setText("Reverberation time: --");
+			}
 		}
 		
 	}

@@ -13,13 +13,8 @@ import languagesAndMessages.Message;
 
 public class SoundSource extends Agent{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3414148236747846279L;
 
-	//private int updateTime = 10000; //Uncomment if the UpdateSoundBehaviour is activated.
-	
 	private SoundSourceObject soundSource;
 
 	@Override
@@ -33,7 +28,6 @@ public class SoundSource extends Agent{
 	}
 
 	private void addBehaviours() {
-		//addBehaviour(new UpdateSoundBehaviour(this, updateTime)); //Uncomment to add this behaviour
 		addBehaviour(new GetMessageBehaviour(this));
 	}
 
@@ -52,22 +46,7 @@ public class SoundSource extends Agent{
 	}
 
 	/*--------------------------  COMPORTAMENTS ------------------------*/
-	/* Uncomment to implement this behaviour
-	private class UpdateSoundBehaviour extends TickerBehaviour {
 
-		private static final long serialVersionUID = 1L;
-
-		public UpdateSoundBehaviour(Agent a, long period) {
-			super(a, period);
-		}
-
-		@Override
-		protected void onTick() {
-			emitSoundPulse(direction, opening, power);
-		}		
-	}
-*/
-	
 	private class GetMessageBehaviour extends CyclicBehaviour {
 		
 		private static final long serialVersionUID = 1L;
