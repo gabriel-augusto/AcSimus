@@ -47,7 +47,7 @@ public class SoundSourceObjectTest {
 		assertEquals("Ambient", soundSource.getAmbient().getLocalName());
 		assertEquals(5, soundSource.getLocation().getX(), TOLERANCE);
 		assertEquals(10, soundSource.getOpening());
-		assertEquals(10, soundSource.getPower(), TOLERANCE);
+		assertEquals(Math.pow(10, -7), soundSource.getPower(), TOLERANCE);
 		assertEquals(0, soundSource.getDirection());
 		assertEquals("Container-1", soundSource.getCc().getContainerName());
 		assertEquals(0, soundSource.getSounds().size());

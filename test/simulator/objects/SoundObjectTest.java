@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import jade.core.AID;
+import settings.ProjectSettings;
 
 public class SoundObjectTest {
 	
@@ -14,6 +15,10 @@ public class SoundObjectTest {
 
 	@Before
 	public void setUp() throws Exception {
+		ProjectSettings settings = ProjectSettings.getProjectSettings();
+		settings.setLenght(10);
+		settings.setWidth(10);
+		
 		Obstacle.createObstacle("ob1", Line.getLine(new Location(0,0), new Location(0,10)), 10);
 		Obstacle.createObstacle("ob2", Line.getLine(new Location(0,10), new Location(10,10)), 10);
 		Obstacle.createObstacle("ob3", Line.getLine(new Location(10,10), new Location(10,0)), 10);
@@ -34,7 +39,7 @@ public class SoundObjectTest {
 		sound.update();
 		assertEquals(sound.getActualState(), sound.getState());
 		sound.update();
-		assertEquals(5, sound.getCollisionPoint().getX(), TOLERANCE);
+		assertEquals(10, sound.getCollisionPoint().getX(), TOLERANCE);
 	}
 
 	@Test
@@ -135,7 +140,7 @@ public class SoundObjectTest {
 		
 		sound.updateParameters();
 		
-		assertEquals(0, sound.getDistanceOfPreviousColisionPoint());
+		assertEquals(0, sound.getDistanceOfPreviousColisionPoint(), TOLERANCE);
 		assertTrue(sound.getInitialLocation().equals(new Location(0,5), TOLERANCE));
 		assertEquals(0, sound.getDirection(), TOLERANCE);
 		assertEquals(90, sound.getIntensity(), TOLERANCE);
@@ -159,7 +164,7 @@ public class SoundObjectTest {
 		SoundObject.createSound(new Location(0, 5), 0, 0.1, 90, null, null, "s1");		
 		
 		SoundObject sound = SoundObject.getSounds().get("s1");
-		String response = "\ndecibel: 110.0\ndirection: 0.0 degrees\ndistance of origin: 0\ninitial location: (x: 0.0; y: 5.0)\nlocation: (x: 0.0; y: 5.0)";
+		String response = "\ndecibel: 110.0\ndirection: 0.0 degrees\ndistance of origin: 0.0\ninitial location: (x: 0.0; y: 5.0)\nlocation: (x: 0.0; y: 5.0)";
 		assertEquals(response, sound.getActualState());
 	}
 	
@@ -201,7 +206,7 @@ public class SoundObjectTest {
 		SoundObject.createSound(new Location(0, 5), 0, 100, 90, null, null, "s1");
 		SoundObject sound = SoundObject.getSounds().get("s1");
 		sound.setDistanceTraveled(10);
-		assertEquals(10, sound.getDistanceTraveled());
+		assertEquals(10, sound.getDistanceTraveled(), TOLERANCE);
 	}
 	
 	@Test

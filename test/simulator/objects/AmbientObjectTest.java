@@ -37,11 +37,11 @@ public class AmbientObjectTest {
 	@Test
 	public void defineSoundSourceTest(){
 		Location location = new Location(5,5);
-		double power = 10;
+		int agents = 10;
 		int opening = 50;
 		int direction = 0;
 		String id = "SS";
-		Object[] parameters = {location, power, opening, direction, id};
+		Object[] parameters = {location, agents, opening, direction, id};
 		ambient.setSoundSourceParameters(parameters);
 		ambient.defineSoundSource();
 		
