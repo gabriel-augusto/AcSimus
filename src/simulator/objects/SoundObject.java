@@ -4,11 +4,12 @@ import java.util.HashMap;
 
 import utils.Util;
 import jade.core.AID;
+import settings.ProjectSettings;
 
 public class SoundObject {
 	
-	private static final int SIZE_OF_STEP = 1;
-	private static final double ERROR = 1;
+	private double sizeOfStep;
+	private double error;
 	
 	private String identifier;
 	private String state;
@@ -25,8 +26,8 @@ public class SoundObject {
 	private double actualVirtualSoundSourcePower;
 	private int opening;
 	private double intensity;
-	private int distanceOfPreviousColisionPoint = 0;
-	private int distanceTraveled = 0;
+	private double distanceOfPreviousColisionPoint = 0;
+	private double distanceTraveled = 0;
 	
 	private static HashMap <String, SoundObject> sounds = new HashMap<>();
 	
@@ -35,7 +36,10 @@ public class SoundObject {
 	}
 	
 	public static SoundObject createSound(Location location, double direction, double power, int opening, AID ambient, AID soundSource, String id){
+		ProjectSettings settings = ProjectSettings.getProjectSettings();
 		SoundObject sound = new SoundObject(location, direction, power, opening, ambient, soundSource, id);
+		sound.setSizeOfStep((settings.getWidth() + settings.getLenght())/50);
+		sound.setError(sound.getSizeOfStep());
 		getSounds().put(id, sound);
 		return sound;
 	}
@@ -60,7 +64,7 @@ public class SoundObject {
 		Location intersectionPoint = null;
 		for(Obstacle obstacle : Obstacle.getObstacles().values()){
 			intersectionPoint = this.getRote().searchIntersectionPoint(obstacle.getLine());
-			if(intersectionPoint != null && !this.getActualLocation().equals(intersectionPoint, ERROR)){
+			if(intersectionPoint != null && !this.getActualLocation().equals(intersectionPoint, getError())){
 				if(this.getCollisionPoint() == null || this.getActualLocation().distance(intersectionPoint) < this.getActualLocation().distance(this.getCollisionPoint())){
 					this.setCollisionObstacle(obstacle);
 					this.setCollisionPoint(intersectionPoint);
@@ -71,8 +75,8 @@ public class SoundObject {
 	}
 	
 	public void update(){
-		this.setDistanceOfPreviousColisionPoint(this.getDistanceOfPreviousColisionPoint() + SIZE_OF_STEP);
-		this.setDistanceTraveled(this.getDistanceTraveled() + SIZE_OF_STEP);
+		this.setDistanceOfPreviousColisionPoint(this.getDistanceOfPreviousColisionPoint() + getSizeOfStep());
+		this.setDistanceTraveled(this.getDistanceTraveled() + getSizeOfStep());
 		this.setIntensity(calculateIntensityBySoundPropagation(this.getActualVirtualSoundSourcePower(), this.getOpening(), this.getDistanceTraveled()));
 		updateLocation();
 		
@@ -94,7 +98,7 @@ public class SoundObject {
 	}
 	
 	public boolean isCollisionPoint() {
-		return this.getActualLocation().equals(this.getCollisionPoint(), ERROR);
+		return this.getActualLocation().equals(this.getCollisionPoint(), getError());
 	}
 	
 	public void updateParameters(){
@@ -214,20 +218,19 @@ public class SoundObject {
 		this.intensity = intensity;
 	}
 
-	public int getDistanceOfPreviousColisionPoint() {
+	public double getDistanceOfPreviousColisionPoint() {
 		return distanceOfPreviousColisionPoint;
 	}
 
-	public void setDistanceOfPreviousColisionPoint(
-			int distanceOfPreviousColisionPoint) {
+	public void setDistanceOfPreviousColisionPoint(double distanceOfPreviousColisionPoint) {
 		this.distanceOfPreviousColisionPoint = distanceOfPreviousColisionPoint;
 	}
 
-	public int getDistanceTraveled() {
+	public double getDistanceTraveled() {
 		return distanceTraveled;
 	}
 
-	public void setDistanceTraveled(int distanceTraveled) {
+	public void setDistanceTraveled(double distanceTraveled) {
 		this.distanceTraveled = distanceTraveled;
 	}
 
@@ -253,5 +256,21 @@ public class SoundObject {
 	
 	public double getReverberationTime(){
 		return this.distanceTraveled * (1/0.34029);
+	}
+
+	public double getSizeOfStep() {
+		return sizeOfStep;
+	}
+
+	public void setSizeOfStep(double sizeOfStep) {
+		this.sizeOfStep = sizeOfStep;
+	}
+
+	public double getError() {
+		return error;
+	}
+
+	public void setError(double error) {
+		this.error = error;
 	}
 }

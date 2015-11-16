@@ -98,7 +98,7 @@ public class Util{
 		return Math.cos(Math.toRadians(angle)) * hypotenuse;
 	}
 	
-	public static double calculateY(double angle, int hypotenuse){
+	public static double calculateY(double angle, double hypotenuse){
 		return Math.sin(Math.toRadians(angle)) * hypotenuse;
 	}
 
