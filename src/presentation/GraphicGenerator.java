@@ -1,4 +1,4 @@
-package view;
+package presentation;
 
 import java.awt.Color;
 import java.io.IOException;

@@ -1,8 +1,8 @@
 package main;
 
 import jade.wrapper.StaleProxyException;
+import presentation.HomeFrame;
 import utils.Util;
-import view.HomeFrame;
 
 public class Main {	
 	

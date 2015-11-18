@@ -6,9 +6,9 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.ContainerController;
 import languagesAndMessages.Message;
+import presentation.HomeFrame;
 import simulator.objects.AmbientObject;
 import simulator.objects.UIController;
-import view.HomeFrame;
 
 public class Ambient extends Agent{
 

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package view;
+package presentation;
 
 import settings.ProjectSettings;
 import simulator.objects.AmbientObject;
